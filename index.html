@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>中国消费数据看板</title>
-    <link rel="stylesheet" href="./styles.css?v=31" />
+    <link rel="stylesheet" href="./styles.css?v=32" />
   </head>
   <body>
     <main class="page">
@@ -12,7 +12,8 @@
         <div class="segmented section-switch" id="sectionControls">
           <button class="active" data-section="retail">社会消费品零售总额</button>
           <button data-section="income">居民收入和支出</button>
-          <button data-section="property">房价和房贷</button>
+          <button data-section="propertyPrice">70 城房价</button>
+          <button data-section="propertyCredit">房贷和土地出让</button>
         </div>
       </nav>
 
@@ -60,7 +61,7 @@
         </div>
       </nav>
 
-      <section class="city-panel property-only" aria-label="70城城市选择">
+      <section class="city-panel property-price-only" aria-label="70城城市选择">
         <div class="city-panel-inner" id="propertyCityButtons"></div>
       </section>
 
@@ -71,7 +72,7 @@
       </footer>
     </main>
 
-    <script src="./data.js?v=31"></script>
-    <script src="./app.js?v=31"></script>
+    <script src="./data.js?v=32"></script>
+    <script src="./app.js?v=32"></script>
   </body>
 </html>

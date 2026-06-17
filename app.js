@@ -6,7 +6,7 @@ const state = {
   retailFrequency: "period",
   incomeFrequency: "quarter",
   incomeScale: "percapita",
-  propertyCity: "average",
+  propertyCity: "overall",
   datasets: {},
 };
 
@@ -68,20 +68,32 @@ const sections = {
       "consumption_other",
     ],
   },
-  property: {
-    label: "房价和房贷",
+  propertyPrice: {
+    label: "70 城房价",
     eyebrow: "NBS / PBOC / MOF",
     dataUrl: "./property_release_archive.json",
     sourceLabel: "官方来源",
     sourceUrl: "https://www.stats.gov.cn/sj/zxfb/202606/t20260616_1963946.html",
     methodUrl: "https://www.stats.gov.cn/sj/zxfb/202606/t20260616_1963946.html",
     footnote:
-      "数据来源：国家统计局《70个大中城市商品住宅销售价格变动情况》、国家数据“主要城市月度价格”、中国人民银行《金融机构贷款投向统计报告》、财政部《财政收支情况》。70城房价为70个城市指数的简单平均，环比/同比由指数减100得到；城市明细使用国家数据历史层，当前可追溯至2011-01，2026-05城市明细待国家数据表更新后补入；房贷余额为季度期末余额；地产税收和土地出让收入为财政部官方报告期值，历史页面存在当月、累计、年度等披露差异，图表保留官方报告期口径。",
+      "数据来源：国家统计局《70个大中城市商品住宅销售价格变动情况》、国家数据“主要城市月度价格”。70城整体房价为70个城市指数的简单平均，环比/同比由指数减100得到；城市明细使用国家数据历史层和发布稿缓存，当前可追溯至2011-01。",
     preferred: [
       "new_home_70_price",
       "resale_home_70_price",
       "new_home_up_cities",
       "resale_home_up_cities",
+    ],
+  },
+  propertyCredit: {
+    label: "房贷和土地出让",
+    eyebrow: "PBOC / MOF",
+    dataUrl: "./property_release_archive.json",
+    sourceLabel: "官方来源",
+    sourceUrl: "https://www.pbc.gov.cn/",
+    methodUrl: "https://www.pbc.gov.cn/",
+    footnote:
+      "数据来源：中国人民银行《金融机构贷款投向统计报告》、财政部《财政收支情况》。房贷余额为季度期末余额；地产税收和土地出让收入为财政部官方报告期值，历史页面存在当月、累计、年度等披露差异，图表保留官方报告期口径。",
+    preferred: [
       "real_estate_loan_balance",
       "mortgage_balance",
       "property_development_loan_balance",
@@ -142,8 +154,52 @@ const propertyCitySeries = {
   resale_home_70_price: { cityMetric: "resale_home_price", label: "二手房价格" },
 };
 
+const propertyOverallValue = "overall";
+
+const coreCityGroup = ["北京", "上海", "广州", "深圳"];
+
+const capitalAndNewTierCities = [
+  "天津",
+  "石家庄",
+  "太原",
+  "呼和浩特",
+  "沈阳",
+  "长春",
+  "哈尔滨",
+  "南京",
+  "杭州",
+  "宁波",
+  "合肥",
+  "福州",
+  "南昌",
+  "济南",
+  "青岛",
+  "郑州",
+  "武汉",
+  "长沙",
+  "南宁",
+  "海口",
+  "重庆",
+  "成都",
+  "贵阳",
+  "昆明",
+  "西安",
+  "兰州",
+  "西宁",
+  "银川",
+  "乌鲁木齐",
+];
+
+function isPropertySection() {
+  return state.section === "propertyPrice" || state.section === "propertyCredit";
+}
+
+function isPropertyPriceSection() {
+  return state.section === "propertyPrice";
+}
+
 function selectedPropertyCity() {
-  return state.section === "property" && state.propertyCity !== "average" ? state.propertyCity : null;
+  return isPropertyPriceSection() && state.propertyCity !== propertyOverallValue ? state.propertyCity : null;
 }
 
 function displayUnit(seriesId) {
@@ -155,7 +211,7 @@ function displayUnit(seriesId) {
 
 function effectiveMode(seriesId) {
   const meta = payload()?.series?.[seriesId];
-  if (state.section === "property" && state.mode === "yoy" && !meta?.yoyLabel) return "value";
+  if (isPropertySection() && state.mode === "yoy" && !meta?.yoyLabel) return "value";
   return state.mode;
 }
 
@@ -420,6 +476,9 @@ function allSeriesIds() {
   const data = payload();
   const ids = Object.keys(data.series);
   const preferred = currentSection().preferred;
+  if (isPropertyPriceSection() && selectedPropertyCity()) {
+    return preferred.filter((id) => ids.includes(id) && propertyCitySeries[id]);
+  }
   return [
     ...preferred.filter((id) => ids.includes(id)),
     ...ids.filter((id) => !preferred.includes(id)).sort((a, b) => {
@@ -440,7 +499,8 @@ function updateHeadline() {
   const section = currentSection();
   document.body.classList.toggle("retail-section", state.section === "retail");
   document.body.classList.toggle("income-section", state.section === "income");
-  document.body.classList.toggle("property-section", state.section === "property");
+  document.body.classList.toggle("property-section", isPropertySection());
+  document.body.classList.toggle("property-price-section", isPropertyPriceSection());
   byId("latestPeriod").textContent = latest ? `${recordLabel(latest)} 发布` : "--";
   byId("eyebrow").textContent = section.eyebrow || "Official data";
   byId("sourceLink").textContent = section.sourceLabel;
@@ -455,27 +515,57 @@ function propertyCityNames() {
   return Array.from(new Set(Array.isArray(data.cities) ? data.cities : Object.keys(data.cities)));
 }
 
+function propertyCityGroups(cities) {
+  const available = new Set(cities);
+  const core = coreCityGroup.filter((city) => available.has(city));
+  const capitalAndNewTier = capitalAndNewTierCities.filter((city) => available.has(city) && !core.includes(city));
+  const assigned = new Set([...core, ...capitalAndNewTier]);
+  const other = cities.filter((city) => !assigned.has(city));
+  return [
+    { label: "70 城整体", cities: [propertyOverallValue] },
+    { label: "北上广深", cities: core },
+    { label: "省会和新一线", cities: capitalAndNewTier },
+    { label: "其他城市", cities: other },
+  ].filter((group) => group.cities.length);
+}
+
+function makeCityButton(city) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.dataset.city = city;
+  button.textContent = city === propertyOverallValue ? "70 城整体" : city;
+  return button;
+}
+
+function makeCityGroup(group) {
+  const wrapper = document.createElement("section");
+  wrapper.className = "city-group";
+  const title = document.createElement("div");
+  title.className = "city-group-title";
+  title.textContent = group.label;
+  const buttons = document.createElement("div");
+  buttons.className = "city-group-buttons";
+  buttons.replaceChildren(...group.cities.map(makeCityButton));
+  wrapper.replaceChildren(title, buttons);
+  return wrapper;
+}
+
 function populatePropertyCities() {
   const panel = byId("propertyCityButtons");
-  if (!panel || state.section !== "property") return;
+  if (!panel || !isPropertyPriceSection()) return;
   const cities = propertyCityNames();
   if (!cities.length) return;
-  if (!cities.includes(state.propertyCity)) state.propertyCity = "average";
-  const cityOptions = ["average", ...cities];
+  if (state.propertyCity !== propertyOverallValue && !cities.includes(state.propertyCity)) {
+    state.propertyCity = propertyOverallValue;
+  }
+  const groups = propertyCityGroups(cities);
+  const cityOptions = groups.flatMap((group) => group.cities);
   const currentOptions = Array.from(panel.querySelectorAll("button"))
     .map((button) => button.dataset.city)
     .join("|");
   const nextOptions = cityOptions.join("|");
   if (currentOptions !== nextOptions) {
-    panel.replaceChildren(
-      ...cityOptions.map((city) => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.dataset.city = city;
-        button.textContent = city === "average" ? "70城平均" : city;
-        return button;
-      }),
-    );
+    panel.replaceChildren(...groups.map(makeCityGroup));
   }
   panel.querySelectorAll("button").forEach((button) => {
     button.classList.toggle("active", button.dataset.city === state.propertyCity);
@@ -601,7 +691,7 @@ function makeCard(seriesId, index) {
     state.section === "retail" ? (state.version === "published" ? "发布时数据" : "修正后数据") : null;
   const metricMode = effectiveMode(seriesId);
   const modeLabel =
-    state.section === "property"
+    isPropertySection()
       ? metricMode === "value"
         ? meta.valueLabel || "绝对值"
         : meta.yoyLabel || "同比"
@@ -709,6 +799,10 @@ async function loadDataset(sectionId) {
   if (state.datasets[sectionId]) return;
   if (window.__DASHBOARD_DATA__?.[sectionId]) {
     state.datasets[sectionId] = window.__DASHBOARD_DATA__[sectionId];
+    return;
+  }
+  if ((sectionId === "propertyPrice" || sectionId === "propertyCredit") && window.__DASHBOARD_DATA__?.property) {
+    state.datasets[sectionId] = window.__DASHBOARD_DATA__.property;
     return;
   }
   const section = sections[sectionId];
