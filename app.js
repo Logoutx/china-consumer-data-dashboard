@@ -522,7 +522,7 @@ function updateHeadline() {
   document.body.classList.toggle("income-section", state.section === "income");
   document.body.classList.toggle("property-section", isPropertySection());
   document.body.classList.toggle("property-price-section", isPropertyPriceSection());
-  byId("latestPeriod").textContent = latest ? `${recordLabel(latest)} 发布` : "--";
+  byId("latestPeriod").textContent = latest ? recordLabel(latest) : "--";
   byId("eyebrow").textContent = section.eyebrow || "Official data";
   byId("sourceLink").textContent = section.sourceLabel;
   byId("sourceLink").href = latest?.url || section.sourceUrl;
