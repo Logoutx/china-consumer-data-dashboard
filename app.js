@@ -167,7 +167,7 @@ function monthDiff(a, b) {
 }
 
 function seriesUnit(seriesId) {
-  return payload().series[seriesId]?.unit;
+  return payload().series[baseSeriesId(seriesId)]?.unit;
 }
 
 const propertyCitySeries = {
@@ -176,6 +176,10 @@ const propertyCitySeries = {
 };
 
 const propertyOverallValue = "overall";
+const propertyCoreValue = "core";
+const propertyCapitalNewTierValue = "capitalNewTier";
+const propertyOtherValue = "other";
+const citySeriesSeparator = "__city__";
 
 const coreCityGroup = ["北京", "上海", "广州", "深圳"];
 
@@ -219,19 +223,33 @@ function isPropertyPriceSection() {
   return state.section === "propertyPrice";
 }
 
-function selectedPropertyCity() {
-  return isPropertyPriceSection() && state.propertyCity !== propertyOverallValue ? state.propertyCity : null;
+function baseSeriesId(seriesId) {
+  return String(seriesId).split(citySeriesSeparator)[0];
+}
+
+function cityFromSeriesId(seriesId) {
+  return String(seriesId).includes(citySeriesSeparator) ? String(seriesId).split(citySeriesSeparator)[1] : null;
+}
+
+function citySeriesId(seriesId, city) {
+  return `${seriesId}${citySeriesSeparator}${city}`;
+}
+
+function selectedPropertyGroup() {
+  if (!isPropertyPriceSection()) return null;
+  const cities = propertyCityNames();
+  return propertyCityGroups(cities).find((group) => group.value === state.propertyCity) || null;
 }
 
 function displayUnit(seriesId) {
-  if (state.section === "income" && state.incomeScale === "national" && seriesUnit(seriesId) === "元") {
+  if (state.section === "income" && state.incomeScale === "national" && seriesUnit(baseSeriesId(seriesId)) === "元") {
     return "亿元";
   }
-  return seriesUnit(seriesId);
+  return seriesUnit(baseSeriesId(seriesId));
 }
 
 function effectiveMode(seriesId) {
-  const meta = payload()?.series?.[seriesId];
+  const meta = payload()?.series?.[baseSeriesId(seriesId)];
   if (isPropertySection() && state.mode === "yoy" && !meta?.yoyLabel) return "value";
   return state.mode;
 }
@@ -262,7 +280,7 @@ function displayPeriod(point) {
 
 function sourceLink(seriesId) {
   const section = currentSection();
-  const meta = payload().series[seriesId] || {};
+  const meta = payload().series[baseSeriesId(seriesId)] || {};
   if (meta.methodUrl) return meta.methodUrl;
   if (state.section === "retail" && (seriesId === "online_goods" || seriesId === "online_ex_auto_share")) {
     return section.onlineMethodUrl;
@@ -271,7 +289,7 @@ function sourceLink(seriesId) {
 }
 
 function sourceMeta(seriesId) {
-  const meta = payload().series[seriesId] || {};
+  const meta = payload().series[baseSeriesId(seriesId)] || {};
   return {
     name: meta.source_name || "中国国家统计局",
     url: sourceLink(seriesId),
@@ -291,12 +309,13 @@ function metricValue(metric, seriesId) {
 }
 
 function recordMetric(record, seriesId) {
-  const city = selectedPropertyCity();
-  const citySeries = propertyCitySeries[seriesId];
+  const baseId = baseSeriesId(seriesId);
+  const city = cityFromSeriesId(seriesId);
+  const citySeries = propertyCitySeries[baseId];
   if (city && citySeries) {
     return record.cities?.[city]?.[citySeries.cityMetric] || null;
   }
-  return record.metrics[seriesId];
+  return record.metrics[baseId];
 }
 
 function absoluteMetricValue(metric) {
@@ -488,8 +507,8 @@ function chartSeries(seriesId) {
 }
 
 function displaySeriesName(seriesId, meta) {
-  const city = selectedPropertyCity();
-  const citySeries = propertyCitySeries[seriesId];
+  const city = cityFromSeriesId(seriesId);
+  const citySeries = propertyCitySeries[baseSeriesId(seriesId)];
   return city && citySeries ? `${city}${citySeries.label}` : meta.name;
 }
 
@@ -497,8 +516,10 @@ function allSeriesIds() {
   const data = payload();
   const ids = Object.keys(data.series);
   const preferred = currentSection().preferred;
-  if (isPropertyPriceSection() && selectedPropertyCity()) {
-    return preferred.filter((id) => ids.includes(id) && propertyCitySeries[id]);
+  const group = selectedPropertyGroup();
+  if (isPropertyPriceSection() && group?.value !== propertyOverallValue) {
+    const citySeriesIds = preferred.filter((id) => ids.includes(id) && propertyCitySeries[id]);
+    return group.cities.flatMap((city) => citySeriesIds.map((id) => citySeriesId(id, city)));
   }
   return [
     ...preferred.filter((id) => ids.includes(id)),
@@ -543,32 +564,19 @@ function propertyCityGroups(cities) {
   const assigned = new Set([...core, ...capitalAndNewTier]);
   const other = cities.filter((city) => !assigned.has(city));
   return [
-    { label: "70 城整体", cities: [propertyOverallValue] },
-    { label: "北上广深", cities: core },
-    { label: "省会和新一线", cities: capitalAndNewTier },
-    { label: "其他城市", cities: other },
+    { value: propertyOverallValue, label: "70 城整体", cities },
+    { value: propertyCoreValue, label: "北上广深", cities: core },
+    { value: propertyCapitalNewTierValue, label: "省会和新一线", cities: capitalAndNewTier },
+    { value: propertyOtherValue, label: "其他城市", cities: other },
   ].filter((group) => group.cities.length);
 }
 
-function makeCityButton(city) {
+function makeCityButton(group) {
   const button = document.createElement("button");
   button.type = "button";
-  button.dataset.city = city;
-  button.textContent = city === propertyOverallValue ? "70 城整体" : city;
+  button.dataset.city = group.value;
+  button.textContent = group.label;
   return button;
-}
-
-function makeCityGroup(group) {
-  const wrapper = document.createElement("section");
-  wrapper.className = "city-group";
-  const title = document.createElement("div");
-  title.className = "city-group-title";
-  title.textContent = group.label;
-  const buttons = document.createElement("div");
-  buttons.className = "city-group-buttons";
-  buttons.replaceChildren(...group.cities.map(makeCityButton));
-  wrapper.replaceChildren(title, buttons);
-  return wrapper;
 }
 
 function populatePropertyCities() {
@@ -576,17 +584,15 @@ function populatePropertyCities() {
   if (!panel || !isPropertyPriceSection()) return;
   const cities = propertyCityNames();
   if (!cities.length) return;
-  if (state.propertyCity !== propertyOverallValue && !cities.includes(state.propertyCity)) {
-    state.propertyCity = propertyOverallValue;
-  }
   const groups = propertyCityGroups(cities);
-  const cityOptions = groups.flatMap((group) => group.cities);
+  if (!groups.some((group) => group.value === state.propertyCity)) state.propertyCity = propertyOverallValue;
+  const cityOptions = groups.map((group) => group.value);
   const currentOptions = Array.from(panel.querySelectorAll("button"))
     .map((button) => button.dataset.city)
     .join("|");
   const nextOptions = cityOptions.join("|");
   if (currentOptions !== nextOptions) {
-    panel.replaceChildren(...groups.map(makeCityGroup));
+    panel.replaceChildren(...groups.map(makeCityButton));
   }
   panel.querySelectorAll("button").forEach((button) => {
     button.classList.toggle("active", button.dataset.city === state.propertyCity);
@@ -667,7 +673,7 @@ function drawChart(container, points, color, seriesId) {
   });
 
   container.innerHTML = `
-    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${payload().series[seriesId].name}">
+    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${payload().series[baseSeriesId(seriesId)].name}">
       <g class="axis">
         ${ticks
           .map((tick) => {
@@ -701,7 +707,7 @@ function drawChart(container, points, color, seriesId) {
 }
 
 function makeCard(seriesId, index) {
-  const meta = payload().series[seriesId];
+  const meta = payload().series[baseSeriesId(seriesId)];
   const points = chartSeries(seriesId);
   const latest = points[points.length - 1];
   const card = document.createElement("article");
@@ -735,8 +741,8 @@ function makeCard(seriesId, index) {
         : null;
   const scaleLabel =
     state.section === "income" ? (state.incomeScale === "national" ? "全国" : "人均") : null;
-  const city = selectedPropertyCity();
-  const citySeries = propertyCitySeries[seriesId];
+  const city = cityFromSeriesId(seriesId);
+  const citySeries = propertyCitySeries[baseSeriesId(seriesId)];
   const groupLabel = city && citySeries ? "城市明细" : meta.group;
   const metaLabels = [groupLabel, versionLabel, cadenceLabel, scaleLabel, modeLabel].filter(Boolean);
   const value = latest ? formatMetric(seriesId, latest.value, metricMode) : "--";

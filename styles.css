@@ -217,41 +217,18 @@ body.property-section #versionControls {
 
 .city-panel-inner {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
   width: 100%;
-  max-height: 190px;
+  max-height: 86px;
   overflow: auto;
   padding: 2px 2px 4px;
   scrollbar-width: thin;
 }
 
-.city-group {
-  display: grid;
-  grid-template-columns: 116px minmax(0, 1fr);
-  gap: 10px;
-  align-items: start;
-}
-
-.city-group-title {
-  min-height: 32px;
-  display: flex;
-  align-items: center;
-  color: var(--muted);
-  font-size: 13px;
-  font-weight: 800;
-  white-space: nowrap;
-}
-
-.city-group-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
 .city-panel button {
   height: 32px;
-  min-width: 58px;
+  min-width: 92px;
   padding: 0 12px;
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -263,8 +240,8 @@ body.property-section #versionControls {
   white-space: nowrap;
 }
 
-.city-panel button[data-city="overall"] {
-  min-width: 96px;
+.city-panel button[data-city="capitalNewTier"] {
+  min-width: 118px;
 }
 
 .city-panel button.active {
@@ -517,11 +494,6 @@ body.property-section #versionControls {
     margin-right: -16px;
     padding-left: 16px;
     padding-right: 16px;
-  }
-
-  .city-group {
-    grid-template-columns: 1fr;
-    gap: 6px;
   }
 
   .section-tabs {
