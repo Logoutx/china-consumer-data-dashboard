@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>中国消费数据看板</title>
+    <link rel="stylesheet" href="./styles.css?v=31" />
+  </head>
+  <body>
+    <main class="page">
+      <nav class="section-tabs" aria-label="数据板块">
+        <div class="segmented section-switch" id="sectionControls">
+          <button class="active" data-section="retail">社会消费品零售总额</button>
+          <button data-section="income">居民收入和支出</button>
+          <button data-section="property">房价和房贷</button>
+        </div>
+      </nav>
+
+      <header class="hero">
+        <div>
+          <p class="eyebrow" id="eyebrow">National Bureau of Statistics</p>
+          <h1>中国消费数据看板</h1>
+        </div>
+        <aside class="source-panel">
+          <span>最新发布</span>
+          <strong id="latestPeriod">--</strong>
+          <a id="sourceLink" href="https://www.stats.gov.cn/sj/zxfb/202605/t20260518_1963727.html" target="_blank" rel="noreferrer">国家统计局原文</a>
+        </aside>
+      </header>
+
+      <nav class="controls" aria-label="图表控制">
+        <div class="segmented wide" id="versionControls">
+          <button class="active" data-version="latest">修正后数据</button>
+          <button data-version="published">发布时数据</button>
+        </div>
+        <div class="segmented" id="modeControls">
+          <button class="active" data-mode="value">绝对值</button>
+          <button data-mode="yoy">同比</button>
+        </div>
+        <div class="segmented retail-only" id="retailFrequencyControls">
+          <button class="active" data-retail-frequency="period">当期</button>
+          <button data-retail-frequency="ttm">TTM</button>
+        </div>
+        <div class="segmented income-only" id="incomeFrequencyControls">
+          <button class="active" data-income-frequency="quarter">季度</button>
+          <button data-income-frequency="ttm">TTM</button>
+          <button data-income-frequency="annual">年度</button>
+        </div>
+        <div class="segmented income-only" id="incomeScaleControls">
+          <button class="active" data-income-scale="percapita">人均</button>
+          <button data-income-scale="national">全国</button>
+        </div>
+        <div class="range" id="rangeControls">
+          <button data-range="1Y">1Y</button>
+          <button data-range="3Y">3Y</button>
+          <button data-range="5Y">5Y</button>
+          <button data-range="10Y">10Y</button>
+          <button data-range="20Y">20Y</button>
+          <button class="active" data-range="Max">Max</button>
+        </div>
+      </nav>
+
+      <section class="city-panel property-only" aria-label="70城城市选择">
+        <div class="city-panel-inner" id="propertyCityButtons"></div>
+      </section>
+
+      <section class="grid" id="chartGrid"></section>
+
+      <footer class="footnote">
+        <p id="footnoteText"></p>
+      </footer>
+    </main>
+
+    <script src="./data.js?v=31"></script>
+    <script src="./app.js?v=31"></script>
+  </body>
+</html>
