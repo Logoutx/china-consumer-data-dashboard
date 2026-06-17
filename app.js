@@ -521,6 +521,9 @@ function allSeriesIds() {
     const citySeriesIds = preferred.filter((id) => ids.includes(id) && propertyCitySeries[id]);
     return group.cities.flatMap((city) => citySeriesIds.map((id) => citySeriesId(id, city)));
   }
+  if (isPropertySection()) {
+    return preferred.filter((id) => ids.includes(id));
+  }
   return [
     ...preferred.filter((id) => ids.includes(id)),
     ...ids.filter((id) => !preferred.includes(id)).sort((a, b) => {
