@@ -128,6 +128,27 @@ function byId(id) {
   return document.getElementById(id);
 }
 
+function formatMixedSpacing(value) {
+  const token = "[A-Za-z0-9]+(?:[.-][A-Za-z0-9]+)*(?:[%％])?";
+  return String(value)
+    .replace(new RegExp(`([\\p{Script=Han}])\\s*(${token})`, "gu"), "$1 $2")
+    .replace(new RegExp(`(${token})\\s*([\\p{Script=Han}])`, "gu"), "$1 $2");
+}
+
+function applyTypography(root = document.body) {
+  const skipTags = new Set(["SCRIPT", "STYLE", "TEXTAREA"]);
+  const walk = (node) => {
+    if (node.nodeType === 3) {
+      const next = formatMixedSpacing(node.nodeValue);
+      if (next !== node.nodeValue) node.nodeValue = next;
+      return;
+    }
+    if (node.nodeType !== 1 || skipTags.has(node.tagName)) return;
+    node.childNodes.forEach(walk);
+  };
+  walk(root);
+}
+
 function currentSection() {
   return sections[state.section];
 }
@@ -765,7 +786,7 @@ function attachTooltip(container) {
     tooltip.style.left = `${left}px`;
     tooltip.style.top = `${top}px`;
     const note = target.dataset.supplement ? "<em>非完整发布稿口径</em>" : "";
-    tooltip.innerHTML = `<span>${target.dataset.label || formatPeriod(target.dataset.period)}</span><strong>${target.dataset.value}</strong>${note}`;
+    tooltip.innerHTML = `<span>${formatMixedSpacing(target.dataset.label || formatPeriod(target.dataset.period))}</span><strong>${target.dataset.value}</strong>${note}`;
     tooltip.classList.add("visible");
     focus.setAttribute("cx", target.dataset.x);
     focus.setAttribute("cy", target.dataset.y);
@@ -789,10 +810,12 @@ function render() {
   allSeriesIds().forEach((seriesId, index) => {
     grid.appendChild(makeCard(seriesId, index));
   });
+  applyTypography(document.querySelector("main"));
 }
 
 function renderError(error) {
   byId("chartGrid").innerHTML = `<article class="card"><h2>数据加载失败</h2><p class="meta">${error.message}</p></article>`;
+  applyTypography(document.querySelector("main"));
 }
 
 async function loadDataset(sectionId) {
