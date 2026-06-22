@@ -61,7 +61,7 @@ python3 tools/merge_property_city_history.py
 python3 tools/audit_official_data.py --samples-per-pool 35 --seed 2026-06-22
 ```
 
-它会生成 `audit_reports/official_data_audit_*.json` 和 `.md`，默认使用 `_cache/` 内已保存的官方页面和国家数据原始表。需要重新请求官方页面时：
+它会生成 `audit_reports/official_data_audit_*.json`、`.md` 和 `.html`，默认使用 `_cache/` 内已保存的官方页面和国家数据原始表。需要重新请求官方页面时：
 
 ```bash
 python3 tools/audit_official_data.py --refresh-official --samples-per-pool 50
@@ -70,7 +70,7 @@ python3 tools/audit_official_data.py --refresh-official --samples-per-pool 50
 当前检查包括：
 
 - 发布稿页面数值抽查：随机抽取发布时字段，确认数字能在官方页面文本中找到。
-- 社零累计差分抽查：用相邻累计值复核当月值；该项只作为 warning，因为官方发布稿可能四舍五入或修订前期累计值。
+- 社零累计差分抽查：只对金额类指标用相邻累计值复核当月值；该项只作为 warning，因为官方发布稿可能四舍五入或修订前期累计值。比例类指标（如网上商品零售额占比）不使用累计差分。
 - 70 城整体复算：用逐城新房/二手房环比数据重算 70 城平均和上涨城市数。
 - 70 城逐城原始表复核：把看板逐城数据回查到国家数据原始表中的城市、月份、指标单元格。
 

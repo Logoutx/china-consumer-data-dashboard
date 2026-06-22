@@ -33,6 +33,13 @@ OFFICIAL_PAGE_VALUE_KEYS = [
     "real_yoy",
 ]
 
+DERIVED_RATIO_SERIES = {"online_ex_auto_share"}
+DIRECT_RELEASE_CHECK_NOTE = "same-source hard check: published fields are checked against the official release page text"
+RETAIL_DIFF_CHECK_NOTE = (
+    "diagnostic only: this check is limited to amount series; cumulative-difference checks can diverge when "
+    "official tables revise prior cumulative values or report rounded current-month values"
+)
+
 CITY_RAW_ROWS = {
     ("new_home_price", "month_value"): "新建商品住宅销售价格指数 (上月=100)",
     ("new_home_price", "month_yoy"): "新建商品住宅销售价格指数 (上年同月=100)",
@@ -55,6 +62,7 @@ class AuditResult:
     source: str | None = None
     evidence: str | None = None
     note: str | None = None
+    rule: str | None = None
 
     def to_dict(self) -> dict:
         return {key: value for key, value in self.__dict__.items() if value is not None}
@@ -198,13 +206,13 @@ def release_metric_items(datasets: dict[str, dict]) -> list[dict]:
             for series_id, metric in metrics.items():
                 if series_id not in series_meta or not isinstance(metric, dict):
                     continue
-            for field in OFFICIAL_PAGE_VALUE_KEYS:
-                value = numeric(metric.get(field))
-                if value is None:
-                    continue
-                if series_id == "online_ex_auto_share":
-                    continue
-                items.append(
+                for field in OFFICIAL_PAGE_VALUE_KEYS:
+                    value = numeric(metric.get(field))
+                    if value is None:
+                        continue
+                    if series_id in DERIVED_RATIO_SERIES:
+                        continue
+                    items.append(
                         {
                             "dataset": dataset,
                             "period": record.get("period", ""),
@@ -232,6 +240,7 @@ def check_release_metric(item: dict, refresh: bool) -> AuditResult:
             expected=item["value"],
             source=url,
             note="this point comes from the 国家数据 interactive endpoint; page-text validation is not available in this offline audit",
+            rule=DIRECT_RELEASE_CHECK_NOTE,
         )
     text, cached_path, error = official_page_text(url, refresh)
     if error:
@@ -245,6 +254,7 @@ def check_release_metric(item: dict, refresh: bool) -> AuditResult:
             expected=item["value"],
             source=url,
             note=error,
+            rule=DIRECT_RELEASE_CHECK_NOTE,
         )
     if not text:
         return AuditResult(
@@ -257,6 +267,7 @@ def check_release_metric(item: dict, refresh: bool) -> AuditResult:
             expected=item["value"],
             source=url,
             note="official page text unavailable",
+            rule=DIRECT_RELEASE_CHECK_NOTE,
         )
     matched, evidence = source_contains_value(text, item["series_name"], item["value"])
     return AuditResult(
@@ -270,6 +281,7 @@ def check_release_metric(item: dict, refresh: bool) -> AuditResult:
         source=url,
         evidence=evidence or str(cached_path),
         note=None if matched else "expected number was not found near the official page text",
+        rule=DIRECT_RELEASE_CHECK_NOTE,
     )
 
 
@@ -286,6 +298,8 @@ def check_retail_cumulative(payload: dict, rng: random.Random, sample_size: int)
         if not previous:
             continue
         for series_id, metric in (record.get("metrics") or {}).items():
+            if series_id in DERIVED_RATIO_SERIES:
+                continue
             previous_metric = (previous.get("metrics") or {}).get(series_id) or {}
             for ytd_field, month_field in [
                 ("latest_ytd_value", "latest_month_value"),
@@ -315,7 +329,8 @@ def check_retail_cumulative(payload: dict, rng: random.Random, sample_size: int)
                 source=record.get("url"),
                 note=None
                 if close_enough(expected, observed, tolerance)
-                else "advisory only: cumulative-difference checks can diverge when official tables revise prior cumulative values or report rounded current-month values",
+                else RETAIL_DIFF_CHECK_NOTE,
+                rule=RETAIL_DIFF_CHECK_NOTE,
             )
         )
     return results
@@ -478,11 +493,120 @@ def summarize(results: list[AuditResult]) -> dict:
     return summary
 
 
-def write_report(payload: dict, output_dir: Path) -> tuple[Path, Path]:
+def escape_html(value) -> str:
+    return html.escape("" if value is None else str(value))
+
+
+def status_pill(status: str) -> str:
+    return f'<span class="pill {escape_html(status)}">{escape_html(status)}</span>'
+
+
+def table_rows(results: list[dict], status: str, limit: int | None = None) -> str:
+    rows = [row for row in results if row.get("status") == status]
+    if limit:
+        rows = rows[:limit]
+    if not rows:
+        return '<tr><td colspan="10" class="empty">None</td></tr>'
+    rendered = []
+    for row in rows:
+        rendered.append(
+            f"""<tr>
+<td>{status_pill(row.get("status", ""))}</td>
+<td><code>{escape_html(row.get("check"))}</code></td>
+<td>{escape_html(row.get("dataset"))}</td>
+<td>{escape_html(row.get("period"))}</td>
+<td>{escape_html(row.get("series"))}</td>
+<td><code>{escape_html(row.get("field"))}</code></td>
+<td>{escape_html(row.get("expected"))}</td>
+<td>{escape_html(row.get("observed"))}</td>
+<td class="note">{escape_html(row.get("rule") or "")}</td>
+<td class="note">{escape_html(row.get("note") or row.get("evidence") or "")}</td>
+</tr>"""
+        )
+    return "\n".join(rendered)
+
+
+def write_html_report(payload: dict, html_path: Path) -> None:
+    summary = payload["summary"]
+    results = payload["results"]
+    by_check = "\n".join(
+        f"""<tr>
+<td><code>{escape_html(name)}</code></td>
+<td>{row.get("total", 0)}</td>
+<td>{row.get("pass", 0)}</td>
+<td>{row.get("fail", 0)}</td>
+<td>{row.get("warn", 0)}</td>
+<td>{row.get("skipped", 0)}</td>
+</tr>"""
+        for name, row in summary["by_check"].items()
+    )
+    html_doc = f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Official Data Audit Results</title>
+<style>
+:root {{ color-scheme: light; --ink:#1d1d1f; --muted:#6e6e73; --line:#d2d2d7; --bg:#f5f5f7; --card:#fff; --green:#248a3d; --red:#b42318; --orange:#b25a00; --blue:#0066cc; }}
+* {{ box-sizing:border-box; }}
+body {{ margin:0; font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Arial,sans-serif; background:var(--bg); color:var(--ink); }}
+main {{ max-width:1180px; margin:0 auto; padding:40px 24px 72px; }}
+header {{ display:grid; grid-template-columns:1fr auto; gap:24px; align-items:end; border-bottom:1px solid var(--line); padding-bottom:28px; margin-bottom:24px; }}
+h1 {{ font-size:56px; line-height:.95; letter-spacing:0; margin:0; }}
+.sub {{ color:var(--muted); font-size:17px; line-height:1.45; margin-top:14px; }}
+.score {{ background:var(--card); border:1px solid var(--line); border-radius:18px; padding:20px 24px; min-width:260px; box-shadow:0 18px 44px rgba(0,0,0,.06); }}
+.score b {{ display:block; font-size:44px; line-height:1; }}
+.score span {{ color:var(--muted); font-weight:700; }}
+.grid {{ display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin:24px 0; }}
+.metric {{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px; }}
+.metric strong {{ display:block; font-size:30px; }}
+.metric span {{ color:var(--muted); font-weight:700; }}
+.card {{ background:var(--card); border:1px solid var(--line); border-radius:18px; padding:20px; margin-top:18px; overflow:auto; }}
+h2 {{ font-size:24px; margin:0 0 14px; }}
+table {{ width:100%; border-collapse:collapse; font-size:14px; }}
+th,td {{ text-align:left; padding:10px 9px; border-top:1px solid #ececf0; vertical-align:top; }}
+th {{ color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.02em; }}
+code {{ font-family:"SF Mono",ui-monospace,Menlo,monospace; font-size:.92em; }}
+.pill {{ display:inline-block; min-width:58px; text-align:center; color:white; border-radius:999px; padding:4px 8px; font-weight:800; font-size:12px; }}
+.pass {{ background:var(--green); }} .fail {{ background:var(--red); }} .warn {{ background:var(--orange); }} .skipped {{ background:var(--muted); }}
+.note {{ color:var(--muted); max-width:360px; }}
+.empty {{ color:var(--muted); text-align:center; padding:24px; }}
+@media (max-width: 860px) {{ header {{ grid-template-columns:1fr; }} h1 {{ font-size:40px; }} .grid {{ grid-template-columns:repeat(2,1fr); }} }}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div>
+<h1>Official Data Audit Results</h1>
+<div class="sub">Generated at: <code>{escape_html(payload.get("generated_at"))}</code><br>Seed: <code>{escape_html(payload.get("seed"))}</code> · Samples per pool: <code>{escape_html(payload.get("samples_per_pool"))}</code> · Refresh official: <code>{escape_html(payload.get("refresh_official"))}</code></div>
+</div>
+<div class="score"><span>Hard failures</span><b>{summary.get("fail", 0)}</b></div>
+</header>
+<section class="grid">
+<div class="metric"><span>Total</span><strong>{summary.get("total", 0)}</strong></div>
+<div class="metric"><span>Pass</span><strong>{summary.get("pass", 0)}</strong></div>
+<div class="metric"><span>Fail</span><strong>{summary.get("fail", 0)}</strong></div>
+<div class="metric"><span>Warn</span><strong>{summary.get("warn", 0)}</strong></div>
+<div class="metric"><span>Skipped</span><strong>{summary.get("skipped", 0)}</strong></div>
+</section>
+<section class="card"><h2>Check Summary</h2><table><thead><tr><th>Check</th><th>Total</th><th>Pass</th><th>Fail</th><th>Warn</th><th>Skipped</th></tr></thead><tbody>{by_check}</tbody></table></section>
+<section class="card"><h2>Failures</h2><table><thead><tr><th>Status</th><th>Check</th><th>Dataset</th><th>Period</th><th>Series</th><th>Field</th><th>Expected</th><th>Observed</th><th>Rule</th><th>Note / Evidence</th></tr></thead><tbody>{table_rows(results, "fail")}</tbody></table></section>
+<section class="card"><h2>Warnings</h2><table><thead><tr><th>Status</th><th>Check</th><th>Dataset</th><th>Period</th><th>Series</th><th>Field</th><th>Expected</th><th>Observed</th><th>Rule</th><th>Note / Evidence</th></tr></thead><tbody>{table_rows(results, "warn")}</tbody></table></section>
+<section class="card"><h2>Skipped</h2><table><thead><tr><th>Status</th><th>Check</th><th>Dataset</th><th>Period</th><th>Series</th><th>Field</th><th>Expected</th><th>Observed</th><th>Rule</th><th>Note / Evidence</th></tr></thead><tbody>{table_rows(results, "skipped")}</tbody></table></section>
+<section class="card"><h2>Passed Sample</h2><table><thead><tr><th>Status</th><th>Check</th><th>Dataset</th><th>Period</th><th>Series</th><th>Field</th><th>Expected</th><th>Observed</th><th>Rule</th><th>Evidence</th></tr></thead><tbody>{table_rows(results, "pass", 40)}</tbody></table></section>
+</main>
+</body>
+</html>"""
+    html_path.write_text(html_doc, encoding="utf-8")
+
+
+def write_report(payload: dict, output_dir: Path) -> tuple[Path, Path, Path]:
     output_dir.mkdir(parents=True, exist_ok=True)
     stamp = dt.datetime.now().strftime("%Y%m%d_%H%M%S")
     json_path = output_dir / f"official_data_audit_{stamp}.json"
     md_path = output_dir / f"official_data_audit_{stamp}.md"
+    html_path = output_dir / f"official_data_audit_{stamp}.html"
     json_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
     summary = payload["summary"]
@@ -518,7 +642,8 @@ def write_report(payload: dict, output_dir: Path) -> tuple[Path, Path]:
                 f"- `{row['check']}` {row['dataset']} {row['period']} {row['series']} `{row['field']}`: {row.get('note', '')}"
             )
     md_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    return json_path, md_path
+    write_html_report(payload, html_path)
+    return json_path, md_path, html_path
 
 
 def main() -> int:
@@ -553,11 +678,12 @@ def main() -> int:
         "summary": summarize(results),
         "results": [result.to_dict() for result in results],
     }
-    json_path, md_path = write_report(payload, args.output_dir)
+    json_path, md_path, html_path = write_report(payload, args.output_dir)
 
     summary = payload["summary"]
     print(f"Audit report: {json_path}")
     print(f"Markdown summary: {md_path}")
+    print(f"HTML summary: {html_path}")
     print(
         f"Checks: {summary['total']} total, {summary.get('pass', 0)} pass, "
         f"{summary.get('fail', 0)} fail, {summary.get('warn', 0)} warn, {summary.get('skipped', 0)} skipped"
