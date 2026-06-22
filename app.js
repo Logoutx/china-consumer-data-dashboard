@@ -128,6 +128,55 @@ function byId(id) {
   return document.getElementById(id);
 }
 
+function setStateFromParam(params, paramName, stateKey) {
+  const value = params.get(paramName);
+  if (value && allowedStateValues[stateKey]?.has(value)) state[stateKey] = value;
+}
+
+function applyUrlState() {
+  const params = new URLSearchParams(window.location.search);
+  setStateFromParam(params, "section", "section");
+  setStateFromParam(params, "version", "version");
+  setStateFromParam(params, "mode", "mode");
+  setStateFromParam(params, "range", "range");
+  setStateFromParam(params, "retail", "retailFrequency");
+  setStateFromParam(params, "income", "incomeFrequency");
+  setStateFromParam(params, "scale", "incomeScale");
+  setStateFromParam(params, "city", "propertyCity");
+}
+
+function updateUrlState() {
+  const url = new URL(window.location.href);
+  const params = url.searchParams;
+  params.set("section", state.section);
+  params.set("mode", state.mode);
+  params.set("range", state.range);
+
+  if (state.section === "retail") {
+    params.set("version", state.version);
+    params.set("retail", state.retailFrequency);
+  } else {
+    params.delete("version");
+    params.delete("retail");
+  }
+
+  if (state.section === "income") {
+    params.set("income", state.incomeFrequency);
+    params.set("scale", state.incomeScale);
+  } else {
+    params.delete("income");
+    params.delete("scale");
+  }
+
+  if (state.section === "propertyPrice") {
+    params.set("city", state.propertyCity);
+  } else {
+    params.delete("city");
+  }
+
+  history.replaceState(null, "", url);
+}
+
 function formatMixedSpacing(value) {
   const token = "[A-Za-z0-9]+(?:[.-][A-Za-z0-9]+)*(?:[%％])?";
   return String(value)
@@ -178,6 +227,17 @@ const propertyCoreValue = "core";
 const propertyCapitalNewTierValue = "capitalNewTier";
 const propertyOtherValue = "other";
 const citySeriesSeparator = "__city__";
+
+const allowedStateValues = {
+  section: new Set(Object.keys(sections)),
+  version: new Set(["latest", "published"]),
+  mode: new Set(["value", "yoy", "trend"]),
+  range: new Set(["1Y", "3Y", "5Y", "10Y", "20Y", "Max"]),
+  retailFrequency: new Set(["period", "ttm"]),
+  incomeFrequency: new Set(["quarter", "ttm", "annual"]),
+  incomeScale: new Set(["percapita", "national"]),
+  propertyCity: new Set([propertyOverallValue, propertyCoreValue, propertyCapitalNewTierValue, propertyOtherValue]),
+};
 
 const coreCityGroup = ["北京", "上海", "广州", "深圳"];
 
@@ -650,6 +710,24 @@ function updateRangeControls() {
   });
 }
 
+function updateButtonGroup(selector, datasetKey, value) {
+  document.querySelectorAll(selector).forEach((button) => {
+    const active = button.dataset[datasetKey] === value;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", active ? "true" : "false");
+  });
+}
+
+function updateControlsFromState() {
+  updateButtonGroup("[data-section]", "section", state.section);
+  updateButtonGroup("[data-version]", "version", state.version);
+  updateModeControls();
+  updateRangeControls();
+  updateButtonGroup("[data-retail-frequency]", "retailFrequency", state.retailFrequency);
+  updateButtonGroup("[data-income-frequency]", "incomeFrequency", state.incomeFrequency);
+  updateButtonGroup("[data-income-scale]", "incomeScale", state.incomeScale);
+}
+
 function propertyCityNames() {
   const data = payload();
   if (!data?.cities) return [];
@@ -1086,12 +1164,14 @@ function attachTooltip(container) {
 function render() {
   syncSectionState();
   updateHeadline();
+  updateControlsFromState();
   const grid = byId("chartGrid");
   grid.innerHTML = "";
   allSeriesIds().forEach((seriesId, index) => {
     grid.appendChild(makeCard(seriesId, index));
   });
   applyTypography(document.querySelector("main"));
+  updateUrlState();
 }
 
 function renderError(error) {
@@ -1185,6 +1265,7 @@ function bindControls() {
 }
 
 async function boot() {
+  applyUrlState();
   await loadDataset(state.section);
   bindControls();
   render();
