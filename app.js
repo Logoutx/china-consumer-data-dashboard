@@ -11,6 +11,10 @@ const state = {
 };
 
 const colors = ["#248a3d", "#0066cc", "#b25a00", "#6e52c8", "#0f7b8f", "#b42318", "#5f6f52"];
+const propertyHomePriceColors = {
+  new_home_70_price: colors[0],
+  resale_home_70_price: colors[1],
+};
 
 const sections = {
   retail: {
@@ -622,7 +626,7 @@ function combinedHomePriceLines(seriesId, index) {
     return {
       id,
       label: propertyCitySeries[baseId].label.replace("价格", ""),
-      color: colors[(index + offset) % colors.length],
+      color: propertyHomePriceColors[baseId] || colors[(index + offset) % colors.length],
       points: chartSeries(id),
     };
   });
