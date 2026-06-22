@@ -275,7 +275,11 @@ function displayUnit(seriesId) {
 
 function effectiveMode(seriesId) {
   const meta = seriesMeta(seriesId);
+  if (state.mode === "trend" && !isPropertyPriceSection()) return "value";
   if (isPropertySection() && state.mode === "yoy" && !meta?.yoyLabel) return "value";
+  if (isPropertySection() && state.mode === "trend" && !propertyCitySeries[baseSeriesId(seriesId)] && !isCombinedHomePriceSeries(seriesId)) {
+    return "value";
+  }
   return state.mode;
 }
 
@@ -285,6 +289,7 @@ function formatMetric(seriesId, value, mode) {
   if (seriesId === "online_ex_auto_share") {
     return mode === "value" ? `${fmtPct.format(value)}%` : `${value > 0 ? "+" : ""}${fmtPct.format(value)} pp`;
   }
+  if (mode === "trend") return fmtValue.format(value);
   if (mode === "yoy") return `${value > 0 ? "+" : ""}${fmtPct.format(value)}%`;
   if (unit === "元") return `${fmtWhole.format(value)} 元`;
   if (unit === "个") return `${fmtWhole.format(value)} 个`;
@@ -505,6 +510,21 @@ function computedYoyPoints(points, difference = false) {
     .filter(Boolean);
 }
 
+function homePriceTrendPoints(seriesId) {
+  const raw = payload()
+    .records.map((record) => reportPoint(record, seriesId, "value"))
+    .filter(Boolean)
+    .sort((a, b) => a.date - b.date);
+  let index = 100;
+  return raw.map((point, pointIndex) => {
+    if (pointIndex > 0) index *= 1 + point.value / 100;
+    return {
+      ...point,
+      value: Number(index.toFixed(2)),
+    };
+  });
+}
+
 function filterRange(points) {
   if (!points.length) return points;
   const last = points[points.length - 1].date;
@@ -515,6 +535,9 @@ function filterRange(points) {
 
 function chartSeries(seriesId) {
   if (isCombinedHomePriceSeries(seriesId)) return [];
+  if (isPropertyPriceSection() && state.mode === "trend" && propertyCitySeries[baseSeriesId(seriesId)]) {
+    return filterRange(homePriceTrendPoints(seriesId));
+  }
   if (state.section === "income") {
     let points = incomeAbsolutePoints(seriesId);
     if (state.incomeFrequency === "ttm") points = rollingWindowPoints(points, 4, seriesId);
@@ -560,7 +583,7 @@ function allSeriesIds() {
   if (isPropertyPriceSection() && group?.value === propertyOverallValue) {
     return [
       propertyHomePriceCombinedId,
-      ...preferred.filter((id) => ids.includes(id) && !propertyCitySeries[id]),
+      ...(state.mode === "trend" ? [] : preferred.filter((id) => ids.includes(id) && !propertyCitySeries[id])),
     ];
   }
   if (isPropertyPriceSection() && group?.value !== propertyOverallValue) {
@@ -595,8 +618,36 @@ function updateHeadline() {
   byId("eyebrow").textContent = section.eyebrow || "Official data";
   byId("sourceLink").textContent = section.sourceLabel;
   byId("sourceLink").href = latest?.url || section.sourceUrl;
-  byId("footnoteText").textContent = section.footnote;
+  byId("footnoteText").textContent =
+    isPropertyPriceSection() && state.mode === "trend"
+      ? `${section.footnote} 历史走势为基于官方环比数据连续复权的推算指数，首个可用报告期设为100，不是国家统计局直接发布的定基价格指数；遇到缺月会从下一个可用月继续连乘。`
+      : section.footnote;
   populatePropertyCities();
+  updateModeControls();
+  updateRangeControls();
+}
+
+function syncSectionState() {
+  if (isPropertyPriceSection()) {
+    if (state.mode === "value") state.mode = "yoy";
+    if (state.range === "20Y") state.range = "Max";
+    return;
+  }
+  if (state.mode === "trend") state.mode = "value";
+}
+
+function updateModeControls() {
+  document.querySelectorAll("[data-mode]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.mode === state.mode);
+    button.setAttribute("aria-pressed", button.dataset.mode === state.mode ? "true" : "false");
+  });
+}
+
+function updateRangeControls() {
+  document.querySelectorAll("[data-range]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.range === state.range);
+    button.setAttribute("aria-pressed", button.dataset.range === state.range ? "true" : "false");
+  });
 }
 
 function propertyCityNames() {
@@ -681,6 +732,7 @@ function niceTicks(min, max, count = 4) {
 function isPercentageAxis(seriesId) {
   const unit = displayUnit(seriesId);
   const mode = effectiveMode(seriesId);
+  if (mode === "trend") return false;
   return mode === "yoy" || seriesId === "online_ex_auto_share" || unit === "%";
 }
 
@@ -699,6 +751,7 @@ function ticksWithZero(min, max, count = 4) {
 
 function formatAxis(value, seriesId) {
   const unit = displayUnit(seriesId);
+  if (effectiveMode(seriesId) === "trend") return fmtValue.format(value);
   if (isPercentageAxis(seriesId)) return fmtPct.format(value);
   if (unit === "个") return fmtWhole.format(value);
   if (Math.abs(value) >= 10000) return `${fmtValue.format(value / 10000)}万`;
@@ -882,7 +935,9 @@ function makeCard(seriesId, index) {
   const metricMode = effectiveMode(seriesId);
   const modeLabel =
     isPropertySection()
-      ? metricMode === "value"
+      ? metricMode === "trend"
+        ? "历史走势"
+        : metricMode === "value"
         ? meta.valueLabel || "绝对值"
         : meta.yoyLabel || "同比"
       : state.mode === "value"
@@ -925,6 +980,10 @@ function makeCard(seriesId, index) {
   const tone = latest?.value >= 0 ? "up" : "down";
   const metricClass = isCombinedHomePriceSeries(seriesId) ? "" : state.mode === "yoy" ? tone : "";
   const source = sourceMeta(seriesId);
+  const trendNote =
+    isPropertyPriceSection() && state.mode === "trend"
+      ? "历史走势为基于官方环比数据连续复权的推算指数，首个可用报告期设为100；不是国家统计局直接发布的定基价格指数。"
+      : "";
 
   card.innerHTML = `
     <div class="card-head">
@@ -946,6 +1005,7 @@ function makeCard(seriesId, index) {
           ? `<div class="chart ${isPrimary ? "primary-chart" : ""}"></div>`
           : `<div class="empty">该口径暂无可用${modeLabel}序列</div>`
     }
+    ${trendNote ? `<div class="chart-note">${trendNote}</div>` : ""}
     <div class="card-source">
       ${source.name}（<a href="${source.url}" target="_blank" rel="noreferrer">${source.label}</a>）
     </div>
@@ -1007,6 +1067,7 @@ function attachTooltip(container) {
 }
 
 function render() {
+  syncSectionState();
   updateHeadline();
   const grid = byId("chartGrid");
   grid.innerHTML = "";

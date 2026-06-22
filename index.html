@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>中国消费数据看板</title>
-    <link rel="stylesheet" href="./styles.css?v=38" />
+    <link rel="stylesheet" href="./styles.css?v=39" />
   </head>
   <body>
     <main class="page">
@@ -37,6 +37,7 @@
         <div class="segmented" id="modeControls">
           <button class="active" data-mode="value">绝对值</button>
           <button data-mode="yoy">同比</button>
+          <button data-mode="trend" class="property-price-mode-only">历史走势</button>
         </div>
         <div class="segmented retail-only" id="retailFrequencyControls">
           <button class="active" data-retail-frequency="period">当期</button>
@@ -57,7 +58,7 @@
           <button data-range="5Y">5Y</button>
           <button data-range="10Y">10Y</button>
           <button data-range="20Y">20Y</button>
-          <button class="active" data-range="Max">Max</button>
+          <button class="active" data-range="Max">MAX</button>
         </div>
       </nav>
 
@@ -72,7 +73,7 @@
       </footer>
     </main>
 
-    <script src="./data.js?v=38"></script>
-    <script src="./app.js?v=38"></script>
+    <script src="./data.js?v=39"></script>
+    <script src="./app.js?v=39"></script>
   </body>
 </html>

@@ -157,6 +157,10 @@ a {
   display: none;
 }
 
+.property-price-mode-only {
+  display: none;
+}
+
 body.income-section .income-only {
   display: flex;
 }
@@ -178,6 +182,15 @@ body.property-price-section .property-price-only {
 body.income-section #versionControls,
 body.property-section #versionControls {
   display: none;
+}
+
+body.property-price-section #modeControls [data-mode="value"],
+body.property-price-section #rangeControls [data-range="20Y"] {
+  display: none;
+}
+
+body.property-price-section .property-price-mode-only {
+  display: block;
 }
 
 .segmented button,
@@ -362,6 +375,13 @@ body.property-section #versionControls {
   color: var(--muted);
   font-size: 12px;
   line-height: 1.4;
+}
+
+.chart-note {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 .card-source a {
