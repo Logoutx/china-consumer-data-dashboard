@@ -470,6 +470,33 @@ body.property-section #versionControls {
   line-height: 1.1;
 }
 
+.tooltip-rows {
+  display: grid;
+  gap: 6px;
+  margin-top: 7px;
+}
+
+.tooltip-rows strong {
+  display: grid;
+  grid-template-columns: 8px auto auto;
+  gap: 7px;
+  align-items: center;
+  margin-top: 0;
+  white-space: nowrap;
+}
+
+.tooltip-rows i {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+}
+
+.tooltip-rows b {
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 13px;
+  font-weight: 700;
+}
+
 .tooltip em {
   display: block;
   margin-top: 6px;

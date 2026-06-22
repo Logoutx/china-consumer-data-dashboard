@@ -654,6 +654,19 @@ function makePath(points, xScale, yScale) {
     .join(" ");
 }
 
+function encodeTooltipGroup(group) {
+  return encodeURIComponent(JSON.stringify(group));
+}
+
+function decodeTooltipGroup(value) {
+  if (!value) return null;
+  try {
+    return JSON.parse(decodeURIComponent(value));
+  } catch {
+    return null;
+  }
+}
+
 function niceTicks(min, max, count = 4) {
   if (min === max) {
     const pad = Math.abs(min || 1) * 0.1;
@@ -788,6 +801,9 @@ function drawCombinedChart(container, lines, seriesId) {
     if (arr.length <= 5) return true;
     return index === 0 || index === arr.length - 1 || index % Math.ceil(arr.length / 4) === 0;
   });
+  const pointsByPeriod = new Map(
+    usableLines.map((line) => [line.id, new Map(line.points.map((point) => [point.period, point]))]),
+  );
 
   container.innerHTML = `
     <div class="chart-legend">
@@ -830,7 +846,20 @@ function drawCombinedChart(container, lines, seriesId) {
             const x = xScale(point.date).toFixed(1);
             const y = yScale(point.value).toFixed(1);
             const label = `${line.label} ${formatMetric(line.id, point.value, effectiveMode(line.id))}`;
-            return `<circle class="hit-point" r="13" cx="${x}" cy="${y}" data-index="${index}" data-x="${x}" data-y="${y}" data-color="${line.color}" data-period="${point.period}" data-label="${point.label}" data-value="${label}" data-supplement="${point.supplement ? "1" : ""}"></circle>`;
+            const group = {
+              rows: usableLines
+                .map((item) => {
+                  const samePeriodPoint = pointsByPeriod.get(item.id)?.get(point.period);
+                  if (!samePeriodPoint) return null;
+                  return {
+                    label: item.label,
+                    value: formatMetric(item.id, samePeriodPoint.value, effectiveMode(item.id)),
+                    color: item.color,
+                  };
+                })
+                .filter(Boolean),
+            };
+            return `<circle class="hit-point" r="13" cx="${x}" cy="${y}" data-index="${index}" data-x="${x}" data-y="${y}" data-color="${line.color}" data-period="${point.period}" data-label="${point.label}" data-value="${label}" data-tooltip-group="${encodeTooltipGroup(group)}" data-supplement="${point.supplement ? "1" : ""}"></circle>`;
           }),
         )
         .join("")}
@@ -950,7 +979,16 @@ function attachTooltip(container) {
     tooltip.style.left = `${left}px`;
     tooltip.style.top = `${top}px`;
     const note = target.dataset.supplement ? "<em>非完整发布稿口径</em>" : "";
-    tooltip.innerHTML = `<span>${formatMixedSpacing(target.dataset.label || formatPeriod(target.dataset.period))}</span><strong>${target.dataset.value}</strong>${note}`;
+    const group = decodeTooltipGroup(target.dataset.tooltipGroup);
+    const valueMarkup = group?.rows?.length
+      ? `<div class="tooltip-rows">${group.rows
+          .map(
+            (row) =>
+              `<strong><i style="background:${row.color}"></i><b>${formatMixedSpacing(row.label)}</b>${formatMixedSpacing(row.value)}</strong>`,
+          )
+          .join("")}</div>`
+      : `<strong>${target.dataset.value}</strong>`;
+    tooltip.innerHTML = `<span>${formatMixedSpacing(target.dataset.label || formatPeriod(target.dataset.period))}</span>${valueMarkup}${note}`;
     tooltip.classList.add("visible");
     focus.setAttribute("cx", target.dataset.x);
     focus.setAttribute("cy", target.dataset.y);
