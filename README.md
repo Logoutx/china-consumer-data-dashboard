@@ -53,6 +53,27 @@ python3 tools/merge_property_city_history.py
 
 刷新 JSON 后，需要重新生成 `data.js`，让页面直接加载嵌入数据。
 
+## 官方数据抽查 agent
+
+运行随机审计：
+
+```bash
+python3 tools/audit_official_data.py --samples-per-pool 35 --seed 2026-06-22
+```
+
+它会生成 `audit_reports/official_data_audit_*.json` 和 `.md`，默认使用 `_cache/` 内已保存的官方页面和国家数据原始表。需要重新请求官方页面时：
+
+```bash
+python3 tools/audit_official_data.py --refresh-official --samples-per-pool 50
+```
+
+当前检查包括：
+
+- 发布稿页面数值抽查：随机抽取发布时字段，确认数字能在官方页面文本中找到。
+- 社零累计差分抽查：用相邻累计值复核当月值；该项只作为 warning，因为官方发布稿可能四舍五入或修订前期累计值。
+- 70 城整体复算：用逐城新房/二手房环比数据重算 70 城平均和上涨城市数。
+- 70 城逐城原始表复核：把看板逐城数据回查到国家数据原始表中的城市、月份、指标单元格。
+
 ## 修订处理
 
 社零数据保留“修正后数据”和“发布时数据”两套口径。居民收入和支出当前没有发现发布时字段与最新字段的差异，因此页面不展示版本切换。
