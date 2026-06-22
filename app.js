@@ -166,15 +166,13 @@ function monthDiff(a, b) {
   return (b.getFullYear() - a.getFullYear()) * 12 + b.getMonth() - a.getMonth();
 }
 
-function seriesUnit(seriesId) {
-  return payload().series[baseSeriesId(seriesId)]?.unit;
-}
-
 const propertyCitySeries = {
   new_home_70_price: { cityMetric: "new_home_price", label: "新房价格" },
   resale_home_70_price: { cityMetric: "resale_home_price", label: "二手房价格" },
 };
 
+const propertyHomePriceCombinedId = "home_price_combined";
+const propertyHomePriceBaseIds = ["new_home_70_price", "resale_home_70_price"];
 const propertyOverallValue = "overall";
 const propertyCoreValue = "core";
 const propertyCapitalNewTierValue = "capitalNewTier";
@@ -235,6 +233,33 @@ function citySeriesId(seriesId, city) {
   return `${seriesId}${citySeriesSeparator}${city}`;
 }
 
+function isCombinedHomePriceSeries(seriesId) {
+  return baseSeriesId(seriesId) === propertyHomePriceCombinedId;
+}
+
+function combinedHomePriceSeriesId(city) {
+  return citySeriesId(propertyHomePriceCombinedId, city);
+}
+
+function seriesMeta(seriesId) {
+  const data = payload();
+  const baseId = baseSeriesId(seriesId);
+  if (isCombinedHomePriceSeries(seriesId)) {
+    const reference = data.series.new_home_70_price || {};
+    const city = cityFromSeriesId(seriesId);
+    return {
+      ...reference,
+      name: city ? `${city}房价` : "70 城平均房价",
+      group: city ? "城市明细" : "70 城房价",
+    };
+  }
+  return data.series[baseId] || {};
+}
+
+function seriesUnit(seriesId) {
+  return seriesMeta(seriesId)?.unit;
+}
+
 function selectedPropertyGroup() {
   if (!isPropertyPriceSection()) return null;
   const cities = propertyCityNames();
@@ -249,7 +274,7 @@ function displayUnit(seriesId) {
 }
 
 function effectiveMode(seriesId) {
-  const meta = payload()?.series?.[baseSeriesId(seriesId)];
+  const meta = seriesMeta(seriesId);
   if (isPropertySection() && state.mode === "yoy" && !meta?.yoyLabel) return "value";
   return state.mode;
 }
@@ -280,7 +305,7 @@ function displayPeriod(point) {
 
 function sourceLink(seriesId) {
   const section = currentSection();
-  const meta = payload().series[baseSeriesId(seriesId)] || {};
+  const meta = seriesMeta(seriesId);
   if (meta.methodUrl) return meta.methodUrl;
   if (state.section === "retail" && (seriesId === "online_goods" || seriesId === "online_ex_auto_share")) {
     return section.onlineMethodUrl;
@@ -289,7 +314,7 @@ function sourceLink(seriesId) {
 }
 
 function sourceMeta(seriesId) {
-  const meta = payload().series[baseSeriesId(seriesId)] || {};
+  const meta = seriesMeta(seriesId);
   return {
     name: meta.source_name || "中国国家统计局",
     url: sourceLink(seriesId),
@@ -489,6 +514,7 @@ function filterRange(points) {
 }
 
 function chartSeries(seriesId) {
+  if (isCombinedHomePriceSeries(seriesId)) return [];
   if (state.section === "income") {
     let points = incomeAbsolutePoints(seriesId);
     if (state.incomeFrequency === "ttm") points = rollingWindowPoints(points, 4, seriesId);
@@ -506,7 +532,21 @@ function chartSeries(seriesId) {
   );
 }
 
+function combinedHomePriceLines(seriesId, index) {
+  const city = cityFromSeriesId(seriesId);
+  return propertyHomePriceBaseIds.map((baseId, offset) => {
+    const id = city ? citySeriesId(baseId, city) : baseId;
+    return {
+      id,
+      label: propertyCitySeries[baseId].label.replace("价格", ""),
+      color: colors[(index + offset) % colors.length],
+      points: chartSeries(id),
+    };
+  });
+}
+
 function displaySeriesName(seriesId, meta) {
+  if (isCombinedHomePriceSeries(seriesId)) return meta.name;
   const city = cityFromSeriesId(seriesId);
   const citySeries = propertyCitySeries[baseSeriesId(seriesId)];
   return city && citySeries ? `${city}${citySeries.label}` : meta.name;
@@ -517,9 +557,14 @@ function allSeriesIds() {
   const ids = Object.keys(data.series);
   const preferred = currentSection().preferred;
   const group = selectedPropertyGroup();
+  if (isPropertyPriceSection() && group?.value === propertyOverallValue) {
+    return [
+      propertyHomePriceCombinedId,
+      ...preferred.filter((id) => ids.includes(id) && !propertyCitySeries[id]),
+    ];
+  }
   if (isPropertyPriceSection() && group?.value !== propertyOverallValue) {
-    const citySeriesIds = preferred.filter((id) => ids.includes(id) && propertyCitySeries[id]);
-    return group.cities.flatMap((city) => citySeriesIds.map((id) => citySeriesId(id, city)));
+    return group.cities.map(combinedHomePriceSeriesId);
   }
   if (isPropertySection()) {
     return preferred.filter((id) => ids.includes(id));
@@ -659,6 +704,10 @@ function drawChart(container, points, color, seriesId) {
   const positiveAbsolute = mode === "value" && min >= 0;
   min = positiveAbsolute ? Math.max(0, min - extra) : min - extra;
   max += extra;
+  if (isPercentageAxis(seriesId)) {
+    min = Math.min(min, 0);
+    max = Math.max(max, 0);
+  }
 
   const first = points[0].date;
   const last = points[points.length - 1].date;
@@ -676,7 +725,7 @@ function drawChart(container, points, color, seriesId) {
   });
 
   container.innerHTML = `
-    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${payload().series[baseSeriesId(seriesId)].name}">
+    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${seriesMeta(seriesId).name}">
       <g class="axis">
         ${ticks
           .map((tick) => {
@@ -702,16 +751,98 @@ function drawChart(container, points, color, seriesId) {
           const x = xScale(point.date).toFixed(1);
           const y = yScale(point.value).toFixed(1);
           const label = formatMetric(seriesId, point.value, mode);
-          return `<circle class="hit-point" r="13" cx="${x}" cy="${y}" data-index="${index}" data-x="${x}" data-y="${y}" data-period="${point.period}" data-label="${point.label}" data-value="${label}" data-supplement="${point.supplement ? "1" : ""}"></circle>`;
+          return `<circle class="hit-point" r="13" cx="${x}" cy="${y}" data-index="${index}" data-x="${x}" data-y="${y}" data-color="${color}" data-period="${point.period}" data-label="${point.label}" data-value="${label}" data-supplement="${point.supplement ? "1" : ""}"></circle>`;
         })
         .join("")}
     </svg>`;
   attachTooltip(container);
 }
 
+function drawCombinedChart(container, lines, seriesId) {
+  const width = 760;
+  const height = 238;
+  const pad = { left: 56, right: 16, top: 22, bottom: 34 };
+  const usableLines = lines.filter((line) => line.points.length > 1);
+  const values = usableLines.flatMap((line) => line.points.map((point) => point.value));
+  let min = Math.min(...values);
+  let max = Math.max(...values);
+  const extra = (max - min || Math.abs(max) || 1) * 0.12;
+  const mode = effectiveMode(seriesId);
+  min = mode === "value" && min >= 0 ? Math.max(0, min - extra) : min - extra;
+  max += extra;
+  if (isPercentageAxis(seriesId)) {
+    min = Math.min(min, 0);
+    max = Math.max(max, 0);
+  }
+
+  const dates = usableLines.flatMap((line) => line.points.map((point) => point.date));
+  const first = new Date(Math.min(...dates));
+  const last = new Date(Math.max(...dates));
+  const xScale = (date) => {
+    const denom = last - first || 1;
+    return pad.left + ((date - first) / denom) * (width - pad.left - pad.right);
+  };
+  const yScale = (value) => pad.top + ((max - value) / (max - min)) * (height - pad.top - pad.bottom);
+  const ticks = isPercentageAxis(seriesId) ? ticksWithZero(min, max, 4) : niceTicks(min, max, 4);
+  const years = Array.from(new Set(dates.map((date) => date.getFullYear()))).filter((year, index, arr) => {
+    if (arr.length <= 5) return true;
+    return index === 0 || index === arr.length - 1 || index % Math.ceil(arr.length / 4) === 0;
+  });
+
+  container.innerHTML = `
+    <div class="chart-legend">
+      ${usableLines
+        .map((line) => `<span><i style="background:${line.color}"></i>${line.label}</span>`)
+        .join("")}
+    </div>
+    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${seriesMeta(seriesId).name}">
+      <g class="axis">
+        ${ticks
+          .map((tick) => {
+            const y = yScale(tick);
+            return `<line x1="${pad.left}" x2="${width - pad.right}" y1="${y}" y2="${y}"></line>
+              <text x="4" y="${y + 4}">${formatAxis(tick, seriesId)}</text>`;
+          })
+          .join("")}
+        ${years
+          .map((year) => {
+            const d = new Date(year, 0, 1);
+            const x = Math.max(pad.left, Math.min(width - pad.right, xScale(d)));
+            return `<text x="${x}" y="${height - 8}" text-anchor="middle">${year}</text>`;
+          })
+          .join("")}
+      </g>
+      ${usableLines
+        .map((line, lineIndex) => {
+          const path = makePath(line.points, xScale, yScale);
+          const lineFirst = line.points[0].date;
+          const lineLast = line.points[line.points.length - 1].date;
+          const area = `${path} L${xScale(lineLast).toFixed(1)} ${height - pad.bottom} L${xScale(lineFirst).toFixed(1)} ${height - pad.bottom} Z`;
+          return `<path class="area ${lineIndex ? "secondary" : ""}" d="${area}" fill="${line.color}"></path>
+            <path class="line" d="${path}" stroke="${line.color}"></path>
+            <circle cx="${xScale(lineLast)}" cy="${yScale(line.points[line.points.length - 1].value)}" r="4.5" fill="${line.color}"></circle>`;
+        })
+        .join("")}
+      <circle class="focus-point" data-focus cx="${xScale(last)}" cy="${yScale(usableLines[0].points[usableLines[0].points.length - 1].value)}" r="6" fill="${usableLines[0].color}" stroke="white" stroke-width="2"></circle>
+      ${usableLines
+        .flatMap((line) =>
+          line.points.map((point, index) => {
+            const x = xScale(point.date).toFixed(1);
+            const y = yScale(point.value).toFixed(1);
+            const label = `${line.label} ${formatMetric(line.id, point.value, effectiveMode(line.id))}`;
+            return `<circle class="hit-point" r="13" cx="${x}" cy="${y}" data-index="${index}" data-x="${x}" data-y="${y}" data-color="${line.color}" data-period="${point.period}" data-label="${point.label}" data-value="${label}" data-supplement="${point.supplement ? "1" : ""}"></circle>`;
+          }),
+        )
+        .join("")}
+    </svg>`;
+  attachTooltip(container);
+}
+
 function makeCard(seriesId, index) {
-  const meta = payload().series[baseSeriesId(seriesId)];
+  const meta = seriesMeta(seriesId);
   const points = chartSeries(seriesId);
+  const combinedLines = isCombinedHomePriceSeries(seriesId) ? combinedHomePriceLines(seriesId, index) : [];
+  const combinedUsable = combinedLines.filter((line) => line.points.length > 1);
   const latest = points[points.length - 1];
   const card = document.createElement("article");
   const isPrimary = seriesId === "retail_total" || seriesId === "income_disposable";
@@ -748,8 +879,22 @@ function makeCard(seriesId, index) {
   const citySeries = propertyCitySeries[baseSeriesId(seriesId)];
   const groupLabel = city && citySeries ? "城市明细" : meta.group;
   const metaLabels = [groupLabel, versionLabel, cadenceLabel, scaleLabel, modeLabel].filter(Boolean);
-  const value = latest ? formatMetric(seriesId, latest.value, metricMode) : "--";
+  const value = isCombinedHomePriceSeries(seriesId)
+    ? combinedLines
+        .map((line) => {
+          const lineLatest = line.points[line.points.length - 1];
+          return lineLatest ? `${line.label} ${formatMetric(line.id, lineLatest.value, effectiveMode(line.id))}` : `${line.label} --`;
+        })
+        .join(" / ")
+    : latest
+      ? formatMetric(seriesId, latest.value, metricMode)
+      : "--";
+  const latestCombinedLine = combinedLines.find((line) => line.points.length);
+  const latestDisplay = isCombinedHomePriceSeries(seriesId)
+    ? displayPeriod(latestCombinedLine?.points[latestCombinedLine.points.length - 1])
+    : displayPeriod(latest);
   const tone = latest?.value >= 0 ? "up" : "down";
+  const metricClass = isCombinedHomePriceSeries(seriesId) ? "" : state.mode === "yoy" ? tone : "";
   const source = sourceMeta(seriesId);
 
   card.innerHTML = `
@@ -758,18 +903,28 @@ function makeCard(seriesId, index) {
         <h2>${displaySeriesName(seriesId, meta)}</h2>
         <div class="meta">${metaLabels.join(" · ")}</div>
       </div>
-      <div class="metric">
-        <strong class="${state.mode === "yoy" ? tone : ""}">${value}</strong>
-        <span>${displayPeriod(latest)}</span>
+      <div class="metric ${isCombinedHomePriceSeries(seriesId) ? "combined" : ""}">
+        <strong class="${metricClass}">${value}</strong>
+        <span>${latestDisplay}</span>
       </div>
     </div>
-    ${points.length > 1 ? `<div class="chart ${isPrimary ? "primary-chart" : ""}"></div>` : `<div class="empty">该口径暂无可用${modeLabel}序列</div>`}
+    ${
+      isCombinedHomePriceSeries(seriesId)
+        ? combinedUsable.length
+          ? `<div class="chart"></div>`
+          : `<div class="empty">该口径暂无可用${modeLabel}序列</div>`
+        : points.length > 1
+          ? `<div class="chart ${isPrimary ? "primary-chart" : ""}"></div>`
+          : `<div class="empty">该口径暂无可用${modeLabel}序列</div>`
+    }
     <div class="card-source">
       ${source.name}（<a href="${source.url}" target="_blank" rel="noreferrer">${source.label}</a>）
     </div>
   `;
 
-  if (points.length > 1) {
+  if (isCombinedHomePriceSeries(seriesId) && combinedUsable.length) {
+    drawCombinedChart(card.querySelector(".chart"), combinedLines, seriesId);
+  } else if (points.length > 1) {
     drawChart(card.querySelector(".chart"), points, color, seriesId);
   }
   return card;
@@ -799,6 +954,7 @@ function attachTooltip(container) {
     tooltip.classList.add("visible");
     focus.setAttribute("cx", target.dataset.x);
     focus.setAttribute("cy", target.dataset.y);
+    if (target.dataset.color) focus.setAttribute("fill", target.dataset.color);
     focus.style.opacity = "1";
   };
 

@@ -315,6 +315,13 @@ body.property-section #versionControls {
   line-height: 1;
 }
 
+.metric.combined strong {
+  max-width: 320px;
+  font-size: 22px;
+  line-height: 1.12;
+  white-space: normal;
+}
+
 .metric span {
   display: block;
   margin-top: 8px;
@@ -387,6 +394,35 @@ body.property-section #versionControls {
 
 .area {
   opacity: 0.09;
+}
+
+.area.secondary {
+  opacity: 0.055;
+}
+
+.chart-legend {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.chart-legend span {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.chart-legend i {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
 }
 
 .hit-point {
