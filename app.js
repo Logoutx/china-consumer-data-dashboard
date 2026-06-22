@@ -629,7 +629,6 @@ function updateHeadline() {
 
 function syncSectionState() {
   if (isPropertyPriceSection()) {
-    if (state.mode === "value") state.mode = "yoy";
     if (state.range === "20Y") state.range = "Max";
     return;
   }
@@ -638,6 +637,7 @@ function syncSectionState() {
 
 function updateModeControls() {
   document.querySelectorAll("[data-mode]").forEach((button) => {
+    if (button.dataset.mode === "value") button.textContent = isPropertyPriceSection() ? "环比" : "绝对值";
     button.classList.toggle("active", button.dataset.mode === state.mode);
     button.setAttribute("aria-pressed", button.dataset.mode === state.mode ? "true" : "false");
   });

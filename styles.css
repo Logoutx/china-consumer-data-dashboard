@@ -184,7 +184,6 @@ body.property-section #versionControls {
   display: none;
 }
 
-body.property-price-section #modeControls [data-mode="value"],
 body.property-price-section #rangeControls [data-range="20Y"] {
   display: none;
 }
