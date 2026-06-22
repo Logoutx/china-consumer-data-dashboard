@@ -758,6 +758,13 @@ function formatAxis(value, seriesId) {
   return fmtValue.format(value);
 }
 
+function baselineMarkup(mode, min, max, yScale, pad, width) {
+  if (mode !== "trend" || min > 100 || max < 100) return "";
+  const y = yScale(100).toFixed(1);
+  const labelY = Math.max(pad.top + 12, Number(y) - 7);
+  return `<g class="baseline"><line x1="${pad.left}" x2="${width - pad.right}" y1="${y}" y2="${y}"></line><text x="${pad.left + 6}" y="${labelY}">100</text></g>`;
+}
+
 function drawChart(container, points, color, seriesId) {
   const width = 760;
   const height = container.classList.contains("primary-chart") ? 300 : 238;
@@ -773,6 +780,10 @@ function drawChart(container, points, color, seriesId) {
   if (isPercentageAxis(seriesId)) {
     min = Math.min(min, 0);
     max = Math.max(max, 0);
+  }
+  if (mode === "trend") {
+    min = Math.min(min, 100);
+    max = Math.max(max, 100);
   }
 
   const first = points[0].date;
@@ -809,6 +820,7 @@ function drawChart(container, points, color, seriesId) {
           .join("")}
       </g>
       <path class="area" d="${area}" fill="${color}"></path>
+      ${baselineMarkup(mode, min, max, yScale, pad, width)}
       <path class="line" d="${path}" stroke="${color}"></path>
       <circle cx="${xScale(last)}" cy="${yScale(points[points.length - 1].value)}" r="5" fill="${color}"></circle>
       <circle class="focus-point" data-focus cx="${xScale(last)}" cy="${yScale(points[points.length - 1].value)}" r="6" fill="${color}" stroke="white" stroke-width="2"></circle>
@@ -839,6 +851,10 @@ function drawCombinedChart(container, lines, seriesId) {
   if (isPercentageAxis(seriesId)) {
     min = Math.min(min, 0);
     max = Math.max(max, 0);
+  }
+  if (mode === "trend") {
+    min = Math.min(min, 100);
+    max = Math.max(max, 100);
   }
 
   const dates = usableLines.flatMap((line) => line.points.map((point) => point.date));
@@ -892,6 +908,7 @@ function drawCombinedChart(container, lines, seriesId) {
             <circle cx="${xScale(lineLast)}" cy="${yScale(line.points[line.points.length - 1].value)}" r="4.5" fill="${line.color}"></circle>`;
         })
         .join("")}
+      ${baselineMarkup(mode, min, max, yScale, pad, width)}
       <circle class="focus-point" data-focus cx="${xScale(last)}" cy="${yScale(usableLines[0].points[usableLines[0].points.length - 1].value)}" r="6" fill="${usableLines[0].color}" stroke="white" stroke-width="2"></circle>
       ${usableLines
         .flatMap((line) =>

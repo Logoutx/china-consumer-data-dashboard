@@ -404,6 +404,18 @@ body.property-price-section .property-price-mode-only {
   stroke: var(--hairline);
 }
 
+.baseline line {
+  stroke: rgba(29, 29, 31, 0.36);
+  stroke-dasharray: 5 5;
+  stroke-width: 1.4;
+}
+
+.baseline text {
+  fill: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .line {
   fill: none;
   stroke-width: 3;
