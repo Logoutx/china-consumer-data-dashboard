@@ -1,0 +1,38 @@
+name: CI
+
+# Fast correctness gate for pipeline/ changes: full pytest suite plus a build
+# smoke test against whatever's actually committed under data/ today (catches
+# a build-time crash on real data shapes that synthetic fixtures wouldn't).
+# Kept intentionally small -- this is a pre-merge check, not the data gates
+# (those are Gate A inside pipeline.runner and Gate B in deploy.yml).
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    paths:
+      - 'pipeline/**'
+      - 'data/schemas/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5 # target is ~3 min; this is a hang guard, not the goal itself
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: pytest
+        run: pytest
+
+      - name: Build smoke test (against committed data/)
+        run: python -m pipeline.build --out /tmp/sd-ci

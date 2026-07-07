@@ -1,0 +1,278 @@
+name: Update data
+
+# Polls official-source release windows (pipeline/schedule.py) every two
+# hours during the Beijing business day, runs pipeline.runner for whatever's
+# due, and commits any resulting data/ changes straight to main. Gate A
+# (pipeline.validate, run INSIDE pipeline.runner) is what actually decides
+# whether a release's numbers are trustworthy enough to land -- this
+# workflow's job is only to run the right sources at the right time and
+# react correctly to what the runner reports. See docs/OPERATIONS.md for the
+# full runbook, including the exit-code assumptions this workflow makes
+# about pipeline.runner/pipeline.validate ahead of their landing.
+#
+# After a successful push, this workflow explicitly re-dispatches deploy.yml
+# (gated on vars.PAGES_LIVE, same as deploy.yml's own job-level check) --
+# fixed 2026-07-08 (adversarial review, CRITICAL bug 1): a GITHUB_TOKEN-
+# authored push never fires another workflow's own `on: push` trigger, so
+# deploy.yml's push trigger alone would never actually see this workflow's
+# commits post-cutover.
+
+on:
+  schedule:
+    # Six fixed UTC hours (not a single "every 2 hours" step expression) so
+    # each run has one exact, legible time in the Actions history: 00, 02,
+    # 04, 06, 08, 10 UTC == 08, 10, 12, 14, 16, 18 Beijing (China does not
+    # observe DST, so this mapping is exact year-round). This covers every
+    # release window in pipeline/schedule.py's table (all clustered in the
+    # Beijing morning/workday) with margin on both ends.
+    - cron: '0 0 * * *'
+    - cron: '0 2 * * *'
+    - cron: '0 4 * * *'
+    - cron: '0 6 * * *'
+    - cron: '0 8 * * *'
+    - cron: '0 10 * * *'
+  workflow_dispatch:
+    inputs:
+      source:
+        description: 'Run one source directly, bypassing pipeline.schedule --due (e.g. nbs_cpi)'
+        required: false
+        type: string
+      no_gate:
+        description: 'Pass --no-gate to the runner (emergency bypass of Gate A -- see docs/OPERATIONS.md)'
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+  # actions: write is what lets the "Trigger deploy workflow" step below call
+  # `gh workflow run deploy.yml` -- needed because a push authenticated with
+  # the built-in GITHUB_TOKEN never fires another workflow's `on: push`
+  # (GitHub's own anti-recursion rule, see CRITICAL fix note on that step).
+  actions: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Determine due sources
+        id: due
+        env:
+          DISPATCH_SOURCE: ${{ github.event.inputs.source }}
+        run: |
+          if [ -n "$DISPATCH_SOURCE" ]; then
+            echo "Manual dispatch: running '$DISPATCH_SOURCE' directly (pipeline.schedule bypassed)."
+            printf 'sources=%s\n' "$DISPATCH_SOURCE" >> "$GITHUB_OUTPUT"
+          else
+            # MEDIUM bug fixed 2026-07-08 (adversarial review): a crashing
+            # `pipeline.schedule --due` (e.g. an import error, a malformed
+            # data/series/ file) used to leave $due empty via unchecked
+            # command substitution -- indistinguishable from the honest
+            # "nothing is due right now" steady state, so a real scheduler
+            # failure silently no-opped every single cron tick instead of
+            # ever surfacing as a visible failure.
+            if ! due="$(python -m pipeline.schedule --due)"; then
+              echo "::error::pipeline.schedule --due crashed -- see log above (this is NOT the same as 'nothing due')"
+              exit 1
+            fi
+            sources="$(printf '%s' "$due" | tr '\n' ' ' | sed 's/[[:space:]]*$//')"
+            if [ -z "$sources" ]; then
+              echo "Nothing due right now."
+            else
+              echo "Due: $sources"
+            fi
+            printf 'sources=%s\n' "$sources" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run due sources
+        id: run_sources
+        if: steps.due.outputs.sources != ''
+        env:
+          SOURCES: ${{ steps.due.outputs.sources }}
+          NO_GATE: ${{ github.event.inputs.no_gate }}
+        run: |
+          set +e
+          mkdir -p /tmp/run-artifacts
+          : > /tmp/run-artifacts/blocked_output.txt
+          : > /tmp/run-artifacts/commit_summary.txt
+
+          gate_flag=""
+          if [ "$NO_GATE" = "true" ]; then
+            gate_flag="--no-gate"
+            echo "::warning::--no-gate requested -- Gate A (pipeline.validate) will be bypassed for this run."
+          fi
+
+          blocked=""
+          changed=""
+          title_parts=""
+
+          for s in $SOURCES; do
+            echo "::group::pipeline.runner --source $s"
+            out="$(python -m pipeline.runner --source "$s" $gate_flag 2>&1)"
+            code=$?
+            echo "$out"
+            echo "::endgroup::"
+
+            case "$code" in
+              2)
+                blocked="$blocked $s"
+                {
+                  echo "#### $s"
+                  echo '```'
+                  echo "$out"
+                  echo '```'
+                  echo
+                } >> /tmp/run-artifacts/blocked_output.txt
+                ;;
+              0)
+                change_line="$(printf '%s\n' "$out" | grep -E '^\[.*\] changed: ' || true)"
+                if [ -n "$change_line" ]; then
+                  n_new="$(printf '%s\n' "$change_line" | grep -oP 'changed: \K[0-9]+' || echo 0)"
+                  n_rev="$(printf '%s\n' "$change_line" | grep -oP '[0-9]+(?= revision)' || echo 0)"
+                  if [ "${n_new:-0}" -gt 0 ] || [ "${n_rev:-0}" -gt 0 ]; then
+                    changed="$changed $s"
+                    period="$(printf '%s\n' "$out" | grep -oP 'period: \K\S+' | head -1 || echo unknown)"
+                    title_parts="$title_parts $s@${period:-unknown}"
+                    echo "- $s (${period:-unknown}): $n_new new, $n_rev revised" >> /tmp/run-artifacts/commit_summary.txt
+                  fi
+                fi
+                ;;
+              *)
+                echo "::error::pipeline.runner --source $s exited $code (fetch/parse error, not a Gate A block)"
+                ;;
+            esac
+          done
+
+          {
+            echo "blocked=${blocked# }"
+            echo "changed=${changed# }"
+            echo "title_parts=${title_parts# }"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Upload Gate A validation reports
+        if: steps.run_sources.outputs.blocked != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: gate-a-validation-reports
+          # validate_reports/<source>/gate_report.{json,md} is written by
+          # pipeline.runner itself (_persist_gate_report, fixed 2026-07-08 --
+          # MEDIUM bug 5: this path used to have nothing writing to it at
+          # all, since Gate A's own report only ever lived in a per-run temp
+          # dir nothing copied anywhere durable -- this artifact upload
+          # always silently warned-and-uploaded-nothing). The captured
+          # runner stdout/stderr is included unconditionally too, so the
+          # artifact stays useful even if that copy step itself ever fails.
+          path: |
+            validate_reports/
+            /tmp/run-artifacts/blocked_output.txt
+          if-no-files-found: warn
+
+      - name: File or update Gate A issue
+        if: steps.run_sources.outputs.blocked != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BLOCKED: ${{ steps.run_sources.outputs.blocked }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh label create data-audit --color B60205 --description "A data gate (Gate A or Gate B) blocked a run" 2>/dev/null || true
+
+          body_file="$(mktemp)"
+          {
+            echo "Gate A (ingest validation) blocked: **${BLOCKED}**"
+            echo
+            echo "Run: $RUN_URL"
+            echo
+            echo "### Failing checks"
+            echo
+            cat /tmp/run-artifacts/blocked_output.txt
+          } > "$body_file"
+
+          number="$(gh issue list --search 'in:title "数据门禁拦截 (Gate A)" is:open' --json number --jq '.[0].number' 2>/dev/null || true)"
+          if [ -n "$number" ] && [ "$number" != "null" ]; then
+            gh issue comment "$number" --body-file "$body_file"
+          else
+            gh issue create --title "数据门禁拦截 (Gate A)" --label data-audit --body-file "$body_file"
+          fi
+
+      - name: Commit data changes
+        id: commit
+        if: steps.run_sources.outputs.changed != ''
+        env:
+          TITLE_PARTS: ${{ steps.run_sources.outputs.title_parts }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          if git diff --cached --quiet; then
+            echo "Runner reported changes but nothing is staged under data/ -- skipping commit."
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "data: $TITLE_PARTS" -m "$(cat /tmp/run-artifacts/commit_summary.txt)"
+
+            # LOW bug fixed 2026-07-08 (adversarial review): a concurrent
+            # push to main between our commit and `git push` used to be a
+            # single-shot failure -- the rebase conflict killed the job and
+            # took the just-made commit down with it (nothing else retries
+            # this run). 3 attempts, matching the cron cadence's own
+            # tolerance for "try again shortly".
+            pushed=false
+            for attempt in 1 2 3; do
+              if git pull --rebase origin main && git push; then
+                pushed=true
+                break
+              fi
+              echo "::warning::push attempt $attempt/3 failed (likely a rebase conflict against a concurrent push) -- retrying"
+              git rebase --abort 2>/dev/null || true
+              sleep 5
+            done
+            if [ "$pushed" = "true" ]; then
+              echo "pushed=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "::error::failed to push data changes after 3 attempts"
+              echo "pushed=false" >> "$GITHUB_OUTPUT"
+              exit 1
+            fi
+          fi
+
+      - name: Trigger deploy workflow
+        # CRITICAL bug fixed 2026-07-08 (adversarial review): a push made
+        # with the built-in GITHUB_TOKEN NEVER fires another workflow's
+        # `on: push` (a deliberate GitHub anti-recursion rule, not a bug in
+        # deploy.yml) -- so after cutover, every data commit this workflow
+        # made was silently invisible to deploy.yml and the live site just
+        # went stale forever. Explicitly re-dispatches it instead. Gated on
+        # the SAME vars.PAGES_LIVE check deploy.yml's own job-level `if:`
+        # already enforces -- that job-level check remains the authoritative
+        # gate; this is just an optimization so a pre-cutover run doesn't
+        # dispatch a run that would immediately no-op.
+        if: steps.commit.outputs.pushed == 'true' && vars.PAGES_LIVE == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml
+
+      - name: Fail job if any source was gate-blocked
+        if: steps.run_sources.outputs.blocked != ''
+        env:
+          BLOCKED: ${{ steps.run_sources.outputs.blocked }}
+        run: |
+          echo "::error::Gate A blocked: ${BLOCKED}"
+          exit 1

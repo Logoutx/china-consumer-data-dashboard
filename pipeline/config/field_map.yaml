@@ -6,38 +6,54 @@
 # of the six observation measure names (m/m_yoy/ytd/ytd_yoy/mom/real_yoy). See the
 # "caliber_hint" design note in pipeline/__init__.py for why.
 #
-# PLACEHOLDER IDS: the real catalog (data/catalog.json, data/series/*.json) is being
-# built concurrently by another agent in this same rebuild. The ids below are
-# reasonable, contract-shaped (agency-slug[-qualifier]) guesses so this pipeline is
-# runnable and testable end-to-end today -- they are NOT guaranteed to match
-# whatever ids the real catalog ultimately mints. Reconcile before pointing
-# normalize.py at the real data/series/ tree.
+# RECONCILED 2026-07-08 against the real data/catalog.json (105 series) and the
+# three parsers' actual output (pipeline/parsers/{nbs_cpi,nbs_retail,pboc_money}.py,
+# run against their committed fixtures under pipeline/fixtures/raw/). Every id below
+# is a real, catalog-scaffolded id with a matching data/series/<id>.json file on
+# disk -- confirmed by staging each fixture end-to-end (see docs/OPERATIONS.md /
+# this reconciliation's own report for the staged-diff proof).
+#
+# A source_field the parser emits but with NO matching catalog series is commented
+# out below rather than deleted outright -- each has a one-line reason. Nothing is
+# lost: an unmapped field lands in stage_result.unmapped_fields (runner.py prints
+# it as "add to pipeline/config/field_map.yaml"), a soft, expected signal, not an
+# error. Uncomment + point at a real id once/if the catalog grows to cover it.
 
 nbs-cpi:
-  居民消费价格: nbs-cpi
-  城市: nbs-cpi-urban
-  农村: nbs-cpi-rural
-  食品: nbs-cpi-food
-  非食品: nbs-cpi-nonfood
-  消费品: nbs-cpi-goods
-  服务: nbs-cpi-services
-  不包括食品和能源: nbs-cpi-core
-  食品烟酒及在外餐饮: nbs-cpi-cat-food-tobacco
-  衣着: nbs-cpi-cat-clothing
-  居住: nbs-cpi-cat-housing
-  生活用品及服务: nbs-cpi-cat-household-goods
-  交通通信: nbs-cpi-cat-transport-comm
-  教育文化娱乐: nbs-cpi-cat-education-culture
-  医疗保健: nbs-cpi-cat-health
-  其他用品及服务: nbs-cpi-cat-other
+  居民消费价格: nbs-cpi-yoy
+  非食品: nbs-cpi-nonfood-yoy
+  消费品: nbs-cpi-goods-yoy
+  服务: nbs-cpi-services-yoy
+  不包括食品和能源: nbs-cpi-core-yoy
+  # 一、食品烟酒及在外餐饮 (the CATEGORY row) is the one catalog tracks under
+  # nbs-cpi-food-yoy ("食品烟酒及在外餐饮类居民消费价格指数") -- NOT the bare
+  # "食品" summary row below, which is a narrower, different concept (food only,
+  # excl. tobacco/alcohol/dining out) with no catalog series of its own.
+  食品烟酒及在外餐饮: nbs-cpi-food-yoy
+
+  # -- no catalog series for these; catalog's "prices" section only tracks the
+  #    headline + 5 named breakdowns above (core/food-tobacco-dining/goods/
+  #    nonfood/services), not urban/rural or the other 7 of 8 top-level
+  #    categories. The expenditure side (income-confidence section,
+  #    nbs-consumption-clothing/housing/healthcare/...) already covers those
+  #    category names from a different survey (CNY spend, not a price index) --
+  #    do not conflate the two even though the Chinese labels match.
+  # 城市: (no catalog series -- urban-only CPI not tracked)
+  # 农村: (no catalog series -- rural-only CPI not tracked)
+  # 食品: (no catalog series -- bare "food" CPI not tracked; see 食品烟酒及在外餐饮 above)
+  # 衣着: (no catalog series -- CPI category not tracked; nbs-consumption-clothing is EXPENDITURE, a different concept)
+  # 居住: (no catalog series -- CPI category not tracked; nbs-consumption-housing is EXPENDITURE, a different concept)
+  # 生活用品及服务: (no catalog series -- CPI category not tracked; nbs-consumption-household-services is EXPENDITURE, a different concept)
+  # 交通通信: (no catalog series -- CPI category not tracked; nbs-consumption-transport-communication is EXPENDITURE, a different concept)
+  # 教育文化娱乐: (no catalog series -- CPI category not tracked; nbs-consumption-education-culture is EXPENDITURE, a different concept)
+  # 医疗保健: (no catalog series -- CPI category not tracked; nbs-consumption-healthcare is EXPENDITURE, a different concept)
+  # 其他用品及服务: (no catalog series -- CPI category not tracked; nbs-consumption-other is EXPENDITURE, a different concept)
 
 nbs-retail:
   社会消费品零售总额: nbs-retail-total
   除汽车以外的消费品零售额: nbs-retail-ex-auto
-  限额以上单位消费品零售额: nbs-retail-above-quota-total
+  限额以上单位消费品零售额: nbs-retail-above-quota
   网上商品零售额: nbs-retail-online-goods
-  网上商品和服务零售额: nbs-retail-online-total
-  网上服务零售额: nbs-retail-online-services
   城镇: nbs-retail-urban
   乡村: nbs-retail-rural
   餐饮收入: nbs-retail-catering
@@ -52,29 +68,49 @@ nbs-retail:
   金银珠宝类: nbs-retail-cat-gold-jewelry
   日用品类: nbs-retail-cat-daily-goods
   体育、娱乐用品类: nbs-retail-cat-sports-entertainment
-  书报杂志类: nbs-retail-cat-books-magazines
   家用电器和音像器材类: nbs-retail-cat-household-appliances
   中西药品类: nbs-retail-cat-medicine
   文化办公用品类: nbs-retail-cat-cultural-office
   家具类: nbs-retail-cat-furniture
   通讯器材类: nbs-retail-cat-communication
   石油及制品类: nbs-retail-cat-petroleum
-  汽车类: nbs-retail-cat-auto
+  # "汽车类" is the above-quota commodity-category table's own auto row --
+  # catalog's dedicated id for it is nbs-retail-auto (group "汽车拆分"), not a
+  # "-cat-auto" placeholder; it is a DIFFERENT id from nbs-retail-ex-auto
+  # (which is the *complement*, "everything except cars").
+  汽车类: nbs-retail-auto
   建筑及装潢材料类: nbs-retail-cat-building-materials
+
+  # -- no catalog series for these:
+  # 网上商品和服务零售额: (no catalog series -- the new, broader combined goods+services
+  #   online total post-2026-relabeling (DATA-CONTRACT §2.1); catalog kept tracking
+  #   only the narrower goods-only concept under nbs-retail-online-goods, both
+  #   before and after the relabeling)
+  # 网上服务零售额: (no catalog series -- the new services-only online split; not yet scaffolded)
+  # 书报杂志类: (no catalog series; also absent from this month's own release table --
+  #   see pipeline/parsers/nbs_retail.py's module docstring)
 
 pbc-money:
   M2: pbc-m2
   M1: pbc-m1
   M0: pbc-m0
-  社会融资规模存量: pbc-tsf-stock
-  社会融资规模增量: pbc-tsf-flow
-  对实体经济发放的人民币贷款余额: pbc-tsf-rmb-loans-stock
-  对实体经济发放的人民币贷款增加: pbc-tsf-rmb-loans-flow
-  人民币贷款余额: pbc-rmb-loans-stock
-  人民币贷款增加: pbc-rmb-loans-flow
-  人民币存款余额: pbc-rmb-deposits-stock
-  人民币存款增加: pbc-rmb-deposits-flow
-  本外币存款余额: pbc-deposits-total-stock
-  本外币贷款余额: pbc-loans-total-stock
-  住户存款增加: pbc-household-deposits-flow
-  住户贷款增加: pbc-household-loans-flow
+
+  # -- no catalog series for these: data/catalog.json's "money-credit" section
+  #    only scaffolds M0/M1/M2 (the headline money-supply aggregates). None of
+  #    the TSF (社会融资规模) or loan/deposit stock+flow figures this parser
+  #    also extracts from the same release have a catalog id anywhere in the
+  #    105-series catalog today (confirmed by full-catalog search, not just
+  #    the money-credit section -- they are not hiding under a different
+  #    section/id either).
+  # 社会融资规模存量: (no catalog series)
+  # 社会融资规模增量: (no catalog series)
+  # 对实体经济发放的人民币贷款余额: (no catalog series)
+  # 对实体经济发放的人民币贷款增加: (no catalog series)
+  # 人民币贷款余额: (no catalog series)
+  # 人民币贷款增加: (no catalog series)
+  # 人民币存款余额: (no catalog series)
+  # 人民币存款增加: (no catalog series)
+  # 本外币存款余额: (no catalog series)
+  # 本外币贷款余额: (no catalog series)
+  # 住户存款增加: (no catalog series)
+  # 住户贷款增加: (no catalog series)

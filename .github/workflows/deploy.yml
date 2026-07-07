@@ -1,0 +1,176 @@
+name: Deploy site
+
+# Builds site-data/ from data/ (DATA-CONTRACT.md §10 option A: main holds only
+# data/ + pipeline/ + docs/; this workflow is the only thing that produces
+# site-data/ and publishes it to Pages). Gate B (pipeline.audit) re-verifies
+# the built output against data/archive/ before anything goes live -- on
+# failure the previous deployment simply stays live (Pages only updates on a
+# successful deploy-pages run). See docs/OPERATIONS.md for the runbook.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/**'
+      - 'site/**'
+      - 'pipeline/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  issues: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # This job-level check is the AUTHORITATIVE gate: no deploy runs until
+    # the owner has actually flipped Pages over to the Actions build
+    # (docs/OPERATIONS.md's CUTOVER procedure sets this variable). Manual
+    # dispatch is always allowed, so cutover testing doesn't need the
+    # variable flipped first.
+    #
+    # Corrected 2026-07-08 (adversarial review, CRITICAL bug 1): this
+    # comment used to describe update-data.yml's scheduled data commits as
+    # reaching this job via the `on: push` trigger above, gated only by this
+    # `if:`. That's not how it actually works: a push authenticated with the
+    # built-in GITHUB_TOKEN (which update-data.yml's commit step uses) never
+    # fires ANOTHER workflow's `on: push` at all -- a deliberate GitHub anti-
+    # recursion rule, not something either workflow's YAML controls. Without
+    # update-data.yml explicitly calling `gh workflow run deploy.yml` after
+    # a successful push (which it now does, gated on this same PAGES_LIVE
+    # variable), this job's `on: push` trigger would only ever fire for a
+    # human's own direct push to data/**/site/**/pipeline/** -- never for
+    # the scheduled poller's commits, which is the vast majority of real
+    # traffic once cutover happens. `workflow_dispatch` and a human's direct
+    # push are unaffected by any of this; only GITHUB_TOKEN-authored pushes
+    # (`git push` with the default checkout credentials) are silently inert
+    # as an `on: push` trigger for a DIFFERENT workflow.
+    if: vars.PAGES_LIVE == '1' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build site-data
+        run: python -m pipeline.build --out site-data/
+
+      - name: Audit gate (Gate B)
+        id: audit
+        run: |
+          set +e
+          python -m pipeline.audit --site-data site-data/ --offline > audit_output.txt 2>&1
+          code=$?
+          cat audit_output.txt
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Fail on unexpected audit error
+        if: steps.audit.outputs.code != '0' && steps.audit.outputs.code != '2'
+        run: |
+          echo "::error::pipeline.audit exited ${{ steps.audit.outputs.code }} (not a Gate B block -- likely a crash; see audit_output.txt above)"
+          exit 1
+
+      - name: Upload Gate B audit report
+        if: steps.audit.outputs.code == '2'
+        uses: actions/upload-artifact@v4
+        with:
+          name: gate-b-audit-report
+          # audit_reports/ is tools/audit_official_data.py's existing output
+          # convention (see README.md); pipeline.audit is expected to reuse
+          # it, but that module doesn't exist yet -- audit_output.txt (the
+          # captured stdout/stderr) is included unconditionally as a
+          # guaranteed fallback either way.
+          path: |
+            audit_reports/
+            audit_output.txt
+          if-no-files-found: warn
+
+      - name: File or update Gate B issue
+        if: steps.audit.outputs.code == '2'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh label create data-audit --color B60205 --description "A data gate (Gate A or Gate B) blocked a run" 2>/dev/null || true
+
+          body_file="$(mktemp)"
+          {
+            echo "Gate B (site-data audit) blocked this deploy. The previous deployment stays live."
+            echo
+            echo "Run: $RUN_URL"
+            echo
+            echo "### Audit output"
+            echo
+            echo '```'
+            tail -c 60000 audit_output.txt
+            echo '```'
+          } > "$body_file"
+
+          number="$(gh issue list --search 'in:title "数据审计拦截 (Gate B)" is:open' --json number --jq '.[0].number' 2>/dev/null || true)"
+          if [ -n "$number" ] && [ "$number" != "null" ]; then
+            gh issue comment "$number" --body-file "$body_file"
+          else
+            gh issue create --title "数据审计拦截 (Gate B)" --label data-audit --body-file "$body_file"
+          fi
+
+      - name: Fail if Gate B blocked
+        if: steps.audit.outputs.code == '2'
+        run: exit 1
+
+      - name: Assemble _site
+        run: |
+          set -e
+          mkdir -p _site
+          cp -R site/. _site/
+          mkdir -p _site/site-data
+          cp -R site-data/. _site/site-data/
+
+          # config.mjs's default DATA_BASE resolves relative to site/index.html
+          # on disk, where site-data/ is a sibling of site/ ("../site-data").
+          # Inside _site/, site/* has been flattened to the root and
+          # site-data/ copied alongside it, so the same relative constant
+          # must become "./site-data" or every fetch 404s once deployed.
+          #
+          # Fixed 2026-07-08 (adversarial review, LOW bug 6): both the sed
+          # and the verifying grep used to be quote-style-specific (assumed
+          # single quotes: '../site-data') and the sed ran unscoped across
+          # the WHOLE file -- a harmless-looking quote-style change in
+          # config.mjs (or an unrelated line elsewhere mentioning the same
+          # path, e.g. a comment) would either silently rewrite something it
+          # shouldn't, or make this guard falsely abort a good deploy.
+          # Scoped to the line actually defining DATA_BASE; the check now
+          # accepts either quote style via a character class.
+          sed -i '/DATA_BASE/ s#\.\./site-data#./site-data#' _site/assets/js/config.mjs
+          if ! grep -Eq "DATA_BASE.*[\"']\./site-data[\"']" _site/assets/js/config.mjs; then
+            echo "::error::config.mjs rewrite failed -- DATA_BASE does not resolve to ./site-data in _site/"
+            exit 1
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
