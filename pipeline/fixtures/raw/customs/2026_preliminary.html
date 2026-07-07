@@ -1,0 +1,307 @@
+<!-- FIXTURE NOTE: english.customs.gov.cn/statics/report/preliminary.html is a JS-RENDERED NAV SHELL. The export/import values are injected client-side by /Scripts/statistic.js; there is NO server-side data table and NO static JSON endpoint exposed. This fixture is retained as EVIDENCE of that dead-end. Reachable monthly exports/imports require: (a) GACC Chinese site via a real browser / US-runner (HTTP 412 anti-bot challenge), or (b) DBnomics CN trade series (monthly, USD) as a CI-friendly fallback, or (c) NBS activity-batch 货物进出口 (RMB). -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>News - Newsroom - GACC</title>
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width" />
+    <link href="../../Content/CSS/Site.css" rel="stylesheet" />
+
+    <script src="../../Scripts/jquery-1.8.2.min.js"></script>
+
+    <script src="../../Scripts/Global.js"></script>
+
+
+
+    <!--[if lt IE 7]>
+    <script src="/Scripts/ie7.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="g-top">
+        <div class="g-top-lks"><a href="/">Home</a><span>|</span><a href="http://www.customs.gov.cn"
+                target="_blank">中文站</a></div>
+    </div>
+    <div class="g-m">
+
+        <div class="g-hdr">
+            <div class="g-hdr-l g-hdr-logo"><a href="/home/index"><img src="/Images/Image/logo.png" alt="logo" /></a>
+            </div>
+            <div class="g-hdr-r">
+                <div class="g-hdr-tos">
+                    <div class="sb">
+                        <form id="formFTS" method="post" action="/search/search">
+                            <input id="iptFTS" class="ipt-txt" type="text" name="keyword" value="" /><input
+                                class="ipt-sbt" id="iptbtn" type="button" value="" />
+                        </form>
+                    </div>
+                    <div class="rsz"><img id="rszSmall" src="/Images/Image/g-hdr-tos-rsz-s.gif" alt="" /><img
+                            id="rszLarge" src="/Images/Image/g-hdr-tos-rsz-l.gif" alt="" /></div>
+                </div>
+                <div class="g-hdr-ttl">
+                </div>
+                <div class="clr"></div>
+            </div>
+            <div class="clr"></div>
+        </div>
+        <div class="g-nav">
+            <div class="g-nav-pf"><img src="/Images/Image/gacc.png" alt="g-nav-pf"></div>
+            <ul>
+
+                <li class="g-nav-itm home"><a href="/index/home"><img class="home" src="/Images/Image/home.gif"
+                            alt="home" /></a></li>
+                <li class="g-nav-itm">
+                    <a href="/about/mission">About GACC<img class="ab" src="/Images/Image/g-nav-ab.gif"
+                            alt="arrow-down" /></a>
+                    <div class="sub">
+                        <ul>
+                            <li><a href="/about/mission">• Mission</a></li>
+                            <li class="sub-spl"></li>
+                            <li><a href="/about/theminister">• The Minister</a></li>
+                            <li class="sub-spl"></li>
+                            <li><a href="/about/principalofficials">• Principal Officials</a></li>
+                            <li class="sub-spl"></li>
+                            <li><a href="/Organizational/html/OrganizationalFunctions.html">• Organizational
+                                    Functions</a></li>
+                            <li class="sub-spl"></li>
+                            <li><a href="/about/organizationalstructure">• Organizational Structure</a></li>
+                            <li class="sub-spl"></li>
+                            <li><a href="/about/rankregime">• Rank Regime</a></li>
+                            <li class="sub-spl"></li>
+                            <li><a href="/about/annualreports">• Annual Reports</a></li>
+                            <li class="sub-end"></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="g-nav-itm">
+                    <a href="/Legislation/Laws">Legislation<img class="ab" src="/Images/Image/g-nav-ab.gif"
+                            alt="arrow-down" /></a>
+                    <div class="sub">
+                        <ul>
+                            <li><a href="/Legislation/Laws">• Laws &amp; Regulations</a></li>
+                            <li class="sub-spl"></li>
+                            <li><a href="/Legislation/Order">• Customs Decrees</a></li>
+                            <li class="sub-spl"></li>
+                            <li><a href="/Legislation/Announcement">• Customs Announcements</a></li>
+                            <li class="sub-end"></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="g-nav-itm">
+                    <a href="/newsroom/news">Newsroom<img class="ab" src="/Images/Image/g-nav-ab.gif"
+                            alt="arrow-down" /></a>
+                    <div class="sub">
+                        <ul>
+                            <li><a href="/newsroom/news">• News</a></li>
+                            <li class="sub-spl"></li>
+                            <li><a href="/newsroom/Special">• Special Features</a></li>
+                            <li class="sub-end"></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="g-nav-itm"><a href="/Reform/html/index.html">Customs Reform</a></li>
+                <li class="g-nav-itm">
+                    <a href="/service/index">Service Center<img class="ab" src="/Images/Image/g-nav-ab.gif"
+                            alt="arrow-down" /></a>
+                    <div class="sub">
+                        <ul>
+                            <li><a href="/service/guide">• Service Guide</a></li>
+                            <li class="sub-spl"></li>
+                            <li><a href="/service/formalities">• General Formalities</a></li>
+                            <li class="sub-spl"></li>
+                            <li><a href="/service/query">• Clearance Status</a></li>
+                            <li class="sub-spl"></li>
+                            <li><a href="/service/characteristic">• Service Navigation</a></li>
+                            <li class="sub-end"></li>
+                            <li><a href="http://ldcorigin.customs.gov.cn" target="_blank">• LDCs'Certification of
+                                    Origin</a></li>
+                            <li class="sub-end"></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="g-nav-itm">
+                    <a href="/statics/report/preliminary.html" target="_blank">Statistics<img class="ab"
+                            src="/Images/Image/g-nav-ab.gif" alt="arrow-down"></a>
+                    <div class="sub">
+                        <ul>
+                            <li><a href="/statics/report/preliminary.html" target="_blank">• Preliminary Release</a>
+                            </li>
+                            <li class="sub-spl"></li>
+                            <li><a href="http:/statics/report/trade.html" target="_blank">• Trade Indices</a></li>
+                            <li class="sub-spl"></li>
+                            <li><a href="/statics/report/monthly.html" target="_blank">• Monthly Bulletin</a></li>
+                            <li class="sub-spl"></li>
+                            <li><a href="/Statistics/Statistics?ColumnId=3">• Quarterly Release</a></li>
+                            <li class="sub-spl"></li>
+                            <li><a href="/Statistics/Statistics?ColumnId=4">• Release Calendar</a></li>
+                            <li class="sub-spl"></li>
+                            <li><a href="/Statistics/Statistics?ColumnId=5">• Explainatory Notes</a></li>
+                            <li class="sub-spl"></li>
+                            <li><a href="/Statistics/Statistics?ColumnId=6">• Coverage of Major Imports &amp;
+                                    Exports</a></li>
+                            <li class="sub-spl"></li>
+                            <li><a href="http://stats.customs.gov.cn/indexEn" target="_blank">• Interactive Tables</a>
+                            </li>
+                            <li class="sub-end"></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+            <div class="clr"></div>
+        </div>
+
+
+
+        <div class="g-pth"><a href="/">Home</a> &gt; <a href="/statics/report/preliminary.html">Statistics</a> &gt; <a
+                class="g-pth-cur">Monthly Bulletin</a></div>
+        <div class="nr-n-container">
+            <div class="nr-n-banner"></div>
+            <div class="nr-n-left nr-n-nav">
+                <div class="nr-n-nav-title"><img src="/Images/Image/logo-tiny.gif" alt="logo-tiny" />Statistics</div>
+                <ul>
+                    <li class="preliactive"><a href="/statics/report/preliminary.html" target="_blank">Preliminary
+                            Release</a></li>
+                    <li><a href="/statics/report/trade.html">Trade Indices</a></li>
+                    <li><a href="/statics/report/monthly.html" target="_blank">Monthly Bulletin</a></li>
+                    <li><a href="/statistics/Statistics?ColumnId=3">Quarterly Release</a></li>
+                    <li><a href="/statistics/Statistics?ColumnId=4">Release Calendar</a></li>
+                    <li><a href="/statistics/Statistics?ColumnId=5">Explainatory Notes</a></li>
+                    <li><a href="/statistics/Statistics?ColumnId=6">Coverage of Major Imports & Exports</a></li>
+                    <li><a href="http://stats.customs.gov.cn/indexEn" target="_blank">Interactive Tables</a></li>
+                </ul>
+            </div>
+            <div class="nr-n-right nr-n-content Statistics">
+                <div class="nr-n-content-title">Statistics</div>
+                <div class="nr-n-content-title-bdr"><span></span></div>
+                <div class="nr-n-content-detail ">
+                    <div>Due to data verification after the preliminary release, the monthly bulletin is of more
+                        accuracy.</div>
+                    <div class="m-report-title">
+                        <img src="/Images/Image/ico_year.png"> <span>Year</span><select id="preliminarysel">
+						    <option value="2026">2026</option>
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                            <option value="2019">2019</option>
+                            <option value="2018">2018</option>
+                        </select>
+                    </div>
+                    <table><thead><tr><th>Title</th><th>Month</th></tr></thead><tbody><tr><td>(1) China's Total Export & Import Values (in CNY)</td><td><span>Jan.</span><a href=http://english.customs.gov.cn/Statics/d11e30df-faa3-4a4d-9816-bada832cafe8.html> Feb.</a><a href=http://english.customs.gov.cn/Statics/78463b33-7b5e-4e29-aee5-c65e42a69727.html> Mar.</a><a href=http://english.customs.gov.cn/Statics/d90956e5-f66c-46b5-80d7-a62e5097a073.html> Apr.</a><a href=http://english.customs.gov.cn/Statics/135af06e-2fd2-4ee9-8f7c-3978077e90a1.html> May.</a><span>Jun.</span></br><span>Jul.</span><span>Aug.</span><span>Sep.</span><span>Oct.</span><span>Nov.</span><span>Dec.</span></td></tr><tr><td>(1) China's Total Export & Import Values (in USD)</td><td><span>Jan.</span><a href=http://english.customs.gov.cn/Statics/01692e74-9069-4562-a742-b382d3634cef.html> Feb.</a><a href=http://english.customs.gov.cn/Statics/d9c40839-ca1e-4726-b570-1e41e043103f.html> Mar.</a><a href=http://english.customs.gov.cn/Statics/83730e94-9e83-470d-ae9e-5c79a84a1a39.html> Apr.</a><a href=http://english.customs.gov.cn/Statics/d7718500-aa23-4590-9996-a31a8827798c.html> May.</a><span>Jun.</span></br><span>Jul.</span><span>Aug.</span><span>Sep.</span><span>Oct.</span><span>Nov.</span><span>Dec.</span></td></tr><tr><td>(2) China's Total Export & Import Values by Trade Mode (in CNY)</td><td><span>Jan.</span><a href=http://english.customs.gov.cn/Statics/54bbd1e5-c847-431e-989a-2b9bb4959bb9.html> Feb.</a><a href=http://english.customs.gov.cn/Statics/b6cab0c5-2c57-4bc8-bfac-c054a8b926ae.html> Mar.</a><a href=http://english.customs.gov.cn/Statics/7b98f445-00e1-49ae-b223-fb0727d45d55.html> Apr.</a><a href=http://english.customs.gov.cn/Statics/7eb3212c-e510-420e-882a-6dbeab497bb2.html> May.</a><span>Jun.</span></br><span>Jul.</span><span>Aug.</span><span>Sep.</span><span>Oct.</span><span>Nov.</span><span>Dec.</span></td></tr><tr><td>(2) China's Total Export & Import Values by Trade Mode (in USD)</td><td><span>Jan.</span><a href=http://english.customs.gov.cn/Statics/2ab1ef1a-bb1f-4056-a243-9d4cc13ef208.html> Feb.</a><a href=http://english.customs.gov.cn/Statics/cbcbc9da-5cc9-4517-af7f-ddb50721e587.html> Mar.</a><a href=http://english.customs.gov.cn/Statics/9c0d6218-d169-4f18-9c61-eefa22787a66.html> Apr.</a><a href=http://english.customs.gov.cn/Statics/1a329ca9-6929-4cdc-be44-3d554117d4df.html> May.</a><span>Jun.</span></br><span>Jul.</span><span>Aug.</span><span>Sep.</span><span>Oct.</span><span>Nov.</span><span>Dec.</span></td></tr><tr><td>(3) China's Total Export & Import Values by Trade Mode (in CNY)</td><td><span>Jan.</span><a href=http://english.customs.gov.cn/Statics/4f58c418-bd92-44dc-a89f-3c68fd9fd6b1.html> Feb.</a><a href=http://english.customs.gov.cn/Statics/532f8eca-2739-4244-8f80-e78ccdea26bd.html> Mar.</a><a href=http://english.customs.gov.cn/Statics/a9c22dfe-ba1f-4130-8d70-cd77d3ebc70f.html> Apr.</a><a href=http://english.customs.gov.cn/Statics/0a9bd1a4-d32e-4e67-80fc-0230148c49d5.html> May.</a><span>Jun.</span></br><span>Jul.</span><span>Aug.</span><span>Sep.</span><span>Oct.</span><span>Nov.</span><span>Dec.</span></td></tr><tr><td>(3) China's Total Export & Import Values by Trade Mode (in USD)</td><td><span>Jan.</span><a href=http://english.customs.gov.cn/Statics/0a7c324d-d923-4a85-b777-7cc0f5121ace.html> Feb.</a><a href=http://english.customs.gov.cn/Statics/40058de2-fd69-4c8a-8e72-e7b369566f1c.html> Mar.</a><a href=http://english.customs.gov.cn/Statics/eb84ec53-5e4f-47a7-baec-5b4c69be0b39.html> Apr.</a><a href=http://english.customs.gov.cn/Statics/a1859932-7d65-479f-a9bc-812112a1c6ad.html> May.</a><span>Jun.</span></br><span>Jul.</span><span>Aug.</span><span>Sep.</span><span>Oct.</span><span>Nov.</span><span>Dec.</span></td></tr><tr><td>(4) China's Total Export & Import Values by Country/Region (in CNY)</td><td><span>Jan.</span><a href=http://english.customs.gov.cn/Statics/47e53257-a14f-4a19-a17c-b5beea64f822.html> Feb.</a><a href=http://english.customs.gov.cn/Statics/2e61c8a1-17b2-4074-b909-c039ccf8c8fb.html> Mar.</a><a href=http://english.customs.gov.cn/Statics/37b6afd7-37d4-43b4-831d-85e6f7d606a8.html> Apr.</a><a href=http://english.customs.gov.cn/Statics/e6d5a834-73ad-4607-b21e-e9dde542a59f.html> May.</a><span>Jun.</span></br><span>Jul.</span><span>Aug.</span><span>Sep.</span><span>Oct.</span><span>Nov.</span><span>Dec.</span></td></tr><tr><td>(4) China's Total Export & Import Values by Country/Region (in USD)</td><td><span>Jan.</span><a href=http://english.customs.gov.cn/Statics/0ed684ce-a5d7-45b8-ab53-0f30b3a8c7c1.html> Feb.</a><a href=http://english.customs.gov.cn/Statics/66580503-6688-49b2-bd23-de154e5677d5.html> Mar.</a><a href=http://english.customs.gov.cn/Statics/ad8e96d8-c573-4828-9232-25f075935841.html> Apr.</a><a href=http://english.customs.gov.cn/Statics/173efb71-7962-4fb2-a623-615fcc627ec0.html> May.</a><span>Jun.</span></br><span>Jul.</span><span>Aug.</span><span>Sep.</span><span>Oct.</span><span>Nov.</span><span>Dec.</span></td></tr><tr><td>(5) China's Major Exports by Quantity and Value (in CNY)</td><td><span>Jan.</span><a href=http://english.customs.gov.cn/Statics/d9247535-8b0d-4704-b7f2-6cab92d00671.html> Feb.</a><a href=http://english.customs.gov.cn/Statics/c2e12291-4e62-44c2-98a1-080f892c9712.html> Mar.</a><a href=http://english.customs.gov.cn/Statics/9d4ecd9e-340d-4d56-ac64-f5875efc9d6a.html> Apr.</a><a href=http://english.customs.gov.cn/Statics/f1a0fe1f-c5ad-45c4-98ec-67f9714d7606.html> May.</a><span>Jun.</span></br><span>Jul.</span><span>Aug.</span><span>Sep.</span><span>Oct.</span><span>Nov.</span><span>Dec.</span></td></tr><tr><td>(5) China's Major Exports by Quantity and Value (in USD)</td><td><span>Jan.</span><a href=http://english.customs.gov.cn/Statics/bd273400-717c-41ab-ac57-8f85a2add7a5.html> Feb.</a><a href=http://english.customs.gov.cn/Statics/e685d609-01eb-470c-804e-08ae239e53a1.html> Mar.</a><a href=http://english.customs.gov.cn/Statics/0556071c-9550-4dd3-abdf-369ebd986c3c.html> Apr.</a><a href=http://english.customs.gov.cn/Statics/1f00d543-64ef-482d-830f-7eee41a7c576.html> May.</a><span>Jun.</span></br><span>Jul.</span><span>Aug.</span><span>Sep.</span><span>Oct.</span><span>Nov.</span><span>Dec.</span></td></tr><tr><td>(6) China's Major Imports by Quantity and Value (in CNY)</td><td><span>Jan.</span><a href=http://english.customs.gov.cn/Statics/04cfaf0d-9828-4890-867e-9ad0cd992721.html> Feb.</a><a href=http://english.customs.gov.cn/Statics/f67824b9-c94c-4952-aa92-9405279bf73a.html> Mar.</a><a href=http://english.customs.gov.cn/Statics/1390956e-3bdf-49c8-b227-8b49e214d602.html> Apr.</a><a href=http://english.customs.gov.cn/Statics/0325517b-2a96-4401-859d-022931fd2462.html> May.</a><span>Jun.</span></br><span>Jul.</span><span>Aug.</span><span>Sep.</span><span>Oct.</span><span>Nov.</span><span>Dec.</span></td></tr><tr><td>(6) China's Major Imports by Quantity and Value (in USD)</td><td><span>Jan.</span><a href=http://english.customs.gov.cn/Statics/c67a053f-e842-4377-b98e-e1632a01c076.html> Feb.</a><a href=http://english.customs.gov.cn/Statics/55c82b59-54f7-4271-b7e2-9deadd0c0b08.html> Mar.</a><a href=http://english.customs.gov.cn/Statics/dbefe77d-88e7-42ea-9dd7-3074cd5c3b8a.html> Apr.</a><a href=http://english.customs.gov.cn/Statics/8e12aa3e-3b78-47b8-9e4e-80c659b03534.html> May.</a><span>Jun.</span></br><span>Jul.</span><span>Aug.</span><span>Sep.</span><span>Oct.</span><span>Nov.</span><span>Dec.</span></td></tr><tr><td>(7) Statistics Bulletin on Freight Supervision</td><td><span>Jan.</span><span>Feb.</span><span>Mar.</span><span>Apr.</span><span>May.</span><span>Jun.</span></br><span>Jul.</span><span>Aug.</span><span>Sep.</span><span>Oct.</span><span>Nov.</span><span>Dec.</span></td></tr><tr><td>(8)Statistics Bulletin on Goods Inspection & Quarantine</td><td><span>Jan.</span><span>Feb.</span><span>Mar.</span><span>Apr.</span><span>May.</span><span>Jun.</span></br><span>Jul.</span><span>Aug.</span><span>Sep.</span><span>Oct.</span><span>Nov.</span><span>Dec.</span></td></tr></tbody></table>
+                </div>
+            </div>
+            <div class="clr"></div>
+        </div>
+
+
+        <div class="g-ftr">
+            <div class="g-ftr-top"></div>
+            <div class="g-ftr-cnt">
+                <div class="g-ftr-l">
+                    <p class="g-ftr-title">About GACC</p>
+                    <p><a href="/about/mission">Mission</a></p>
+                    <p><a href="/about/theminister">The Minister</a></p>
+                    <p><a href="/about/principalOfficials">Principal Officials</a></p>
+                    <p><a href="/about/organizationalstructure">Organizational Structure</a></p>
+                    <p><a href="/about/rankregime">Rank Regime</a></p>
+                    <p><a href="/about/annualReports">Annual Reports </a></p>
+                </div>
+                <div class="g-ftr-splt"></div>
+                <div class="g-ftr-c">
+                    <p class="g-ftr-title">Quick Links</p>
+                    <p><a href="/Legislation/Laws">Legislation</a></p>
+                    <p><a href="/newsroom/news">News</a></p>
+                    <p><a href="/newsroom/statistics">China Customs Statistics</a></p>
+                    <p><a href="/OnlineInterview">Online Interview</a></p>
+                    <p><a href="/service/guide">Service Guide</a></p>
+                    <p><a href="/service/query">Clearance Status</a></p>
+                    <p><a href="/service/characteristic">Service Navigation</a></p>
+                </div>
+                <div class="g-ftr-splt"></div>
+                <div class="g-ftr-r">
+                    <p class="ft-title">Friendly Links</p>
+                    <p><a href="http://www.china.com.cn">www.china.com.cn</a></p>
+                    <p><a href="http://www.haiguan.info">www.haiguan.info</a></p>
+                    <p><a href="http://www.e-to-china.com">www.e-to-china.com</a></p>
+                </div>
+                <div class="clr"></div>
+            </div>
+            <div class="g-ftr-btm"></div>
+        </div>
+    </div>
+    <div class="g-btm">
+        <p><a href="/statement.html">STATEMENT</a></p>
+        <p>General Administration of Customs of the People's Republic of China
+        <p>Address: No.6. Jianguomennei Avenue, Dongcheng District, Beijing, China &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Postcode: 100730
+    </div>
+    <div class="g-btm-edg"></div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#preliminarysel").change(function () {
+                if ($("#preliminarysel").val() == "2018") {
+                    location.replace("http://english.customs.gov.cn/statics/report/preliminary2018.html")
+                }
+                if ($("#preliminarysel").val() == "2020") {
+                    location.replace("http://english.customs.gov.cn/statics/report/preliminary2020.html")
+                }
+                if ($("#preliminarysel").val() == "2021") {
+                    location.replace("http://english.customs.gov.cn/statics/report/preliminary2021.html")
+                }
+                if ($("#preliminarysel").val() == "2019") {
+                    location.replace("http://english.customs.gov.cn/statics/report/preliminary2019.html")
+                }
+                if ($("#preliminarysel").val() == "2022") {
+                    location.replace("http://english.customs.gov.cn/statics/report/preliminary2022.html")
+                }
+                if ($("#preliminarysel").val() == "2023") {
+                    location.replace("http://english.customs.gov.cn/statics/report/preliminary2023.html")
+                }
+                if ($("#preliminarysel").val() == "2024") {
+                    location.replace("http://english.customs.gov.cn/statics/report/preliminary2024.html")
+                }
+				if ($("#preliminarysel").val() == "2025") {
+                    location.replace("http://english.customs.gov.cn/statics/report/preliminary2025.html")
+                }
+                if ($("#preliminarysel").val() == "2026") {
+                    location.replace("http://english.customs.gov.cn/statics/report/preliminary.html")
+                }
+            });
+            var controller = 'newsroom'.toLowerCase();
+            var index = 0;
+            switch (controller) {
+                case "home":
+                    index = 0;
+                    break;
+                case "about":
+                    index = 1;
+                    break;
+                case "legislation":
+                    index = 2;
+                    break;
+                case "newsroom":
+                    index = 3;
+                    break;
+                case "onlineinterview":
+                    index = 4;
+                    break;
+                case "service":
+                    index = 5;
+                    break;
+                default:
+                    break;
+            }
+            setFocusNav(index);
+        });
+    </script>
+    <script src="/Scripts/statistic.js"></script>
+
+
+</body>
+
+</html>

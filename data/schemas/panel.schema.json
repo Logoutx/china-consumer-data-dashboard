@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://china-consumer-dashboard/schemas/panel.schema.json",
+  "title": "Panel file",
+  "description": "A matrix series: dimensions x period-aligned measure arrays. Used for the 70-city price panel. One catalog entry, not one-per-cell. See docs/DATA-CONTRACT.md section 5.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "id", "name_zh", "name_en", "value_type", "freq", "dimensions", "measures", "periods", "cells", "source", "generated_at"],
+  "properties": {
+    "schema": { "const": "panel/v1" },
+    "id": { "type": "string", "pattern": "^[a-z]+(-[a-z0-9]+)+$" },
+    "name_zh": { "type": "string" },
+    "name_en": { "type": "string" },
+    "unit_zh": { "type": "string" },
+    "unit_en": { "type": "string" },
+    "value_type": { "enum": ["level", "index", "mom_pct", "yoy_pct", "rate_pct", "count", "ratio"] },
+    "freq": { "enum": ["M", "Q", "A"] },
+    "decimals": { "type": "integer", "minimum": 0, "maximum": 6 },
+    "dimensions": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+      "description": "Ordered category lists, e.g. {city:[...], metric:[new_home, resale_home]}. The last dimension (metric) keys the cell leaves; earlier dimensions nest the cells object."
+    },
+    "measures": {
+      "type": "array",
+      "items": { "enum": ["m", "m_yoy", "ytd", "ytd_yoy", "mom", "real_yoy"] },
+      "minItems": 1
+    },
+    "periods": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^\\d{4}(-(0[1-9]|1[0-2])|-Q[1-4])?$" },
+      "description": "Ascending. Every measure array is index-aligned to this list."
+    },
+    "cells": {
+      "type": "object",
+      "description": "Nested by all-but-last dimension, leaf keyed by the last dimension, then by measure -> array aligned to periods[]. Missing values are null.",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": ["number", "null"] }
+          }
+        }
+      }
+    },
+    "revisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["period", "measure", "old", "new", "revised_on", "source"],
+        "properties": {
+          "city": { "type": "string" },
+          "metric": { "type": "string" },
+          "period": { "type": "string", "pattern": "^\\d{4}(-(0[1-9]|1[0-2])|-Q[1-4])?$" },
+          "measure": { "enum": ["m", "m_yoy", "ytd", "ytd_yoy", "mom", "real_yoy"] },
+          "old": { "type": ["number", "null"] },
+          "new": { "type": ["number", "null"] },
+          "revised_on": { "type": ["string", "null"] },
+          "source": { "type": "string" },
+          "note": { "type": "string" }
+        },
+        "description": "Cell-level revision; city/metric identify the cell (generalize to your dimension names)."
+      },
+      "default": []
+    },
+    "breaks": { "type": "array", "default": [] },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["agency"],
+      "properties": {
+        "agency": { "enum": ["nbs", "pbc", "mof", "mohurd", "customs", "caam", "safe", "cflp"] },
+        "dataset_zh": { "type": "string" },
+        "dataset_en": { "type": "string" },
+        "url": { "type": "string", "format": "uri" }
+      }
+    },
+    "generated_at": { "type": "string", "format": "date-time" }
+  }
+}

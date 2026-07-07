@@ -1,0 +1,6160 @@
+{
+  "generated_at": "2026-07-07T17:36:17.757550+00:00",
+  "generated_by": "docs/_inventory/extract_shapes.py",
+  "source_data_js": {
+    "path": "data.js",
+    "char_length": 5283254,
+    "top_level_keys": [
+      "retail",
+      "income",
+      "property"
+    ]
+  },
+  "sections": {
+    "retail": {
+      "path": "retail",
+      "top_level_keys": [
+        "generated_at",
+        "coverage_note",
+        "sources",
+        "series",
+        "records",
+        "versioning_note"
+      ],
+      "metadata_fields": {
+        "generated_at": "2026-06-17T02:22:10.004Z",
+        "coverage_note": "新版国家数据接口已补入可取得的当期月度序列：社会消费品零售总额最早为 1985-01；除汽车以外、汽车拆分仍以发布稿可解析范围为准；网上商品零售额当期值由官方累计值按月差推导。",
+        "sources": [
+          "https://data.stats.gov.cn/dg/website/page.html#/pc/national/monthData",
+          "https://data.stats.gov.cn/dg/website/publicrelease/web/external/getEsDataByIndicatorIdAndDa",
+          "https://data.stats.gov.cn/easyquery.htm?cn=A01",
+          "https://www.stats.gov.cn/sj/zxfb/",
+          "https://www.stats.gov.cn/sj/zxfb/202605/t20260518_1963727.html",
+          "https://www.stats.gov.cn/sj/zxfb/202606/t20260616_1963949.html"
+        ],
+        "versioning_note": "每个指标保留 latest_*（当前最新版本）与 published_*（发布日期版本）。month_* 字段保留为 latest_* 的兼容别名。"
+      },
+      "records_summary": {
+        "path": "retail.records",
+        "count": 476,
+        "period_field_formats": {
+          "YYYY-MM": 476
+        },
+        "period_range": {
+          "min": "1985-01",
+          "max": "2026-05"
+        },
+        "record_key_signatures": [
+          {
+            "keys": [
+              "metrics",
+              "month",
+              "period",
+              "published_at",
+              "source",
+              "title",
+              "url",
+              "year"
+            ],
+            "count": 416
+          },
+          {
+            "keys": [
+              "metrics",
+              "month",
+              "period",
+              "published_at",
+              "release_published_at",
+              "release_title",
+              "source",
+              "title",
+              "title_period",
+              "url",
+              "year"
+            ],
+            "count": 59
+          },
+          {
+            "keys": [
+              "metrics",
+              "month",
+              "period",
+              "published_at",
+              "source",
+              "title",
+              "title_period",
+              "url",
+              "year"
+            ],
+            "count": 1
+          }
+        ],
+        "sample_record": {
+          "year": 1985,
+          "month": 1,
+          "period": "1985-01",
+          "title": "国家数据 1985-01",
+          "url": "https://data.stats.gov.cn/dg/website/page.html#/pc/national/monthData",
+          "published_at": null,
+          "source": "国家统计局国家数据",
+          "metrics": {
+            "retail_total": {
+              "month_value": 338.9,
+              "month_yoy": null,
+              "latest_month_value": 338.9,
+              "latest_month_yoy": null,
+              "latest_ytd_value": null,
+              "latest_ytd_yoy": null
+            }
+          }
+        }
+      },
+      "series": {
+        "retail_total": {
+          "path": "retail.series.retail_total",
+          "label_fields": {
+            "name": "社会消费品零售总额",
+            "group": "总览",
+            "level": 1
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 467,
+          "date_range": {
+            "min": "1985-01",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 41090,
+              "month_yoy": -0.6,
+              "ytd_value": 206031,
+              "ytd_yoy": 1.4,
+              "latest_month_value": 41090,
+              "published_month_value": 41090,
+              "latest_month_yoy": -0.6,
+              "published_month_yoy": -0.6,
+              "latest_ytd_value": 206031,
+              "published_ytd_value": 206031,
+              "latest_ytd_yoy": 1.4,
+              "published_ytd_yoy": 1.4
+            }
+          }
+        },
+        "retail_ex_auto": {
+          "path": "retail.series.retail_ex_auto",
+          "label_fields": {
+            "name": "除汽车以外的消费品零售额",
+            "group": "汽车拆分",
+            "level": 2
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 50,
+          "date_range": {
+            "min": "2019-10",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 37781,
+              "month_yoy": 1.1,
+              "ytd_value": 190022,
+              "ytd_yoy": 2.7,
+              "latest_month_value": 37781,
+              "published_month_value": 37781,
+              "latest_month_yoy": 1.1,
+              "published_month_yoy": 1.1,
+              "latest_ytd_value": 190022,
+              "published_ytd_value": 190022,
+              "latest_ytd_yoy": 2.7,
+              "published_ytd_yoy": 2.7
+            }
+          }
+        },
+        "auto_total": {
+          "path": "retail.series.auto_total",
+          "label_fields": {
+            "name": "汽车消费零售额",
+            "group": "汽车拆分",
+            "level": 2
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 53,
+          "date_range": {
+            "min": "2017-11",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 3309,
+              "month_yoy": -16.1,
+              "ytd_value": 16009,
+              "ytd_yoy": -11.8,
+              "latest_month_value": 3309,
+              "published_month_value": 3309,
+              "latest_month_yoy": -16.1,
+              "published_month_yoy": -16.1,
+              "latest_ytd_value": 16009,
+              "published_ytd_value": 16009,
+              "latest_ytd_yoy": -11.8,
+              "published_ytd_yoy": -11.8
+            }
+          }
+        },
+        "urban": {
+          "path": "retail.series.urban",
+          "label_fields": {
+            "name": "城镇消费品零售额",
+            "group": "城乡",
+            "level": 3
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 167,
+          "date_range": {
+            "min": "2010-01",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 35741,
+              "month_yoy": -0.9,
+              "ytd_value": 178662,
+              "ytd_yoy": 1.2,
+              "latest_month_value": 35741,
+              "published_month_value": 35741,
+              "latest_month_yoy": -0.9,
+              "published_month_yoy": -0.9,
+              "latest_ytd_value": 178662,
+              "published_ytd_value": 178662,
+              "latest_ytd_yoy": 1.2,
+              "published_ytd_yoy": 1.2
+            }
+          }
+        },
+        "rural": {
+          "path": "retail.series.rural",
+          "label_fields": {
+            "name": "乡村消费品零售额",
+            "group": "城乡",
+            "level": 3
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 167,
+          "date_range": {
+            "min": "2010-01",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 5349,
+              "month_yoy": 1.5,
+              "ytd_value": 27369,
+              "ytd_yoy": 2.6,
+              "latest_month_value": 5349,
+              "published_month_value": 5349,
+              "latest_month_yoy": 1.5,
+              "published_month_yoy": 1.5,
+              "latest_ytd_value": 27369,
+              "published_ytd_value": 27369,
+              "latest_ytd_yoy": 2.6,
+              "published_ytd_yoy": 2.6
+            }
+          }
+        },
+        "online_goods": {
+          "path": "retail.series.online_goods",
+          "label_fields": {
+            "name": "网上商品零售额",
+            "group": "线上",
+            "level": 4
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 97,
+          "date_range": {
+            "min": "2015-10",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 11533,
+              "month_yoy": 8.7,
+              "ytd_value": 52718,
+              "ytd_yoy": 5,
+              "latest_month_value": 11533,
+              "published_month_value": 11533,
+              "latest_month_yoy": 8.7,
+              "published_month_yoy": 8.7,
+              "latest_ytd_value": 52718,
+              "published_ytd_value": 52718,
+              "latest_ytd_yoy": 5,
+              "published_ytd_yoy": 5
+            }
+          }
+        },
+        "online_ex_auto_share": {
+          "path": "retail.series.online_ex_auto_share",
+          "label_fields": {
+            "name": "网上商品零售额占除汽车零售额比重",
+            "group": "线上",
+            "level": 4
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 50,
+          "date_range": {
+            "min": "2019-10",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 30.53,
+              "month_yoy": 2.09,
+              "ytd_value": 27.74,
+              "ytd_yoy": 0.68,
+              "latest_month_value": 30.53,
+              "published_month_value": 30.53,
+              "latest_month_yoy": 2.09,
+              "published_month_yoy": 2.09,
+              "latest_ytd_value": 27.74,
+              "published_ytd_value": 27.74,
+              "latest_ytd_yoy": 0.68,
+              "published_ytd_yoy": 0.68
+            }
+          }
+        },
+        "catering": {
+          "path": "retail.series.catering",
+          "label_fields": {
+            "name": "餐饮收入",
+            "group": "消费类型",
+            "level": 5
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 359,
+          "date_range": {
+            "min": "1994-01",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 4605,
+              "month_yoy": 0.6,
+              "ytd_value": 23488,
+              "ytd_yoy": 3.1,
+              "latest_month_value": 4605,
+              "published_month_value": 4605,
+              "latest_month_yoy": 0.6,
+              "published_month_yoy": 0.6,
+              "latest_ytd_value": 23488,
+              "published_ytd_value": 23488,
+              "latest_ytd_yoy": 3.1,
+              "published_ytd_yoy": 3.1
+            }
+          }
+        },
+        "goods": {
+          "path": "retail.series.goods",
+          "label_fields": {
+            "name": "商品零售额",
+            "group": "消费类型",
+            "level": 5
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 359,
+          "date_range": {
+            "min": "1994-01",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 36485,
+              "month_yoy": -0.7,
+              "ytd_value": 182543,
+              "ytd_yoy": 1.2,
+              "latest_month_value": 36485,
+              "published_month_value": 36485,
+              "latest_month_yoy": -0.7,
+              "published_month_yoy": -0.7,
+              "latest_ytd_value": 182543,
+              "published_ytd_value": 182543,
+              "latest_ytd_yoy": 1.2,
+              "published_ytd_yoy": 1.2
+            }
+          }
+        },
+        "above_quota_total": {
+          "path": "retail.series.above_quota_total",
+          "label_fields": {
+            "name": "限额以上单位消费品零售额",
+            "group": "限额以上",
+            "level": 6
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 154,
+          "date_range": {
+            "min": "2011-01",
+            "max": "2026-04"
+          },
+          "sample_observation": {
+            "period": "2026-04",
+            "fields": {
+              "month_value": 14147.2,
+              "month_yoy": -4.4,
+              "latest_month_value": 14147.2,
+              "latest_month_yoy": -4.4,
+              "latest_ytd_value": null,
+              "latest_ytd_yoy": null,
+              "published_month_value": 14147.2,
+              "published_month_yoy": -4.4
+            }
+          }
+        },
+        "above_quota_catering": {
+          "path": "retail.series.above_quota_catering",
+          "label_fields": {
+            "name": "限额以上单位餐饮收入",
+            "group": "限额以上",
+            "level": 6
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 154,
+          "date_range": {
+            "min": "2011-01",
+            "max": "2026-04"
+          },
+          "sample_observation": {
+            "period": "2026-04",
+            "fields": {
+              "month_value": 1287.4,
+              "month_yoy": 0.9,
+              "latest_month_value": 1287.4,
+              "latest_month_yoy": 0.9,
+              "latest_ytd_value": null,
+              "latest_ytd_yoy": null,
+              "published_month_value": 1287.4,
+              "published_month_yoy": 0.9
+            }
+          }
+        },
+        "above_quota_goods": {
+          "path": "retail.series.above_quota_goods",
+          "label_fields": {
+            "name": "限额以上单位商品零售额",
+            "group": "限额以上",
+            "level": 6
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 273,
+          "date_range": {
+            "min": "2001-02",
+            "max": "2026-04"
+          },
+          "sample_observation": {
+            "period": "2026-04",
+            "fields": {
+              "month_value": 12859.8,
+              "month_yoy": -4.9,
+              "latest_month_value": 12859.8,
+              "latest_month_yoy": -4.9,
+              "latest_ytd_value": null,
+              "latest_ytd_yoy": null,
+              "published_month_value": 12859.8,
+              "published_month_yoy": -4.9
+            }
+          }
+        },
+        "grain_food": {
+          "path": "retail.series.grain_food",
+          "label_fields": {
+            "name": "粮油、食品类",
+            "group": "商品分类",
+            "level": 7
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 37,
+          "date_range": {
+            "min": "2015-10",
+            "max": "2024-05"
+          },
+          "sample_observation": {
+            "period": "2024-05",
+            "fields": {
+              "month_value": 1615,
+              "month_yoy": 9.3,
+              "ytd_value": 8499,
+              "ytd_yoy": 9.3,
+              "latest_month_value": 1615,
+              "latest_month_yoy": 9.3,
+              "latest_ytd_value": 8499,
+              "latest_ytd_yoy": 9.3,
+              "published_month_value": 1615,
+              "published_month_yoy": 9.3,
+              "published_ytd_value": 8499,
+              "published_ytd_yoy": 9.3
+            }
+          }
+        },
+        "beverage": {
+          "path": "retail.series.beverage",
+          "label_fields": {
+            "name": "饮料类",
+            "group": "商品分类",
+            "level": 7
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 57,
+          "date_range": {
+            "min": "2015-10",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 269,
+              "month_yoy": 6.1,
+              "ytd_value": 1315,
+              "ytd_yoy": 6,
+              "latest_month_value": 269,
+              "published_month_value": 269,
+              "latest_month_yoy": 6.1,
+              "published_month_yoy": 6.1,
+              "latest_ytd_value": 1315,
+              "published_ytd_value": 1315,
+              "latest_ytd_yoy": 6,
+              "published_ytd_yoy": 6
+            }
+          }
+        },
+        "tobacco_alcohol": {
+          "path": "retail.series.tobacco_alcohol",
+          "label_fields": {
+            "name": "烟酒类",
+            "group": "商品分类",
+            "level": 7
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 57,
+          "date_range": {
+            "min": "2015-10",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 484,
+              "month_yoy": 4.8,
+              "ytd_value": 3016,
+              "ytd_yoy": 13.4,
+              "latest_month_value": 484,
+              "published_month_value": 484,
+              "latest_month_yoy": 4.8,
+              "published_month_yoy": 4.8,
+              "latest_ytd_value": 3016,
+              "published_ytd_value": 3016,
+              "latest_ytd_yoy": 13.4,
+              "published_ytd_yoy": 13.4
+            }
+          }
+        },
+        "garments": {
+          "path": "retail.series.garments",
+          "label_fields": {
+            "name": "服装、鞋帽、针纺织品类",
+            "group": "商品分类",
+            "level": 7
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 40,
+          "date_range": {
+            "min": "2022-04",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 1251,
+              "month_yoy": 3.8,
+              "ytd_value": 6425,
+              "ytd_yoy": 7.2,
+              "latest_month_value": 1251,
+              "published_month_value": 1251,
+              "latest_month_yoy": 3.8,
+              "published_month_yoy": 3.8,
+              "latest_ytd_value": 6425,
+              "published_ytd_value": 6425,
+              "latest_ytd_yoy": 7.2,
+              "published_ytd_yoy": 7.2
+            }
+          }
+        },
+        "cosmetics": {
+          "path": "retail.series.cosmetics",
+          "label_fields": {
+            "name": "化妆品类",
+            "group": "商品分类",
+            "level": 7
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 53,
+          "date_range": {
+            "min": "2017-11",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 449,
+              "month_yoy": 2.5,
+              "ytd_value": 1985,
+              "ytd_yoy": 4.9,
+              "latest_month_value": 449,
+              "published_month_value": 449,
+              "latest_month_yoy": 2.5,
+              "published_month_yoy": 2.5,
+              "latest_ytd_value": 1985,
+              "published_ytd_value": 1985,
+              "latest_ytd_yoy": 4.9,
+              "published_ytd_yoy": 4.9
+            }
+          }
+        },
+        "gold_jewelry": {
+          "path": "retail.series.gold_jewelry",
+          "label_fields": {
+            "name": "金银珠宝类",
+            "group": "商品分类",
+            "level": 7
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 53,
+          "date_range": {
+            "min": "2017-11",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 267,
+              "month_yoy": -8.9,
+              "ytd_value": 1678,
+              "ytd_yoy": 2.8,
+              "latest_month_value": 267,
+              "published_month_value": 267,
+              "latest_month_yoy": -8.9,
+              "published_month_yoy": -8.9,
+              "latest_ytd_value": 1678,
+              "published_ytd_value": 1678,
+              "latest_ytd_yoy": 2.8,
+              "published_ytd_yoy": 2.8
+            }
+          }
+        },
+        "daily_goods": {
+          "path": "retail.series.daily_goods",
+          "label_fields": {
+            "name": "日用品类",
+            "group": "商品分类",
+            "level": 7
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 53,
+          "date_range": {
+            "min": "2017-11",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 726,
+              "month_yoy": 1.6,
+              "ytd_value": 3543,
+              "ytd_yoy": 4.6,
+              "latest_month_value": 726,
+              "published_month_value": 726,
+              "latest_month_yoy": 1.6,
+              "published_month_yoy": 1.6,
+              "latest_ytd_value": 3543,
+              "published_ytd_value": 3543,
+              "latest_ytd_yoy": 4.6,
+              "published_ytd_yoy": 4.6
+            }
+          }
+        },
+        "sports_entertainment": {
+          "path": "retail.series.sports_entertainment",
+          "label_fields": {
+            "name": "体育、娱乐用品类",
+            "group": "商品分类",
+            "level": 7
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 32,
+          "date_range": {
+            "min": "2023-03",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 157,
+              "month_yoy": -8,
+              "ytd_value": 697,
+              "ytd_yoy": -2.4,
+              "latest_month_value": 157,
+              "published_month_value": 157,
+              "latest_month_yoy": -8,
+              "published_month_yoy": -8,
+              "latest_ytd_value": 697,
+              "published_ytd_value": 697,
+              "latest_ytd_yoy": -2.4,
+              "published_ytd_yoy": -2.4
+            }
+          }
+        },
+        "books_magazines": {
+          "path": "retail.series.books_magazines",
+          "label_fields": {
+            "name": "书报杂志类",
+            "group": "商品分类",
+            "level": 7
+          },
+          "unit": null,
+          "frequency": "unknown (fewer than 2 observations)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [],
+          "has_published_variant": false,
+          "has_latest_variant": false,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": false,
+          "observation_count": 0,
+          "date_range": {
+            "min": null,
+            "max": null
+          },
+          "sample_observation": null
+        },
+        "household_appliances": {
+          "path": "retail.series.household_appliances",
+          "label_fields": {
+            "name": "家用电器和音像器材类",
+            "group": "商品分类",
+            "level": 7
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 53,
+          "date_range": {
+            "min": "2017-11",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 975,
+              "month_yoy": -15.6,
+              "ytd_value": 4197,
+              "ytd_yoy": -6.9,
+              "latest_month_value": 975,
+              "published_month_value": 975,
+              "latest_month_yoy": -15.6,
+              "published_month_yoy": -15.6,
+              "latest_ytd_value": 4197,
+              "published_ytd_value": 4197,
+              "latest_ytd_yoy": -6.9,
+              "published_ytd_yoy": -6.9
+            }
+          }
+        },
+        "medicine": {
+          "path": "retail.series.medicine",
+          "label_fields": {
+            "name": "中西药品类",
+            "group": "商品分类",
+            "level": 7
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 53,
+          "date_range": {
+            "min": "2017-11",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 596,
+              "month_yoy": 4,
+              "ytd_value": 2997,
+              "ytd_yoy": 3.1,
+              "latest_month_value": 596,
+              "published_month_value": 596,
+              "latest_month_yoy": 4,
+              "published_month_yoy": 4,
+              "latest_ytd_value": 2997,
+              "published_ytd_value": 2997,
+              "latest_ytd_yoy": 3.1,
+              "published_ytd_yoy": 3.1
+            }
+          }
+        },
+        "cultural_office": {
+          "path": "retail.series.cultural_office",
+          "label_fields": {
+            "name": "文化办公用品类",
+            "group": "商品分类",
+            "level": 7
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 53,
+          "date_range": {
+            "min": "2017-11",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 390,
+              "month_yoy": -1.5,
+              "ytd_value": 1866,
+              "ytd_yoy": 3.8,
+              "latest_month_value": 390,
+              "published_month_value": 390,
+              "latest_month_yoy": -1.5,
+              "published_month_yoy": -1.5,
+              "latest_ytd_value": 1866,
+              "published_ytd_value": 1866,
+              "latest_ytd_yoy": 3.8,
+              "published_ytd_yoy": 3.8
+            }
+          }
+        },
+        "furniture": {
+          "path": "retail.series.furniture",
+          "label_fields": {
+            "name": "家具类",
+            "group": "商品分类",
+            "level": 7
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 53,
+          "date_range": {
+            "min": "2017-11",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 150,
+              "month_yoy": -8.7,
+              "ytd_value": 696,
+              "ytd_yoy": -3,
+              "latest_month_value": 150,
+              "published_month_value": 150,
+              "latest_month_yoy": -8.7,
+              "published_month_yoy": -8.7,
+              "latest_ytd_value": 696,
+              "published_ytd_value": 696,
+              "latest_ytd_yoy": -3,
+              "published_ytd_yoy": -3
+            }
+          }
+        },
+        "communication": {
+          "path": "retail.series.communication",
+          "label_fields": {
+            "name": "通讯器材类",
+            "group": "商品分类",
+            "level": 7
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 53,
+          "date_range": {
+            "min": "2017-11",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 889,
+              "month_yoy": 0.7,
+              "ytd_value": 4379,
+              "ytd_yoy": 13.8,
+              "latest_month_value": 889,
+              "published_month_value": 889,
+              "latest_month_yoy": 0.7,
+              "published_month_yoy": 0.7,
+              "latest_ytd_value": 4379,
+              "published_ytd_value": 4379,
+              "latest_ytd_yoy": 13.8,
+              "published_ytd_yoy": 13.8
+            }
+          }
+        },
+        "petroleum": {
+          "path": "retail.series.petroleum",
+          "label_fields": {
+            "name": "石油及制品类",
+            "group": "商品分类",
+            "level": 7
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 53,
+          "date_range": {
+            "min": "2017-11",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 1793,
+              "month_yoy": -3.2,
+              "ytd_value": 8961,
+              "ytd_yoy": -5.8,
+              "latest_month_value": 1793,
+              "published_month_value": 1793,
+              "latest_month_yoy": -3.2,
+              "published_month_yoy": -3.2,
+              "latest_ytd_value": 8961,
+              "published_ytd_value": 8961,
+              "latest_ytd_yoy": -5.8,
+              "published_ytd_yoy": -5.8
+            }
+          }
+        },
+        "building_materials": {
+          "path": "retail.series.building_materials",
+          "label_fields": {
+            "name": "建筑及装潢材料类",
+            "group": "商品分类",
+            "level": 7
+          },
+          "unit": null,
+          "frequency": "monthly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "latest_ytd_value",
+            "latest_ytd_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "published_ytd_value",
+            "published_ytd_yoy",
+            "ytd_value",
+            "ytd_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": true,
+          "has_plain_month_variant": true,
+          "observation_count": 53,
+          "date_range": {
+            "min": "2017-11",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 100,
+              "month_yoy": -13.6,
+              "ytd_value": 500,
+              "ytd_yoy": -8.4,
+              "latest_month_value": 100,
+              "published_month_value": 100,
+              "latest_month_yoy": -13.6,
+              "published_month_yoy": -13.6,
+              "latest_ytd_value": 500,
+              "published_ytd_value": 500,
+              "latest_ytd_yoy": -8.4,
+              "published_ytd_yoy": -8.4
+            }
+          }
+        }
+      },
+      "series_count": 28,
+      "total_observations": 3103
+    },
+    "income": {
+      "path": "income",
+      "top_level_keys": [
+        "generated_at",
+        "section",
+        "section_name",
+        "frequency",
+        "coverage_note",
+        "sources",
+        "series",
+        "records"
+      ],
+      "metadata_fields": {
+        "generated_at": "2026-05-30T20:56:26+0800",
+        "section": "income",
+        "section_name": "居民收入和支出",
+        "frequency": "quarter",
+        "coverage_note": "2017年一季度起为完整居民收入和消费支出发布稿口径；2013-2016年为历史补充层，仅补入官方页面可核验的指标，缺项留空。",
+        "sources": [
+          "https://www.stats.gov.cn/sj/zxfb/",
+          "https://www.stats.gov.cn/sj/zxfb/202604/t20260416_1963323.html"
+        ]
+      },
+      "records_summary": {
+        "path": "income.records",
+        "count": 44,
+        "period_field_formats": {
+          "YYYY-MM": 44
+        },
+        "period_range": {
+          "min": "2013-12",
+          "max": "2026-03"
+        },
+        "record_key_signatures": [
+          {
+            "keys": [
+              "metrics",
+              "month",
+              "period",
+              "period_label",
+              "published_at",
+              "quarter",
+              "source",
+              "title",
+              "url",
+              "year"
+            ],
+            "count": 37
+          },
+          {
+            "keys": [
+              "coverage_note",
+              "historical_supplement",
+              "metrics",
+              "month",
+              "period",
+              "period_label",
+              "published_at",
+              "quarter",
+              "source",
+              "title",
+              "url",
+              "year"
+            ],
+            "count": 7
+          }
+        ],
+        "sample_record": {
+          "url": "https://www.stats.gov.cn/sj/zxfb/202302/t20230203_1898221.html",
+          "title": "2013年国民经济和社会发展统计公报",
+          "year": 2013,
+          "month": 12,
+          "quarter": "Q4",
+          "period": "2013-12",
+          "period_label": "全年",
+          "published_at": null,
+          "source": "国家统计局历史补充",
+          "historical_supplement": true,
+          "coverage_note": "非完整发布稿口径；仅补入官方页面可核验的指标，缺项留空。",
+          "metrics": {
+            "income_disposable": {
+              "month_value": 18311,
+              "latest_month_value": 18311,
+              "published_month_value": 18311,
+              "month_yoy": 10.9,
+              "latest_month_yoy": 10.9,
+              "published_month_yoy": 10.9
+            },
+            "consumption_expenditure": {
+              "month_value": 13220,
+              "latest_month_value": 13220,
+              "published_month_value": 13220
+            }
+          }
+        }
+      },
+      "series": {
+        "income_disposable": {
+          "path": "income.series.income_disposable",
+          "label_fields": {
+            "name": "居民人均可支配收入",
+            "group": "收入",
+            "level": 1
+          },
+          "unit": "元",
+          "frequency": "quarterly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name",
+            "unit"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "real_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 44,
+          "date_range": {
+            "min": "2013-12",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 12782,
+              "month_yoy": 4.9,
+              "latest_month_value": 12782,
+              "latest_month_yoy": 4.9,
+              "published_month_value": 12782,
+              "published_month_yoy": 4.9,
+              "real_yoy": 4
+            }
+          }
+        },
+        "income_disposable_urban": {
+          "path": "income.series.income_disposable_urban",
+          "label_fields": {
+            "name": "城镇居民人均可支配收入",
+            "group": "收入",
+            "level": 2
+          },
+          "unit": "元",
+          "frequency": "quarterly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name",
+            "unit"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "real_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 42,
+          "date_range": {
+            "min": "2014-12",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 16549,
+              "month_yoy": 4.2,
+              "latest_month_value": 16549,
+              "latest_month_yoy": 4.2,
+              "published_month_value": 16549,
+              "published_month_yoy": 4.2,
+              "real_yoy": 3.2
+            }
+          }
+        },
+        "income_disposable_rural": {
+          "path": "income.series.income_disposable_rural",
+          "label_fields": {
+            "name": "农村居民人均可支配收入",
+            "group": "收入",
+            "level": 2
+          },
+          "unit": "元",
+          "frequency": "quarterly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name",
+            "unit"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "real_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 42,
+          "date_range": {
+            "min": "2014-12",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 7433,
+              "month_yoy": 6.1,
+              "latest_month_value": 7433,
+              "latest_month_yoy": 6.1,
+              "published_month_value": 7433,
+              "published_month_yoy": 6.1,
+              "real_yoy": 5.4
+            }
+          }
+        },
+        "income_wage": {
+          "path": "income.series.income_wage",
+          "label_fields": {
+            "name": "工资性收入",
+            "group": "收入来源",
+            "level": 3
+          },
+          "unit": "元",
+          "frequency": "quarterly",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name",
+            "unit"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 42,
+          "date_range": {
+            "min": "2015-12",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 7319,
+              "month_yoy": 4.9,
+              "latest_month_value": 7319,
+              "latest_month_yoy": 4.9,
+              "published_month_value": 7319,
+              "published_month_yoy": 4.9
+            }
+          }
+        },
+        "income_business": {
+          "path": "income.series.income_business",
+          "label_fields": {
+            "name": "经营净收入",
+            "group": "收入来源",
+            "level": 3
+          },
+          "unit": "元",
+          "frequency": "quarterly",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name",
+            "unit"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 42,
+          "date_range": {
+            "min": "2015-12",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 2207,
+              "month_yoy": 6.6,
+              "latest_month_value": 2207,
+              "latest_month_yoy": 6.6,
+              "published_month_value": 2207,
+              "published_month_yoy": 6.6
+            }
+          }
+        },
+        "income_property": {
+          "path": "income.series.income_property",
+          "label_fields": {
+            "name": "财产净收入",
+            "group": "收入来源",
+            "level": 3
+          },
+          "unit": "元",
+          "frequency": "quarterly",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name",
+            "unit"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 42,
+          "date_range": {
+            "min": "2015-12",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 1031,
+              "month_yoy": 1.6,
+              "latest_month_value": 1031,
+              "latest_month_yoy": 1.6,
+              "published_month_value": 1031,
+              "published_month_yoy": 1.6
+            }
+          }
+        },
+        "income_transfer": {
+          "path": "income.series.income_transfer",
+          "label_fields": {
+            "name": "转移净收入",
+            "group": "收入来源",
+            "level": 3
+          },
+          "unit": "元",
+          "frequency": "quarterly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name",
+            "unit"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 43,
+          "date_range": {
+            "min": "2014-12",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 2225,
+              "month_yoy": 5.1,
+              "latest_month_value": 2225,
+              "latest_month_yoy": 5.1,
+              "published_month_value": 2225,
+              "published_month_yoy": 5.1
+            }
+          }
+        },
+        "income_median": {
+          "path": "income.series.income_median",
+          "label_fields": {
+            "name": "居民人均可支配收入中位数",
+            "group": "中位数",
+            "level": 4
+          },
+          "unit": "元",
+          "frequency": "quarterly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name",
+            "unit"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 16,
+          "date_range": {
+            "min": "2016-03",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 10433,
+              "month_yoy": 5,
+              "latest_month_value": 10433,
+              "latest_month_yoy": 5,
+              "published_month_value": 10433,
+              "published_month_yoy": 5
+            }
+          }
+        },
+        "income_median_urban": {
+          "path": "income.series.income_median_urban",
+          "label_fields": {
+            "name": "城镇居民人均可支配收入中位数",
+            "group": "中位数",
+            "level": 4
+          },
+          "unit": "元",
+          "frequency": "quarterly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name",
+            "unit"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 14,
+          "date_range": {
+            "min": "2022-03",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 14038,
+              "month_yoy": 4.4,
+              "latest_month_value": 14038,
+              "latest_month_yoy": 4.4,
+              "published_month_value": 14038,
+              "published_month_yoy": 4.4
+            }
+          }
+        },
+        "income_median_rural": {
+          "path": "income.series.income_median_rural",
+          "label_fields": {
+            "name": "农村居民人均可支配收入中位数",
+            "group": "中位数",
+            "level": 4
+          },
+          "unit": "元",
+          "frequency": "quarterly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name",
+            "unit"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 14,
+          "date_range": {
+            "min": "2022-03",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 5909,
+              "month_yoy": 6,
+              "latest_month_value": 5909,
+              "latest_month_yoy": 6,
+              "published_month_value": 5909,
+              "published_month_yoy": 6
+            }
+          }
+        },
+        "consumption_expenditure": {
+          "path": "income.series.consumption_expenditure",
+          "label_fields": {
+            "name": "居民人均消费支出",
+            "group": "消费支出",
+            "level": 5
+          },
+          "unit": "元",
+          "frequency": "quarterly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name",
+            "unit"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "real_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 44,
+          "date_range": {
+            "min": "2013-12",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 7955,
+              "month_yoy": 3.6,
+              "latest_month_value": 7955,
+              "latest_month_yoy": 3.6,
+              "published_month_value": 7955,
+              "published_month_yoy": 3.6,
+              "real_yoy": 2.6
+            }
+          }
+        },
+        "consumption_expenditure_urban": {
+          "path": "income.series.consumption_expenditure_urban",
+          "label_fields": {
+            "name": "城镇居民人均消费支出",
+            "group": "消费支出",
+            "level": 6
+          },
+          "unit": "元",
+          "frequency": "quarterly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name",
+            "unit"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "real_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 40,
+          "date_range": {
+            "min": "2016-03",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 9635,
+              "month_yoy": 2.9,
+              "latest_month_value": 9635,
+              "latest_month_yoy": 2.9,
+              "published_month_value": 9635,
+              "published_month_yoy": 2.9,
+              "real_yoy": 2
+            }
+          }
+        },
+        "consumption_expenditure_rural": {
+          "path": "income.series.consumption_expenditure_rural",
+          "label_fields": {
+            "name": "农村居民人均消费支出",
+            "group": "消费支出",
+            "level": 6
+          },
+          "unit": "元",
+          "frequency": "quarterly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name",
+            "unit"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy",
+            "real_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 40,
+          "date_range": {
+            "min": "2016-03",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 5569,
+              "month_yoy": 4.4,
+              "latest_month_value": 5569,
+              "latest_month_yoy": 4.4,
+              "published_month_value": 5569,
+              "published_month_yoy": 4.4,
+              "real_yoy": 3.7
+            }
+          }
+        },
+        "consumption_food_tobacco_alcohol": {
+          "path": "income.series.consumption_food_tobacco_alcohol",
+          "label_fields": {
+            "name": "食品烟酒消费支出",
+            "group": "消费类别",
+            "level": 7
+          },
+          "unit": "元",
+          "frequency": "quarterly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name",
+            "unit"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 39,
+          "date_range": {
+            "min": "2015-12",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 2549,
+              "month_yoy": 5.3,
+              "latest_month_value": 2549,
+              "latest_month_yoy": 5.3,
+              "published_month_value": 2549,
+              "published_month_yoy": 5.3
+            }
+          }
+        },
+        "consumption_clothing": {
+          "path": "income.series.consumption_clothing",
+          "label_fields": {
+            "name": "衣着消费支出",
+            "group": "消费类别",
+            "level": 7
+          },
+          "unit": "元",
+          "frequency": "quarterly (with gaps)",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name",
+            "unit"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 38,
+          "date_range": {
+            "min": "2016-09",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 526,
+              "month_yoy": 5.6,
+              "latest_month_value": 526,
+              "latest_month_yoy": 5.6,
+              "published_month_value": 526,
+              "published_month_yoy": 5.6
+            }
+          }
+        },
+        "consumption_housing": {
+          "path": "income.series.consumption_housing",
+          "label_fields": {
+            "name": "居住消费支出",
+            "group": "消费类别",
+            "level": 7
+          },
+          "unit": "元",
+          "frequency": "quarterly",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name",
+            "unit"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 37,
+          "date_range": {
+            "min": "2017-03",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 1611,
+              "month_yoy": 1,
+              "latest_month_value": 1611,
+              "latest_month_yoy": 1,
+              "published_month_value": 1611,
+              "published_month_yoy": 1
+            }
+          }
+        },
+        "consumption_household_services": {
+          "path": "income.series.consumption_household_services",
+          "label_fields": {
+            "name": "生活用品及服务消费支出",
+            "group": "消费类别",
+            "level": 7
+          },
+          "unit": "元",
+          "frequency": "quarterly",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name",
+            "unit"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 37,
+          "date_range": {
+            "min": "2017-03",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 442,
+              "month_yoy": 6.1,
+              "latest_month_value": 442,
+              "latest_month_yoy": 6.1,
+              "published_month_value": 442,
+              "published_month_yoy": 6.1
+            }
+          }
+        },
+        "consumption_transport_communication": {
+          "path": "income.series.consumption_transport_communication",
+          "label_fields": {
+            "name": "交通通信消费支出",
+            "group": "消费类别",
+            "level": 7
+          },
+          "unit": "元",
+          "frequency": "quarterly",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name",
+            "unit"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 36,
+          "date_range": {
+            "min": "2017-06",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 1079,
+              "month_yoy": 3.4,
+              "latest_month_value": 1079,
+              "latest_month_yoy": 3.4,
+              "published_month_value": 1079,
+              "published_month_yoy": 3.4
+            }
+          }
+        },
+        "consumption_education_culture": {
+          "path": "income.series.consumption_education_culture",
+          "label_fields": {
+            "name": "教育文化娱乐消费支出",
+            "group": "消费类别",
+            "level": 7
+          },
+          "unit": "元",
+          "frequency": "quarterly",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name",
+            "unit"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 36,
+          "date_range": {
+            "min": "2017-06",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 843,
+              "month_yoy": 2.5,
+              "latest_month_value": 843,
+              "latest_month_yoy": 2.5,
+              "published_month_value": 843,
+              "published_month_yoy": 2.5
+            }
+          }
+        },
+        "consumption_healthcare": {
+          "path": "income.series.consumption_healthcare",
+          "label_fields": {
+            "name": "医疗保健消费支出",
+            "group": "消费类别",
+            "level": 7
+          },
+          "unit": "元",
+          "frequency": "quarterly",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name",
+            "unit"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 37,
+          "date_range": {
+            "min": "2017-03",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 645,
+              "month_yoy": -0.5,
+              "latest_month_value": 645,
+              "latest_month_yoy": -0.5,
+              "published_month_value": 645,
+              "published_month_yoy": -0.5
+            }
+          }
+        },
+        "consumption_other": {
+          "path": "income.series.consumption_other",
+          "label_fields": {
+            "name": "其他用品及服务消费支出",
+            "group": "消费类别",
+            "level": 7
+          },
+          "unit": "元",
+          "frequency": "quarterly",
+          "value_label": null,
+          "yoy_label": null,
+          "source_name": null,
+          "source_link_label": null,
+          "method_url": null,
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "name",
+            "unit"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 37,
+          "date_range": {
+            "min": "2017-03",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 260,
+              "month_yoy": 10.2,
+              "latest_month_value": 260,
+              "latest_month_yoy": 10.2,
+              "published_month_value": 260,
+              "published_month_yoy": 10.2
+            }
+          }
+        }
+      },
+      "series_count": 21,
+      "total_observations": 762
+    },
+    "property": {
+      "path": "property",
+      "top_level_keys": [
+        "section",
+        "section_name",
+        "frequency",
+        "series",
+        "preferred",
+        "records",
+        "sources",
+        "notes",
+        "cities"
+      ],
+      "metadata_fields": {
+        "section": "property",
+        "section_name": "房价和房贷",
+        "frequency": "mixed",
+        "preferred": [
+          "new_home_70_price",
+          "resale_home_70_price",
+          "new_home_up_cities",
+          "resale_home_up_cities",
+          "real_estate_loan_balance",
+          "mortgage_balance",
+          "property_development_loan_balance",
+          "land_transfer_revenue",
+          "...<6 more items>"
+        ],
+        "sources": {
+          "nbs_70_city": "国家统计局《70个大中城市商品住宅销售价格变动情况》",
+          "pbc_loans": "中国人民银行《金融机构贷款投向统计报告》",
+          "mof_fiscal": "财政部《财政收支情况》",
+          "nbs_city_history": "官方国家数据主要城市月度价格，70个大中城市住宅销售价格指数；2011-01 至 2026-04（2026-05在国家数据表内为空，使用发布稿补齐）"
+        },
+        "notes": [
+          "70城城市明细历史层来自国家数据“主要城市月度价格”；2011-01至2026-04使用国家数据，2026-05及后续优先使用发布稿缓存。",
+          "70城房价为国家统计局70个城市指数的简单平均，环比/同比均由指数减100得到。",
+          "房贷余额为央行季度贷款投向统计报告期末余额，单位由万亿元换算为亿元。",
+          "地产相关税收和土地出让收入为财政部累计报告期数据，非单月值。"
+        ],
+        "cities": [
+          "北京",
+          "天津",
+          "石家庄",
+          "唐山",
+          "秦皇岛",
+          "太原",
+          "呼和浩特",
+          "包头",
+          "...<62 more items>"
+        ]
+      },
+      "records_summary": {
+        "path": "property.records",
+        "count": 185,
+        "period_field_formats": {
+          "YYYY-MM": 185
+        },
+        "period_range": {
+          "min": "2011-01",
+          "max": "2026-05"
+        },
+        "record_key_signatures": [
+          {
+            "keys": [
+              "cities",
+              "metrics",
+              "month",
+              "period",
+              "source",
+              "url",
+              "year"
+            ],
+            "count": 185
+          }
+        ],
+        "sample_record": {
+          "period": "2011-01",
+          "year": 2011,
+          "month": 1,
+          "url": "https://data.stats.gov.cn/dg/website/page.html#/pc/national/mainMonthData",
+          "source": "nbs_data",
+          "metrics": {
+            "new_home_70_price": {
+              "month_value": 0.78,
+              "latest_month_value": 0.78,
+              "published_month_value": 0.78,
+              "month_yoy": 6.89,
+              "latest_month_yoy": 6.89,
+              "published_month_yoy": 6.89
+            },
+            "resale_home_70_price": {
+              "month_value": 0.63,
+              "latest_month_value": 0.63,
+              "published_month_value": 0.63,
+              "month_yoy": 4.67,
+              "latest_month_yoy": 4.67,
+              "published_month_yoy": 4.67
+            },
+            "new_home_up_cities": {
+              "month_value": 60,
+              "latest_month_value": 60,
+              "published_month_value": 60
+            },
+            "resale_home_up_cities": {
+              "month_value": 60,
+              "latest_month_value": 60,
+              "published_month_value": 60
+            }
+          },
+          "cities": {
+            "北京": {
+              "new_home_price": {
+                "month_value": 0.4,
+                "latest_month_value": 0.4,
+                "published_month_value": 0.4,
+                "month_yoy": 19.1,
+                "latest_month_yoy": 19.1,
+                "published_month_yoy": 19.1
+              },
+              "resale_home_price": {
+                "month_value": 0.7,
+                "latest_month_value": 0.7,
+                "published_month_value": 0.7,
+                "month_yoy": 14.8,
+                "latest_month_yoy": 14.8,
+                "published_month_yoy": 14.8
+              }
+            },
+            "天津": {
+              "new_home_price": {
+                "month_value": 1,
+                "latest_month_value": 1,
+                "published_month_value": 1,
+                "month_yoy": 7.6,
+                "latest_month_yoy": 7.6,
+                "published_month_yoy": 7.6
+              },
+              "resale_home_price": {
+                "month_value": 0.1,
+                "latest_month_value": 0.1,
+                "published_month_value": 0.1,
+                "month_yoy": 3.3,
+                "latest_month_yoy": 3.3,
+                "published_month_yoy": 3.3
+              }
+            },
+            "石家庄": {
+              "new_home_price": {
+                "month_value": 1,
+                "latest_month_value": 1,
+                "published_month_value": 1,
+                "month_yoy": 9.1,
+                "latest_month_yoy": 9.1,
+                "published_month_yoy": 9.1
+              },
+              "resale_home_price": {
+                "month_value": 0.3,
+                "latest_month_value": 0.3,
+                "published_month_value": 0.3,
+                "month_yoy": 2.6,
+                "latest_month_yoy": 2.6,
+                "published_month_yoy": 2.6
+              }
+            },
+            "唐山": {
+              "new_home_price": {
+                "month_value": 1,
+                "latest_month_value": 1,
+                "published_month_value": 1,
+                "month_yoy": 7.6,
+                "latest_month_yoy": 7.6,
+                "published_month_yoy": 7.6
+              },
+              "resale_home_price": {
+                "month_value": 0.1,
+                "latest_month_value": 0.1,
+                "published_month_value": 0.1,
+                "month_yoy": 3.3,
+                "latest_month_yoy": 3.3,
+                "published_month_yoy": 3.3
+              }
+            },
+            "秦皇岛": {
+              "new_home_price": {
+                "month_value": 0.8,
+                "latest_month_value": 0.8,
+                "published_month_value": 0.8,
+                "month_yoy": 11.7,
+                "latest_month_yoy": 11.7,
+                "published_month_yoy": 11.7
+              },
+              "resale_home_price": {
+                "month_value": 0.1,
+                "latest_month_value": 0.1,
+                "published_month_value": 0.1,
+                "month_yoy": 3.1,
+                "latest_month_yoy": 3.1,
+                "published_month_yoy": 3.1
+              }
+            },
+            "太原": {
+              "new_home_price": {
+                "month_value": 1.2,
+                "latest_month_value": 1.2,
+                "published_month_value": 1.2,
+                "month_yoy": 12,
+                "latest_month_yoy": 12,
+                "published_month_yoy": 12
+              },
+              "resale_home_price": {
+                "month_value": 0,
+                "latest_month_value": 0,
+                "published_month_value": 0,
+                "month_yoy": 16,
+                "latest_month_yoy": 16,
+                "published_month_yoy": 16
+              }
+            },
+            "呼和浩特": {
+              "new_home_price": {
+                "month_value": 0.9,
+                "latest_month_value": 0.9,
+                "published_month_value": 0.9,
+                "month_yoy": 11.5,
+                "latest_month_yoy": 11.5,
+                "published_month_yoy": 11.5
+              },
+              "resale_home_price": {
+                "month_value": -0.1,
+                "latest_month_value": -0.1,
+                "published_month_value": -0.1,
+                "month_yoy": 4.1,
+                "latest_month_yoy": 4.1,
+                "published_month_yoy": 4.1
+              }
+            },
+            "包头": {
+              "new_home_price": {
+                "month_value": 0,
+                "latest_month_value": 0,
+                "published_month_value": 0,
+                "month_yoy": 4.1,
+                "latest_month_yoy": 4.1,
+                "published_month_yoy": 4.1
+              },
+              "resale_home_price": {
+                "month_value": 2.1,
+                "latest_month_value": 2.1,
+                "published_month_value": 2.1,
+                "month_yoy": 3,
+                "latest_month_yoy": 3,
+                "published_month_yoy": 3
+              }
+            },
+            "沈阳": {
+              "new_home_price": {
+                "month_value": 0.1,
+                "latest_month_value": 0.1,
+                "published_month_value": 0.1,
+                "month_yoy": 7,
+                "latest_month_yoy": 7,
+                "published_month_yoy": 7
+              },
+              "resale_home_price": {
+                "month_value": 0.3,
+                "latest_month_value": 0.3,
+                "published_month_value": 0.3,
+                "month_yoy": 3.2,
+                "latest_month_yoy": 3.2,
+                "published_month_yoy": 3.2
+              }
+            },
+            "大连": {
+              "new_home_price": {
+                "month_value": 0.9,
+                "latest_month_value": 0.9,
+                "published_month_value": 0.9,
+                "month_yoy": 3.1,
+                "latest_month_yoy": 3.1,
+                "published_month_yoy": 3.1
+              },
+              "resale_home_price": {
+                "month_value": 0,
+                "latest_month_value": 0,
+                "published_month_value": 0,
+                "month_yoy": 3.3,
+                "latest_month_yoy": 3.3,
+                "published_month_yoy": 3.3
+              }
+            },
+            "丹东": {
+              "new_home_price": {
+                "month_value": 0.4,
+                "latest_month_value": 0.4,
+                "published_month_value": 0.4,
+                "month_yoy": 9.8,
+                "latest_month_yoy": 9.8,
+                "published_month_yoy": 9.8
+              },
+              "resale_home_price": {
+                "month_value": 0.2,
+                "latest_month_value": 0.2,
+                "published_month_value": 0.2,
+                "month_yoy": 7.7,
+                "latest_month_yoy": 7.7,
+                "published_month_yoy": 7.7
+              }
+            },
+            "锦州": {
+              "new_home_price": {
+                "month_value": 0,
+                "latest_month_value": 0,
+                "published_month_value": 0,
+                "month_yoy": 8.1,
+                "latest_month_yoy": 8.1,
+                "published_month_yoy": 8.1
+              },
+              "resale_home_price": {
+                "month_value": 0.8,
+                "latest_month_value": 0.8,
+                "published_month_value": 0.8,
+                "month_yoy": 0.8,
+                "latest_month_yoy": 0.8,
+                "published_month_yoy": 0.8
+              }
+            },
+            "长春": {
+              "new_home_price": {
+                "month_value": 0.6,
+                "latest_month_value": 0.6,
+                "published_month_value": 0.6,
+                "month_yoy": 12.3,
+                "latest_month_yoy": 12.3,
+                "published_month_yoy": 12.3
+              },
+              "resale_home_price": {
+                "month_value": 0.3,
+                "latest_month_value": 0.3,
+                "published_month_value": 0.3,
+                "month_yoy": 2.5,
+                "latest_month_yoy": 2.5,
+                "published_month_yoy": 2.5
+              }
+            },
+            "吉林": {
+              "new_home_price": {
+                "month_value": 0.2,
+                "latest_month_value": 0.2,
+                "published_month_value": 0.2,
+                "month_yoy": 2.2,
+                "latest_month_yoy": 2.2,
+                "published_month_yoy": 2.2
+              },
+              "resale_home_price": {
+                "month_value": 0.2,
+                "latest_month_value": 0.2,
+                "published_month_value": 0.2,
+                "month_yoy": 6,
+                "latest_month_yoy": 6,
+                "published_month_yoy": 6
+              }
+            },
+            "哈尔滨": {
+              "new_home_price": {
+                "month_value": 0.4,
+                "latest_month_value": 0.4,
+                "published_month_value": 0.4,
+                "month_yoy": 7.1,
+                "latest_month_yoy": 7.1,
+                "published_month_yoy": 7.1
+              },
+              "resale_home_price": {
+                "month_value": 0.3,
+                "latest_month_value": 0.3,
+                "published_month_value": 0.3,
+                "month_yoy": 0.7,
+                "latest_month_yoy": 0.7,
+                "published_month_yoy": 0.7
+              }
+            },
+            "牡丹江": {
+              "new_home_price": {
+                "month_value": 0.8,
+                "latest_month_value": 0.8,
+                "published_month_value": 0.8,
+                "month_yoy": 8.1,
+                "latest_month_yoy": 8.1,
+                "published_month_yoy": 8.1
+              },
+              "resale_home_price": {
+                "month_value": 0,
+                "latest_month_value": 0,
+                "published_month_value": 0,
+                "month_yoy": 0.2,
+                "latest_month_yoy": 0.2,
+                "published_month_yoy": 0.2
+              }
+            },
+            "上海": {
+              "new_home_price": {
+                "month_value": 0.2,
+                "latest_month_value": 0.2,
+                "published_month_value": 0.2,
+                "month_yoy": 7.6,
+                "latest_month_yoy": 7.6,
+                "published_month_yoy": 7.6
+              },
+              "resale_home_price": {
+                "month_value": 0.2,
+                "latest_month_value": 0.2,
+                "published_month_value": 0.2,
+                "month_yoy": 3.4,
+                "latest_month_yoy": 3.4,
+                "published_month_yoy": 3.4
+              }
+            },
+            "南京": {
+              "new_home_price": {
+                "month_value": -0.1,
+                "latest_month_value": -0.1,
+                "published_month_value": -0.1,
+                "month_yoy": 8.1,
+                "latest_month_yoy": 8.1,
+                "published_month_yoy": 8.1
+              },
+              "resale_home_price": {
+                "month_value": -0.1,
+                "latest_month_value": -0.1,
+                "published_month_value": -0.1,
+                "month_yoy": 1.4,
+                "latest_month_yoy": 1.4,
+                "published_month_yoy": 1.4
+              }
+            },
+            "无锡": {
+              "new_home_price": {
+                "month_value": 1.1,
+                "latest_month_value": 1.1,
+                "published_month_value": 1.1,
+                "month_yoy": 1.8,
+                "latest_month_yoy": 1.8,
+                "published_month_yoy": 1.8
+              },
+              "resale_home_price": {
+                "month_value": 0.5,
+                "latest_month_value": 0.5,
+                "published_month_value": 0.5,
+                "month_yoy": 1.7,
+                "latest_month_yoy": 1.7,
+                "published_month_yoy": 1.7
+              }
+            },
+            "徐州": {
+              "new_home_price": {
+                "month_value": 1.5,
+                "latest_month_value": 1.5,
+                "published_month_value": 1.5,
+                "month_yoy": 10,
+                "latest_month_yoy": 10,
+                "published_month_yoy": 10
+              },
+              "resale_home_price": {
+                "month_value": 3.3,
+                "latest_month_value": 3.3,
+                "published_month_value": 3.3,
+                "month_yoy": 11.1,
+                "latest_month_yoy": 11.1,
+                "published_month_yoy": 11.1
+              }
+            },
+            "扬州": {
+              "new_home_price": {
+                "month_value": 0.9,
+                "latest_month_value": 0.9,
+                "published_month_value": 0.9,
+                "month_yoy": 3.6,
+                "latest_month_yoy": 3.6,
+                "published_month_yoy": 3.6
+              },
+              "resale_home_price": {
+                "month_value": 0.9,
+                "latest_month_value": 0.9,
+                "published_month_value": 0.9,
+                "month_yoy": 3.1,
+                "latest_month_yoy": 3.1,
+                "published_month_yoy": 3.1
+              }
+            },
+            "杭州": {
+              "new_home_price": {
+                "month_value": 1.7,
+                "latest_month_value": 1.7,
+                "published_month_value": 1.7,
+                "month_yoy": 9.5,
+                "latest_month_yoy": 9.5,
+                "published_month_yoy": 9.5
+              },
+              "resale_home_price": {
+                "month_value": 0,
+                "latest_month_value": 0,
+                "published_month_value": 0,
+                "month_yoy": 5.3,
+                "latest_month_yoy": 5.3,
+                "published_month_yoy": 5.3
+              }
+            },
+            "宁波": {
+              "new_home_price": {
+                "month_value": 1.1,
+                "latest_month_value": 1.1,
+                "published_month_value": 1.1,
+                "month_yoy": 4.9,
+                "latest_month_yoy": 4.9,
+                "published_month_yoy": 4.9
+              },
+              "resale_home_price": {
+                "month_value": 0.5,
+                "latest_month_value": 0.5,
+                "published_month_value": 0.5,
+                "month_yoy": 5.2,
+                "latest_month_yoy": 5.2,
+                "published_month_yoy": 5.2
+              }
+            },
+            "温州": {
+              "new_home_price": {
+                "month_value": 1,
+                "latest_month_value": 1,
+                "published_month_value": 1,
+                "month_yoy": 3.5,
+                "latest_month_yoy": 3.5,
+                "published_month_yoy": 3.5
+              },
+              "resale_home_price": {
+                "month_value": 0.4,
+                "latest_month_value": 0.4,
+                "published_month_value": 0.4,
+                "month_yoy": 0.8,
+                "latest_month_yoy": 0.8,
+                "published_month_yoy": 0.8
+              }
+            },
+            "金华": {
+              "new_home_price": {
+                "month_value": 0.1,
+                "latest_month_value": 0.1,
+                "published_month_value": 0.1,
+                "month_yoy": 3.9,
+                "latest_month_yoy": 3.9,
+                "published_month_yoy": 3.9
+              },
+              "resale_home_price": {
+                "month_value": 0.2,
+                "latest_month_value": 0.2,
+                "published_month_value": 0.2,
+                "month_yoy": -2.9,
+                "latest_month_yoy": -2.9,
+                "published_month_yoy": -2.9
+              }
+            },
+            "合肥": {
+              "new_home_price": {
+                "month_value": 0,
+                "latest_month_value": 0,
+                "published_month_value": 0,
+                "month_yoy": 6.6,
+                "latest_month_yoy": 6.6,
+                "published_month_yoy": 6.6
+              },
+              "resale_home_price": {
+                "month_value": 0.4,
+                "latest_month_value": 0.4,
+                "published_month_value": 0.4,
+                "month_yoy": 8.1,
+                "latest_month_yoy": 8.1,
+                "published_month_yoy": 8.1
+              }
+            },
+            "蚌埠": {
+              "new_home_price": {
+                "month_value": 0,
+                "latest_month_value": 0,
+                "published_month_value": 0,
+                "month_yoy": 7.6,
+                "latest_month_yoy": 7.6,
+                "published_month_yoy": 7.6
+              },
+              "resale_home_price": {
+                "month_value": 0.6,
+                "latest_month_value": 0.6,
+                "published_month_value": 0.6,
+                "month_yoy": 3.3,
+                "latest_month_yoy": 3.3,
+                "published_month_yoy": 3.3
+              }
+            },
+            "安庆": {
+              "new_home_price": {
+                "month_value": 0.1,
+                "latest_month_value": 0.1,
+                "published_month_value": 0.1,
+                "month_yoy": 0.8,
+                "latest_month_yoy": 0.8,
+                "published_month_yoy": 0.8
+              },
+              "resale_home_price": {
+                "month_value": 2.1,
+                "latest_month_value": 2.1,
+                "published_month_value": 2.1,
+                "month_yoy": 18.5,
+                "latest_month_yoy": 18.5,
+                "published_month_yoy": 18.5
+              }
+            },
+            "福州": {
+              "new_home_price": {
+                "month_value": 0.1,
+                "latest_month_value": 0.1,
+                "published_month_value": 0.1,
+                "month_yoy": 6.5,
+                "latest_month_yoy": 6.5,
+                "published_month_yoy": 6.5
+              },
+              "resale_home_price": {
+                "month_value": 0.2,
+                "latest_month_value": 0.2,
+                "published_month_value": 0.2,
+                "month_yoy": 6.7,
+                "latest_month_yoy": 6.7,
+                "published_month_yoy": 6.7
+              }
+            },
+            "厦门": {
+              "new_home_price": {
+                "month_value": 1.7,
+                "latest_month_value": 1.7,
+                "published_month_value": 1.7,
+                "month_yoy": 0.9,
+                "latest_month_yoy": 0.9,
+                "published_month_yoy": 0.9
+              },
+              "resale_home_price": {
+                "month_value": 0.3,
+                "latest_month_value": 0.3,
+                "published_month_value": 0.3,
+                "month_yoy": 4.4,
+                "latest_month_yoy": 4.4,
+                "published_month_yoy": 4.4
+              }
+            },
+            "泉州": {
+              "new_home_price": {
+                "month_value": 0.7,
+                "latest_month_value": 0.7,
+                "published_month_value": 0.7,
+                "month_yoy": 4.2,
+                "latest_month_yoy": 4.2,
+                "published_month_yoy": 4.2
+              },
+              "resale_home_price": {
+                "month_value": 0.3,
+                "latest_month_value": 0.3,
+                "published_month_value": 0.3,
+                "month_yoy": 0.3,
+                "latest_month_yoy": 0.3,
+                "published_month_yoy": 0.3
+              }
+            },
+            "南昌": {
+              "new_home_price": {
+                "month_value": 0,
+                "latest_month_value": 0,
+                "published_month_value": 0,
+                "month_yoy": 10.1,
+                "latest_month_yoy": 10.1,
+                "published_month_yoy": 10.1
+              },
+              "resale_home_price": {
+                "month_value": 0.5,
+                "latest_month_value": 0.5,
+                "published_month_value": 0.5,
+                "month_yoy": 4.6,
+                "latest_month_yoy": 4.6,
+                "published_month_yoy": 4.6
+              }
+            },
+            "九江": {
+              "new_home_price": {
+                "month_value": 0.2,
+                "latest_month_value": 0.2,
+                "published_month_value": 0.2,
+                "month_yoy": -0.2,
+                "latest_month_yoy": -0.2,
+                "published_month_yoy": -0.2
+              },
+              "resale_home_price": {
+                "month_value": 0.1,
+                "latest_month_value": 0.1,
+                "published_month_value": 0.1,
+                "month_yoy": -0.1,
+                "latest_month_yoy": -0.1,
+                "published_month_yoy": -0.1
+              }
+            },
+            "赣州": {
+              "new_home_price": {
+                "month_value": 2,
+                "latest_month_value": 2,
+                "published_month_value": 2,
+                "month_yoy": 3.1,
+                "latest_month_yoy": 3.1,
+                "published_month_yoy": 3.1
+              },
+              "resale_home_price": {
+                "month_value": 0.6,
+                "latest_month_value": 0.6,
+                "published_month_value": 0.6,
+                "month_yoy": 1.3,
+                "latest_month_yoy": 1.3,
+                "published_month_yoy": 1.3
+              }
+            },
+            "济南": {
+              "new_home_price": {
+                "month_value": 0,
+                "latest_month_value": 0,
+                "published_month_value": 0,
+                "month_yoy": 6,
+                "latest_month_yoy": 6,
+                "published_month_yoy": 6
+              },
+              "resale_home_price": {
+                "month_value": 1.8,
+                "latest_month_value": 1.8,
+                "published_month_value": 1.8,
+                "month_yoy": 7,
+                "latest_month_yoy": 7,
+                "published_month_yoy": 7
+              }
+            },
+            "青岛": {
+              "new_home_price": {
+                "month_value": 1.9,
+                "latest_month_value": 1.9,
+                "published_month_value": 1.9,
+                "month_yoy": 8.9,
+                "latest_month_yoy": 8.9,
+                "published_month_yoy": 8.9
+              },
+              "resale_home_price": {
+                "month_value": 0.8,
+                "latest_month_value": 0.8,
+                "published_month_value": 0.8,
+                "month_yoy": 3.2,
+                "latest_month_yoy": 3.2,
+                "published_month_yoy": 3.2
+              }
+            },
+            "烟台": {
+              "new_home_price": {
+                "month_value": 0.2,
+                "latest_month_value": 0.2,
+                "published_month_value": 0.2,
+                "month_yoy": 5.6,
+                "latest_month_yoy": 5.6,
+                "published_month_yoy": 5.6
+              },
+              "resale_home_price": {
+                "month_value": 0.5,
+                "latest_month_value": 0.5,
+                "published_month_value": 0.5,
+                "month_yoy": 2.3,
+                "latest_month_yoy": 2.3,
+                "published_month_yoy": 2.3
+              }
+            },
+            "济宁": {
+              "new_home_price": {
+                "month_value": 1.6,
+                "latest_month_value": 1.6,
+                "published_month_value": 1.6,
+                "month_yoy": 5.1,
+                "latest_month_yoy": 5.1,
+                "published_month_yoy": 5.1
+              },
+              "resale_home_price": {
+                "month_value": 0.6,
+                "latest_month_value": 0.6,
+                "published_month_value": 0.6,
+                "month_yoy": 0.8,
+                "latest_month_yoy": 0.8,
+                "published_month_yoy": 0.8
+              }
+            },
+            "郑州": {
+              "new_home_price": {
+                "month_value": 0.7,
+                "latest_month_value": 0.7,
+                "published_month_value": 0.7,
+                "month_yoy": 5.5,
+                "latest_month_yoy": 5.5,
+                "published_month_yoy": 5.5
+              },
+              "resale_home_price": {
+                "month_value": 0.2,
+                "latest_month_value": 0.2,
+                "published_month_value": 0.2,
+                "month_yoy": 4.1,
+                "latest_month_yoy": 4.1,
+                "published_month_yoy": 4.1
+              }
+            },
+            "洛阳": {
+              "new_home_price": {
+                "month_value": 0.4,
+                "latest_month_value": 0.4,
+                "published_month_value": 0.4,
+                "month_yoy": 6,
+                "latest_month_yoy": 6,
+                "published_month_yoy": 6
+              },
+              "resale_home_price": {
+                "month_value": 0.7,
+                "latest_month_value": 0.7,
+                "published_month_value": 0.7,
+                "month_yoy": 5.9,
+                "latest_month_yoy": 5.9,
+                "published_month_yoy": 5.9
+              }
+            },
+            "平顶山": {
+              "new_home_price": {
+                "month_value": 1.3,
+                "latest_month_value": 1.3,
+                "published_month_value": 1.3,
+                "month_yoy": 9.6,
+                "latest_month_yoy": 9.6,
+                "published_month_yoy": 9.6
+              },
+              "resale_home_price": {
+                "month_value": 0.2,
+                "latest_month_value": 0.2,
+                "published_month_value": 0.2,
+                "month_yoy": 7.1,
+                "latest_month_yoy": 7.1,
+                "published_month_yoy": 7.1
+              }
+            },
+            "武汉": {
+              "new_home_price": {
+                "month_value": 0.4,
+                "latest_month_value": 0.4,
+                "published_month_value": 0.4,
+                "month_yoy": 6.5,
+                "latest_month_yoy": 6.5,
+                "published_month_yoy": 6.5
+              },
+              "resale_home_price": {
+                "month_value": 0.3,
+                "latest_month_value": 0.3,
+                "published_month_value": 0.3,
+                "month_yoy": 7.5,
+                "latest_month_yoy": 7.5,
+                "published_month_yoy": 7.5
+              }
+            },
+            "宜昌": {
+              "new_home_price": {
+                "month_value": 1.2,
+                "latest_month_value": 1.2,
+                "published_month_value": 1.2,
+                "month_yoy": 5.9,
+                "latest_month_yoy": 5.9,
+                "published_month_yoy": 5.9
+              },
+              "resale_home_price": {
+                "month_value": 2.5,
+                "latest_month_value": 2.5,
+                "published_month_value": 2.5,
+                "month_yoy": 2.5,
+                "latest_month_yoy": 2.5,
+                "published_month_yoy": 2.5
+              }
+            },
+            "襄阳": {
+              "new_home_price": {
+                "month_value": 2.1,
+                "latest_month_value": 2.1,
+                "published_month_value": 2.1,
+                "month_yoy": 5.9,
+                "latest_month_yoy": 5.9,
+                "published_month_yoy": 5.9
+              },
+              "resale_home_price": {
+                "month_value": 0.5,
+                "latest_month_value": 0.5,
+                "published_month_value": 0.5,
+                "month_yoy": 8.6,
+                "latest_month_yoy": 8.6,
+                "published_month_yoy": 8.6
+              }
+            },
+            "长沙": {
+              "new_home_price": {
+                "month_value": 0.1,
+                "latest_month_value": 0.1,
+                "published_month_value": 0.1,
+                "month_yoy": 10.2,
+                "latest_month_yoy": 10.2,
+                "published_month_yoy": 10.2
+              },
+              "resale_home_price": {
+                "month_value": 0.4,
+                "latest_month_value": 0.4,
+                "published_month_value": 0.4,
+                "month_yoy": 1.9,
+                "latest_month_yoy": 1.9,
+                "published_month_yoy": 1.9
+              }
+            },
+            "岳阳": {
+              "new_home_price": {
+                "month_value": 0.9,
+                "latest_month_value": 0.9,
+                "published_month_value": 0.9,
+                "month_yoy": 4.6,
+                "latest_month_yoy": 4.6,
+                "published_month_yoy": 4.6
+              },
+              "resale_home_price": {
+                "month_value": 1.7,
+                "latest_month_value": 1.7,
+                "published_month_value": 1.7,
+                "month_yoy": 6.8,
+                "latest_month_yoy": 6.8,
+                "published_month_yoy": 6.8
+              }
+            },
+            "常德": {
+              "new_home_price": {
+                "month_value": 1.8,
+                "latest_month_value": 1.8,
+                "published_month_value": 1.8,
+                "month_yoy": 10,
+                "latest_month_yoy": 10,
+                "published_month_yoy": 10
+              },
+              "resale_home_price": {
+                "month_value": 0.2,
+                "latest_month_value": 0.2,
+                "published_month_value": 0.2,
+                "month_yoy": 2.2,
+                "latest_month_yoy": 2.2,
+                "published_month_yoy": 2.2
+              }
+            },
+            "广州": {
+              "new_home_price": {
+                "month_value": 0.6,
+                "latest_month_value": 0.6,
+                "published_month_value": 0.6,
+                "month_yoy": 9,
+                "latest_month_yoy": 9,
+                "published_month_yoy": 9
+              },
+              "resale_home_price": {
+                "month_value": 0.3,
+                "latest_month_value": 0.3,
+                "published_month_value": 0.3,
+                "month_yoy": 6.3,
+                "latest_month_yoy": 6.3,
+                "published_month_yoy": 6.3
+              }
+            },
+            "韶关": {
+              "new_home_price": {
+                "month_value": 1.7,
+                "latest_month_value": 1.7,
+                "published_month_value": 1.7,
+                "month_yoy": 6.5,
+                "latest_month_yoy": 6.5,
+                "published_month_yoy": 6.5
+              },
+              "resale_home_price": {
+                "month_value": 1.4,
+                "latest_month_value": 1.4,
+                "published_month_value": 1.4,
+                "month_yoy": 9.1,
+                "latest_month_yoy": 9.1,
+                "published_month_yoy": 9.1
+              }
+            },
+            "深圳": {
+              "new_home_price": {
+                "month_value": 0.9,
+                "latest_month_value": 0.9,
+                "published_month_value": 0.9,
+                "month_yoy": 4.2,
+                "latest_month_yoy": 4.2,
+                "published_month_yoy": 4.2
+              },
+              "resale_home_price": {
+                "month_value": 0.7,
+                "latest_month_value": 0.7,
+                "published_month_value": 0.7,
+                "month_yoy": -0.4,
+                "latest_month_yoy": -0.4,
+                "published_month_yoy": -0.4
+              }
+            },
+            "湛江": {
+              "new_home_price": {
+                "month_value": 1.9,
+                "latest_month_value": 1.9,
+                "published_month_value": 1.9,
+                "month_yoy": 4.4,
+                "latest_month_yoy": 4.4,
+                "published_month_yoy": 4.4
+              },
+              "resale_home_price": {
+                "month_value": 0.6,
+                "latest_month_value": 0.6,
+                "published_month_value": 0.6,
+                "month_yoy": 1.1,
+                "latest_month_yoy": 1.1,
+                "published_month_yoy": 1.1
+              }
+            },
+            "惠州": {
+              "new_home_price": {
+                "month_value": 1.7,
+                "latest_month_value": 1.7,
+                "published_month_value": 1.7,
+                "month_yoy": 0.1,
+                "latest_month_yoy": 0.1,
+                "published_month_yoy": 0.1
+              },
+              "resale_home_price": {
+                "month_value": 1.2,
+                "latest_month_value": 1.2,
+                "published_month_value": 1.2,
+                "month_yoy": 2.9,
+                "latest_month_yoy": 2.9,
+                "published_month_yoy": 2.9
+              }
+            },
+            "南宁": {
+              "new_home_price": {
+                "month_value": 0.9,
+                "latest_month_value": 0.9,
+                "published_month_value": 0.9,
+                "month_yoy": 6.2,
+                "latest_month_yoy": 6.2,
+                "published_month_yoy": 6.2
+              },
+              "resale_home_price": {
+                "month_value": 0.6,
+                "latest_month_value": 0.6,
+                "published_month_value": 0.6,
+                "month_yoy": 9.8,
+                "latest_month_yoy": 9.8,
+                "published_month_yoy": 9.8
+              }
+            },
+            "桂林": {
+              "new_home_price": {
+                "month_value": 2.2,
+                "latest_month_value": 2.2,
+                "published_month_value": 2.2,
+                "month_yoy": 22,
+                "latest_month_yoy": 22,
+                "published_month_yoy": 22
+              },
+              "resale_home_price": {
+                "month_value": 1.5,
+                "latest_month_value": 1.5,
+                "published_month_value": 1.5,
+                "month_yoy": 13.7,
+                "latest_month_yoy": 13.7,
+                "published_month_yoy": 13.7
+              }
+            },
+            "北海": {
+              "new_home_price": {
+                "month_value": 1.3,
+                "latest_month_value": 1.3,
+                "published_month_value": 1.3,
+                "month_yoy": 2.5,
+                "latest_month_yoy": 2.5,
+                "published_month_yoy": 2.5
+              },
+              "resale_home_price": {
+                "month_value": 0.3,
+                "latest_month_value": 0.3,
+                "published_month_value": 0.3,
+                "month_yoy": 3.6,
+                "latest_month_yoy": 3.6,
+                "published_month_yoy": 3.6
+              }
+            },
+            "海口": {
+              "new_home_price": {
+                "month_value": 0.9,
+                "latest_month_value": 0.9,
+                "published_month_value": 0.9,
+                "month_yoy": 4.9,
+                "latest_month_yoy": 4.9,
+                "published_month_yoy": 4.9
+              },
+              "resale_home_price": {
+                "month_value": 1.4,
+                "latest_month_value": 1.4,
+                "published_month_value": 1.4,
+                "month_yoy": 2.7,
+                "latest_month_yoy": 2.7,
+                "published_month_yoy": 2.7
+              }
+            },
+            "三亚": {
+              "new_home_price": {
+                "month_value": 0.4,
+                "latest_month_value": 0.4,
+                "published_month_value": 0.4,
+                "month_yoy": 5.5,
+                "latest_month_yoy": 5.5,
+                "published_month_yoy": 5.5
+              },
+              "resale_home_price": {
+                "month_value": 0,
+                "latest_month_value": 0,
+                "published_month_value": 0,
+                "month_yoy": 0.9,
+                "latest_month_yoy": 0.9,
+                "published_month_yoy": 0.9
+              }
+            },
+            "重庆": {
+              "new_home_price": {
+                "month_value": 1.1,
+                "latest_month_value": 1.1,
+                "published_month_value": 1.1,
+                "month_yoy": 7.4,
+                "latest_month_yoy": 7.4,
+                "published_month_yoy": 7.4
+              },
+              "resale_home_price": {
+                "month_value": 0.4,
+                "latest_month_value": 0.4,
+                "published_month_value": 0.4,
+                "month_yoy": 5.8,
+                "latest_month_yoy": 5.8,
+                "published_month_yoy": 5.8
+              }
+            },
+            "成都": {
+              "new_home_price": {
+                "month_value": 0.4,
+                "latest_month_value": 0.4,
+                "published_month_value": 0.4,
+                "month_yoy": 19.1,
+                "latest_month_yoy": 19.1,
+                "published_month_yoy": 19.1
+              },
+              "resale_home_price": {
+                "month_value": 0.7,
+                "latest_month_value": 0.7,
+                "published_month_value": 0.7,
+                "month_yoy": 14.8,
+                "latest_month_yoy": 14.8,
+                "published_month_yoy": 14.8
+              }
+            },
+            "泸州": {
+              "new_home_price": {
+                "month_value": 0.6,
+                "latest_month_value": 0.6,
+                "published_month_value": 0.6,
+                "month_yoy": 21.6,
+                "latest_month_yoy": 21.6,
+                "published_month_yoy": 21.6
+              },
+              "resale_home_price": {
+                "month_value": 0,
+                "latest_month_value": 0,
+                "published_month_value": 0,
+                "month_yoy": -0.6,
+                "latest_month_yoy": -0.6,
+                "published_month_yoy": -0.6
+              }
+            },
+            "南充": {
+              "new_home_price": {
+                "month_value": 1.4,
+                "latest_month_value": 1.4,
+                "published_month_value": 1.4,
+                "month_yoy": 5,
+                "latest_month_yoy": 5,
+                "published_month_yoy": 5
+              },
+              "resale_home_price": {
+                "month_value": 2.2,
+                "latest_month_value": 2.2,
+                "published_month_value": 2.2,
+                "month_yoy": 2.1,
+                "latest_month_yoy": 2.1,
+                "published_month_yoy": 2.1
+              }
+            },
+            "贵阳": {
+              "new_home_price": {
+                "month_value": 2.2,
+                "latest_month_value": 2.2,
+                "published_month_value": 2.2,
+                "month_yoy": 5.8,
+                "latest_month_yoy": 5.8,
+                "published_month_yoy": 5.8
+              },
+              "resale_home_price": {
+                "month_value": 0.8,
+                "latest_month_value": 0.8,
+                "published_month_value": 0.8,
+                "month_yoy": 6,
+                "latest_month_yoy": 6,
+                "published_month_yoy": 6
+              }
+            },
+            "遵义": {
+              "new_home_price": {
+                "month_value": -1.7,
+                "latest_month_value": -1.7,
+                "published_month_value": -1.7,
+                "month_yoy": -0.3,
+                "latest_month_yoy": -0.3,
+                "published_month_yoy": -0.3
+              },
+              "resale_home_price": {
+                "month_value": 1.1,
+                "latest_month_value": 1.1,
+                "published_month_value": 1.1,
+                "month_yoy": 0.9,
+                "latest_month_yoy": 0.9,
+                "published_month_yoy": 0.9
+              }
+            },
+            "昆明": {
+              "new_home_price": {
+                "month_value": -0.5,
+                "latest_month_value": -0.5,
+                "published_month_value": -0.5,
+                "month_yoy": 1.8,
+                "latest_month_yoy": 1.8,
+                "published_month_yoy": 1.8
+              },
+              "resale_home_price": {
+                "month_value": -0.3,
+                "latest_month_value": -0.3,
+                "published_month_value": -0.3,
+                "month_yoy": -1.4,
+                "latest_month_yoy": -1.4,
+                "published_month_yoy": -1.4
+              }
+            },
+            "大理": {
+              "new_home_price": {
+                "month_value": 1.2,
+                "latest_month_value": 1.2,
+                "published_month_value": 1.2,
+                "month_yoy": 5.2,
+                "latest_month_yoy": 5.2,
+                "published_month_yoy": 5.2
+              },
+              "resale_home_price": {
+                "month_value": 1.1,
+                "latest_month_value": 1.1,
+                "published_month_value": 1.1,
+                "month_yoy": 11.7,
+                "latest_month_yoy": 11.7,
+                "published_month_yoy": 11.7
+              }
+            },
+            "西安": {
+              "new_home_price": {
+                "month_value": 0,
+                "latest_month_value": 0,
+                "published_month_value": 0,
+                "month_yoy": 2.8,
+                "latest_month_yoy": 2.8,
+                "published_month_yoy": 2.8
+              },
+              "resale_home_price": {
+                "month_value": 0,
+                "latest_month_value": 0,
+                "published_month_value": 0,
+                "month_yoy": 5.2,
+                "latest_month_yoy": 5.2,
+                "published_month_yoy": 5.2
+              }
+            },
+            "兰州": {
+              "new_home_price": {
+                "month_value": 1.2,
+                "latest_month_value": 1.2,
+                "published_month_value": 1.2,
+                "month_yoy": 5.9,
+                "latest_month_yoy": 5.9,
+                "published_month_yoy": 5.9
+              },
+              "resale_home_price": {
+                "month_value": 0.5,
+                "latest_month_value": 0.5,
+                "published_month_value": 0.5,
+                "month_yoy": 3.7,
+                "latest_month_yoy": 3.7,
+                "published_month_yoy": 3.7
+              }
+            },
+            "西宁": {
+              "new_home_price": {
+                "month_value": 1.1,
+                "latest_month_value": 1.1,
+                "published_month_value": 1.1,
+                "month_yoy": 6.1,
+                "latest_month_yoy": 6.1,
+                "published_month_yoy": 6.1
+              },
+              "resale_home_price": {
+                "month_value": 0.3,
+                "latest_month_value": 0.3,
+                "published_month_value": 0.3,
+                "month_yoy": 3.6,
+                "latest_month_yoy": 3.6,
+                "published_month_yoy": 3.6
+              }
+            },
+            "银川": {
+              "new_home_price": {
+                "month_value": 0.2,
+                "latest_month_value": 0.2,
+                "published_month_value": 0.2,
+                "month_yoy": 4.8,
+                "latest_month_yoy": 4.8,
+                "published_month_yoy": 4.8
+              },
+              "resale_home_price": {
+                "month_value": 0.5,
+                "latest_month_value": 0.5,
+                "published_month_value": 0.5,
+                "month_yoy": 7.4,
+                "latest_month_yoy": 7.4,
+                "published_month_yoy": 7.4
+              }
+            },
+            "乌鲁木齐": {
+              "new_home_price": {
+                "month_value": 0.5,
+                "latest_month_value": 0.5,
+                "published_month_value": 0.5,
+                "month_yoy": 9.4,
+                "latest_month_yoy": 9.4,
+                "published_month_yoy": 9.4
+              },
+              "resale_home_price": {
+                "month_value": 1.9,
+                "latest_month_value": 1.9,
+                "published_month_value": 1.9,
+                "month_yoy": 7.4,
+                "latest_month_yoy": 7.4,
+                "published_month_yoy": 7.4
+              }
+            }
+          }
+        }
+      },
+      "series": {
+        "new_home_70_price": {
+          "path": "property.series.new_home_70_price",
+          "label_fields": {
+            "name": "70城新房价格",
+            "group": "70城房价",
+            "level": 1
+          },
+          "unit": "%",
+          "frequency": "monthly (with gaps)",
+          "value_label": "环比",
+          "yoy_label": "同比",
+          "source_name": "中国国家统计局",
+          "source_link_label": "统计方法说明",
+          "method_url": "https://www.stats.gov.cn/sj/zxfb/202606/t20260616_1963946.html",
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "methodUrl",
+            "name",
+            "source_link_label",
+            "source_name",
+            "unit",
+            "valueLabel",
+            "yoyLabel"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 184,
+          "date_range": {
+            "min": "2011-01",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": -0.2,
+              "latest_month_value": -0.2,
+              "published_month_value": -0.2,
+              "month_yoy": -3.64,
+              "latest_month_yoy": -3.64,
+              "published_month_yoy": -3.64
+            }
+          }
+        },
+        "resale_home_70_price": {
+          "path": "property.series.resale_home_70_price",
+          "label_fields": {
+            "name": "70城二手房价格",
+            "group": "70城房价",
+            "level": 1
+          },
+          "unit": "%",
+          "frequency": "monthly",
+          "value_label": "环比",
+          "yoy_label": "同比",
+          "source_name": "中国国家统计局",
+          "source_link_label": "统计方法说明",
+          "method_url": "https://www.stats.gov.cn/sj/zxfb/202606/t20260616_1963946.html",
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "methodUrl",
+            "name",
+            "source_link_label",
+            "source_name",
+            "unit",
+            "valueLabel",
+            "yoyLabel"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 185,
+          "date_range": {
+            "min": "2011-01",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": -0.26,
+              "latest_month_value": -0.26,
+              "published_month_value": -0.26,
+              "month_yoy": -5.93,
+              "latest_month_yoy": -5.93,
+              "published_month_yoy": -5.93
+            }
+          }
+        },
+        "new_home_up_cities": {
+          "path": "property.series.new_home_up_cities",
+          "label_fields": {
+            "name": "70城新房环比上涨城市数",
+            "group": "70城房价",
+            "level": 2
+          },
+          "unit": "个",
+          "frequency": "monthly (with gaps)",
+          "value_label": "城市数",
+          "yoy_label": null,
+          "source_name": "中国国家统计局",
+          "source_link_label": "统计方法说明",
+          "method_url": "https://www.stats.gov.cn/sj/zxfb/202606/t20260616_1963946.html",
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "methodUrl",
+            "name",
+            "source_link_label",
+            "source_name",
+            "unit",
+            "valueLabel"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "month_value",
+            "published_month_value"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 184,
+          "date_range": {
+            "min": "2011-01",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 16,
+              "latest_month_value": 16,
+              "published_month_value": 16
+            }
+          }
+        },
+        "resale_home_up_cities": {
+          "path": "property.series.resale_home_up_cities",
+          "label_fields": {
+            "name": "70城二手房环比上涨城市数",
+            "group": "70城房价",
+            "level": 2
+          },
+          "unit": "个",
+          "frequency": "monthly",
+          "value_label": "城市数",
+          "yoy_label": null,
+          "source_name": "中国国家统计局",
+          "source_link_label": "统计方法说明",
+          "method_url": "https://www.stats.gov.cn/sj/zxfb/202606/t20260616_1963946.html",
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "methodUrl",
+            "name",
+            "source_link_label",
+            "source_name",
+            "unit",
+            "valueLabel"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "month_value",
+            "published_month_value"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 185,
+          "date_range": {
+            "min": "2011-01",
+            "max": "2026-05"
+          },
+          "sample_observation": {
+            "period": "2026-05",
+            "fields": {
+              "month_value": 10,
+              "latest_month_value": 10,
+              "published_month_value": 10
+            }
+          }
+        },
+        "real_estate_loan_balance": {
+          "path": "property.series.real_estate_loan_balance",
+          "label_fields": {
+            "name": "人民币房地产贷款余额",
+            "group": "房贷余额",
+            "level": 3
+          },
+          "unit": "亿元",
+          "frequency": "quarterly (with gaps)",
+          "value_label": "余额",
+          "yoy_label": "同比",
+          "source_name": "中国人民银行",
+          "source_link_label": "贷款投向统计报告",
+          "method_url": "https://www.pbc.gov.cn/goutongjiaoliu/113456/113469/2026042910121416386/index.html",
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "methodUrl",
+            "name",
+            "source_link_label",
+            "source_name",
+            "unit",
+            "valueLabel",
+            "yoyLabel"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 18,
+          "date_range": {
+            "min": "2021-03",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 517000,
+              "latest_month_value": 517000,
+              "published_month_value": 517000,
+              "month_yoy": -3.4,
+              "latest_month_yoy": -3.4,
+              "published_month_yoy": -3.4
+            }
+          }
+        },
+        "mortgage_balance": {
+          "path": "property.series.mortgage_balance",
+          "label_fields": {
+            "name": "个人住房贷款余额",
+            "group": "房贷余额",
+            "level": 3
+          },
+          "unit": "亿元",
+          "frequency": "quarterly (with gaps)",
+          "value_label": "余额",
+          "yoy_label": "同比",
+          "source_name": "中国人民银行",
+          "source_link_label": "贷款投向统计报告",
+          "method_url": "https://www.pbc.gov.cn/goutongjiaoliu/113456/113469/2026042910121416386/index.html",
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "methodUrl",
+            "name",
+            "source_link_label",
+            "source_name",
+            "unit",
+            "valueLabel",
+            "yoyLabel"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 19,
+          "date_range": {
+            "min": "2021-03",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 367200,
+              "latest_month_value": 367200,
+              "published_month_value": 367200,
+              "month_yoy": -3.1,
+              "latest_month_yoy": -3.1,
+              "published_month_yoy": -3.1
+            }
+          }
+        },
+        "property_development_loan_balance": {
+          "path": "property.series.property_development_loan_balance",
+          "label_fields": {
+            "name": "房地产开发贷款余额",
+            "group": "房贷余额",
+            "level": 3
+          },
+          "unit": "亿元",
+          "frequency": "quarterly (with gaps)",
+          "value_label": "余额",
+          "yoy_label": "同比",
+          "source_name": "中国人民银行",
+          "source_link_label": "贷款投向统计报告",
+          "method_url": "https://www.pbc.gov.cn/goutongjiaoliu/113456/113469/2026042910121416386/index.html",
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "methodUrl",
+            "name",
+            "source_link_label",
+            "source_name",
+            "unit",
+            "valueLabel",
+            "yoyLabel"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 18,
+          "date_range": {
+            "min": "2021-03",
+            "max": "2026-03"
+          },
+          "sample_observation": {
+            "period": "2026-03",
+            "fields": {
+              "month_value": 131700,
+              "latest_month_value": 131700,
+              "published_month_value": 131700,
+              "month_yoy": -5.1,
+              "latest_month_yoy": -5.1,
+              "published_month_yoy": -5.1
+            }
+          }
+        },
+        "land_transfer_revenue": {
+          "path": "property.series.land_transfer_revenue",
+          "label_fields": {
+            "name": "国有土地使用权出让收入",
+            "group": "财政土地",
+            "level": 4
+          },
+          "unit": "亿元",
+          "frequency": "monthly (with gaps)",
+          "value_label": "报告期",
+          "yoy_label": "同比",
+          "source_name": "财政部",
+          "source_link_label": "财政收支情况",
+          "method_url": "http://gks.mof.gov.cn/tongjishuju/202605/t20260515_3989956.htm",
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "methodUrl",
+            "name",
+            "source_link_label",
+            "source_name",
+            "unit",
+            "valueLabel",
+            "yoyLabel"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 86,
+          "date_range": {
+            "min": "2016-03",
+            "max": "2026-04"
+          },
+          "sample_observation": {
+            "period": "2026-04",
+            "fields": {
+              "month_value": 6801,
+              "latest_month_value": 6801,
+              "published_month_value": 6801,
+              "month_yoy": -27.2,
+              "latest_month_yoy": -27.2,
+              "published_month_yoy": -27.2
+            }
+          }
+        },
+        "real_estate_tax_total": {
+          "path": "property.series.real_estate_tax_total",
+          "label_fields": {
+            "name": "地产相关税收合计",
+            "group": "财政土地",
+            "level": 4
+          },
+          "unit": "亿元",
+          "frequency": "monthly (with gaps)",
+          "value_label": "报告期",
+          "yoy_label": "同比",
+          "source_name": "财政部",
+          "source_link_label": "财政收支情况",
+          "method_url": "http://gks.mof.gov.cn/tongjishuju/202605/t20260515_3989956.htm",
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "methodUrl",
+            "name",
+            "source_link_label",
+            "source_name",
+            "unit",
+            "valueLabel",
+            "yoyLabel"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 97,
+          "date_range": {
+            "min": "2016-02",
+            "max": "2026-04"
+          },
+          "sample_observation": {
+            "period": "2026-04",
+            "fields": {
+              "month_value": 6672,
+              "latest_month_value": 6672,
+              "published_month_value": 6672,
+              "month_yoy": -4.81,
+              "latest_month_yoy": -4.81,
+              "published_month_yoy": -4.81
+            }
+          }
+        },
+        "deed_tax": {
+          "path": "property.series.deed_tax",
+          "label_fields": {
+            "name": "契税收入",
+            "group": "地产相关税收",
+            "level": 5
+          },
+          "unit": "亿元",
+          "frequency": "monthly (with gaps)",
+          "value_label": "报告期",
+          "yoy_label": "同比",
+          "source_name": "财政部",
+          "source_link_label": "财政收支情况",
+          "method_url": "http://gks.mof.gov.cn/tongjishuju/202605/t20260515_3989956.htm",
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "methodUrl",
+            "name",
+            "source_link_label",
+            "source_name",
+            "unit",
+            "valueLabel",
+            "yoyLabel"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 102,
+          "date_range": {
+            "min": "2016-02",
+            "max": "2026-04"
+          },
+          "sample_observation": {
+            "period": "2026-04",
+            "fields": {
+              "month_value": 1370,
+              "latest_month_value": 1370,
+              "published_month_value": 1370,
+              "month_yoy": -15.3,
+              "latest_month_yoy": -15.3,
+              "published_month_yoy": -15.3
+            }
+          }
+        },
+        "property_tax": {
+          "path": "property.series.property_tax",
+          "label_fields": {
+            "name": "房产税收入",
+            "group": "地产相关税收",
+            "level": 5
+          },
+          "unit": "亿元",
+          "frequency": "monthly (with gaps)",
+          "value_label": "报告期",
+          "yoy_label": "同比",
+          "source_name": "财政部",
+          "source_link_label": "财政收支情况",
+          "method_url": "http://gks.mof.gov.cn/tongjishuju/202605/t20260515_3989956.htm",
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "methodUrl",
+            "name",
+            "source_link_label",
+            "source_name",
+            "unit",
+            "valueLabel",
+            "yoyLabel"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 102,
+          "date_range": {
+            "min": "2016-02",
+            "max": "2026-04"
+          },
+          "sample_observation": {
+            "period": "2026-04",
+            "fields": {
+              "month_value": 2185,
+              "latest_month_value": 2185,
+              "published_month_value": 2185,
+              "month_yoy": 7.8,
+              "latest_month_yoy": 7.8,
+              "published_month_yoy": 7.8
+            }
+          }
+        },
+        "urban_land_use_tax": {
+          "path": "property.series.urban_land_use_tax",
+          "label_fields": {
+            "name": "城镇土地使用税收入",
+            "group": "地产相关税收",
+            "level": 5
+          },
+          "unit": "亿元",
+          "frequency": "monthly (with gaps)",
+          "value_label": "报告期",
+          "yoy_label": "同比",
+          "source_name": "财政部",
+          "source_link_label": "财政收支情况",
+          "method_url": "http://gks.mof.gov.cn/tongjishuju/202605/t20260515_3989956.htm",
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "methodUrl",
+            "name",
+            "source_link_label",
+            "source_name",
+            "unit",
+            "valueLabel",
+            "yoyLabel"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 102,
+          "date_range": {
+            "min": "2016-02",
+            "max": "2026-04"
+          },
+          "sample_observation": {
+            "period": "2026-04",
+            "fields": {
+              "month_value": 1049,
+              "latest_month_value": 1049,
+              "published_month_value": 1049,
+              "month_yoy": 3.7,
+              "latest_month_yoy": 3.7,
+              "published_month_yoy": 3.7
+            }
+          }
+        },
+        "land_vat": {
+          "path": "property.series.land_vat",
+          "label_fields": {
+            "name": "土地增值税收入",
+            "group": "地产相关税收",
+            "level": 5
+          },
+          "unit": "亿元",
+          "frequency": "monthly (with gaps)",
+          "value_label": "报告期",
+          "yoy_label": "同比",
+          "source_name": "财政部",
+          "source_link_label": "财政收支情况",
+          "method_url": "http://gks.mof.gov.cn/tongjishuju/202605/t20260515_3989956.htm",
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "methodUrl",
+            "name",
+            "source_link_label",
+            "source_name",
+            "unit",
+            "valueLabel",
+            "yoyLabel"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 97,
+          "date_range": {
+            "min": "2016-02",
+            "max": "2026-04"
+          },
+          "sample_observation": {
+            "period": "2026-04",
+            "fields": {
+              "month_value": 1522,
+              "latest_month_value": 1522,
+              "published_month_value": 1522,
+              "month_yoy": -15.6,
+              "latest_month_yoy": -15.6,
+              "published_month_yoy": -15.6
+            }
+          }
+        },
+        "farmland_occupation_tax": {
+          "path": "property.series.farmland_occupation_tax",
+          "label_fields": {
+            "name": "耕地占用税收入",
+            "group": "地产相关税收",
+            "level": 5
+          },
+          "unit": "亿元",
+          "frequency": "monthly (with gaps)",
+          "value_label": "报告期",
+          "yoy_label": "同比",
+          "source_name": "财政部",
+          "source_link_label": "财政收支情况",
+          "method_url": "http://gks.mof.gov.cn/tongjishuju/202605/t20260515_3989956.htm",
+          "raw_meta_keys": [
+            "group",
+            "level",
+            "methodUrl",
+            "name",
+            "source_link_label",
+            "source_name",
+            "unit",
+            "valueLabel",
+            "yoyLabel"
+          ],
+          "metric_field_names": [
+            "latest_month_value",
+            "latest_month_yoy",
+            "month_value",
+            "month_yoy",
+            "published_month_value",
+            "published_month_yoy"
+          ],
+          "has_published_variant": true,
+          "has_latest_variant": true,
+          "has_ytd_variant": false,
+          "has_plain_month_variant": true,
+          "observation_count": 102,
+          "date_range": {
+            "min": "2016-02",
+            "max": "2026-04"
+          },
+          "sample_observation": {
+            "period": "2026-04",
+            "fields": {
+              "month_value": 546,
+              "latest_month_value": 546,
+              "published_month_value": 546,
+              "month_yoy": -0.6,
+              "latest_month_yoy": -0.6,
+              "published_month_yoy": -0.6
+            }
+          }
+        }
+      },
+      "series_count": 14,
+      "total_observations": 1481,
+      "city_detail": {
+        "path": "property.records[].cities",
+        "description": "Per-record nested dict keyed by Chinese city name (not a top-level series). Each city holds new_home_price/resale_home_price metric objects in the same shape as top-level series metrics (month_value/month_yoy/latest_month_*/published_month_*).",
+        "declared_cities_path": "property.cities",
+        "declared_city_count": 70,
+        "declared_city_names": [
+          "北京",
+          "天津",
+          "石家庄",
+          "唐山",
+          "秦皇岛",
+          "太原",
+          "呼和浩特",
+          "包头",
+          "沈阳",
+          "大连",
+          "丹东",
+          "锦州",
+          "长春",
+          "吉林",
+          "哈尔滨",
+          "牡丹江",
+          "上海",
+          "南京",
+          "无锡",
+          "徐州",
+          "扬州",
+          "杭州",
+          "宁波",
+          "温州",
+          "金华",
+          "合肥",
+          "蚌埠",
+          "安庆",
+          "福州",
+          "厦门",
+          "泉州",
+          "南昌",
+          "九江",
+          "赣州",
+          "济南",
+          "青岛",
+          "烟台",
+          "济宁",
+          "郑州",
+          "洛阳",
+          "平顶山",
+          "武汉",
+          "宜昌",
+          "襄阳",
+          "长沙",
+          "岳阳",
+          "常德",
+          "广州",
+          "韶关",
+          "深圳",
+          "湛江",
+          "惠州",
+          "南宁",
+          "桂林",
+          "北海",
+          "海口",
+          "三亚",
+          "重庆",
+          "成都",
+          "泸州",
+          "南充",
+          "贵阳",
+          "遵义",
+          "昆明",
+          "大理",
+          "西安",
+          "兰州",
+          "西宁",
+          "银川",
+          "乌鲁木齐"
+        ],
+        "cities_seen_in_records": 70,
+        "cities_declared_not_seen_in_any_record": [],
+        "cities_seen_but_not_declared_at_top_level": [],
+        "metric_names": [
+          "new_home_price",
+          "resale_home_price"
+        ],
+        "metric_field_names": [
+          "latest_month_value",
+          "latest_month_yoy",
+          "month_value",
+          "month_yoy",
+          "published_month_value",
+          "published_month_yoy"
+        ],
+        "city_count_distribution_across_records": {
+          "1": 1,
+          "62": 1,
+          "65": 1,
+          "70": 182
+        },
+        "records_with_incomplete_city_coverage": [
+          {
+            "period": "2012-12",
+            "city_count": 1
+          },
+          {
+            "period": "2019-05",
+            "city_count": 65
+          },
+          {
+            "period": "2022-11",
+            "city_count": 62
+          }
+        ],
+        "null_month_value_counts_by_metric": {
+          "resale_home_price": 41,
+          "new_home_price": 51
+        },
+        "total_city_metric_observations": 25691,
+        "date_range": {
+          "min": "2011-01",
+          "max": "2026-05"
+        }
+      }
+    }
+  },
+  "archive_files": {
+    "retail_release_archive.json": {
+      "path": "retail_release_archive.json",
+      "file_size_bytes": 1182777,
+      "shape": {
+        "type": "dict",
+        "len": 6,
+        "keys": {
+          "generated_at": {
+            "type": "str",
+            "len": 24,
+            "sample": "2026-06-17T02:22:10.004Z"
+          },
+          "coverage_note": {
+            "type": "str",
+            "len": 88,
+            "sample": "新版国家数据接口已补入可取得的当期月度序列：社会消费品零售总额最早为 1985-01；除汽车以外、汽车拆分仍以发布稿可解析范围为准；网上商品零售额当期值由官方累...<truncated from 88 chars>"
+          },
+          "sources": {
+            "type": "list",
+            "len": 6,
+            "item_sample": {
+              "type": "str",
+              "len": 69,
+              "sample": "https://data.stats.gov.cn/dg/website/page.html#/pc/national/monthData"
+            }
+          },
+          "series": {
+            "type": "dict",
+            "len": 28,
+            "keys": {
+              "retail_total": {
+                "type": "dict",
+                "len": 3,
+                "keys": {
+                  "name": {
+                    "type": "str",
+                    "len": 9,
+                    "sample": "社会消费品零售总额"
+                  },
+                  "group": {
+                    "type": "str",
+                    "len": 2,
+                    "sample": "总览"
+                  },
+                  "level": {
+                    "type": "int",
+                    "value": 1
+                  }
+                }
+              },
+              "retail_ex_auto": {
+                "type": "dict",
+                "len": 3,
+                "keys": {
+                  "name": {
+                    "type": "str",
+                    "len": 12,
+                    "sample": "除汽车以外的消费品零售额"
+                  },
+                  "group": {
+                    "type": "str",
+                    "len": 4,
+                    "sample": "汽车拆分"
+                  },
+                  "level": {
+                    "type": "int",
+                    "value": 2
+                  }
+                }
+              },
+              "auto_total": {
+                "type": "dict",
+                "len": 3,
+                "keys": {
+                  "name": {
+                    "type": "str",
+                    "len": 7,
+                    "sample": "汽车消费零售额"
+                  },
+                  "group": {
+                    "type": "str",
+                    "len": 4,
+                    "sample": "汽车拆分"
+                  },
+                  "level": {
+                    "type": "int",
+                    "value": 2
+                  }
+                }
+              },
+              "urban": {
+                "type": "dict",
+                "len": 3,
+                "keys": {
+                  "name": {
+                    "type": "str",
+                    "len": 8,
+                    "sample": "城镇消费品零售额"
+                  },
+                  "group": {
+                    "type": "str",
+                    "len": 2,
+                    "sample": "城乡"
+                  },
+                  "level": {
+                    "type": "int",
+                    "value": 3
+                  }
+                }
+              },
+              "rural": {
+                "type": "dict",
+                "len": 3,
+                "keys": {
+                  "name": {
+                    "type": "str",
+                    "len": 8,
+                    "sample": "乡村消费品零售额"
+                  },
+                  "group": {
+                    "type": "str",
+                    "len": 2,
+                    "sample": "城乡"
+                  },
+                  "level": {
+                    "type": "int",
+                    "value": 3
+                  }
+                }
+              },
+              "online_goods": {
+                "type": "dict",
+                "len": 3,
+                "keys": {
+                  "name": {
+                    "type": "str",
+                    "len": 7,
+                    "sample": "网上商品零售额"
+                  },
+                  "group": {
+                    "type": "str",
+                    "len": 2,
+                    "sample": "线上"
+                  },
+                  "level": {
+                    "type": "int",
+                    "value": 4
+                  }
+                }
+              },
+              "...": "22 more keys"
+            }
+          },
+          "records": {
+            "type": "list",
+            "len": 476,
+            "item_sample": {
+              "type": "dict",
+              "len": 8,
+              "keys": {
+                "year": {
+                  "type": "int",
+                  "value": 1985
+                },
+                "month": {
+                  "type": "int",
+                  "value": 1
+                },
+                "period": {
+                  "type": "str",
+                  "len": 7,
+                  "sample": "1985-01"
+                },
+                "title": {
+                  "type": "str",
+                  "len": 12,
+                  "sample": "国家数据 1985-01"
+                },
+                "url": {
+                  "type": "str",
+                  "len": 69,
+                  "sample": "https://data.stats.gov.cn/dg/website/page.html#/pc/national/monthData"
+                },
+                "published_at": {
+                  "type": "NoneType",
+                  "value": null
+                },
+                "...": "2 more keys"
+              }
+            }
+          },
+          "versioning_note": {
+            "type": "str",
+            "len": 74,
+            "sample": "每个指标保留 latest_*（当前最新版本）与 published_*（发布日期版本）。month_* 字段保留为 latest_* 的兼容别名。"
+          }
+        }
+      },
+      "relationship_to_data_js": {
+        "compared_to": "data.js:retail",
+        "byte_identical_json": true,
+        "numerically_identical_after_int_float_and_signed_zero_normalization": true,
+        "note": "Identical content."
+      }
+    },
+    "income_release_archive.json": {
+      "path": "income_release_archive.json",
+      "file_size_bytes": 224672,
+      "shape": {
+        "type": "dict",
+        "len": 8,
+        "keys": {
+          "generated_at": {
+            "type": "str",
+            "len": 24,
+            "sample": "2026-05-30T20:56:26+0800"
+          },
+          "section": {
+            "type": "str",
+            "len": 6,
+            "sample": "income"
+          },
+          "section_name": {
+            "type": "str",
+            "len": 7,
+            "sample": "居民收入和支出"
+          },
+          "frequency": {
+            "type": "str",
+            "len": 7,
+            "sample": "quarter"
+          },
+          "coverage_note": {
+            "type": "str",
+            "len": 63,
+            "sample": "2017年一季度起为完整居民收入和消费支出发布稿口径；2013-2016年为历史补充层，仅补入官方页面可核验的指标，缺项留空。"
+          },
+          "sources": {
+            "type": "list",
+            "len": 2,
+            "item_sample": {
+              "type": "str",
+              "len": 33,
+              "sample": "https://www.stats.gov.cn/sj/zxfb/"
+            }
+          },
+          "...": "2 more keys"
+        }
+      },
+      "relationship_to_data_js": {
+        "compared_to": "data.js:income",
+        "byte_identical_json": false,
+        "numerically_identical_after_int_float_and_signed_zero_normalization": true,
+        "note": "Same content; only differences are JSON number-formatting artifacts (int vs float, e.g. 60 vs 60.0; and signed zero, e.g. -0.0 vs 0.0 from rounding), not a real data divergence."
+      }
+    },
+    "property_release_archive.json": {
+      "path": "property_release_archive.json",
+      "file_size_bytes": 7584644,
+      "shape": {
+        "type": "dict",
+        "len": 9,
+        "keys": {
+          "section": {
+            "type": "str",
+            "len": 8,
+            "sample": "property"
+          },
+          "section_name": {
+            "type": "str",
+            "len": 5,
+            "sample": "房价和房贷"
+          },
+          "frequency": {
+            "type": "str",
+            "len": 5,
+            "sample": "mixed"
+          },
+          "series": {
+            "type": "dict",
+            "len": 14,
+            "keys": {
+              "new_home_70_price": {
+                "type": "dict",
+                "len": 9,
+                "keys": {
+                  "name": {
+                    "type": "str",
+                    "len": 7,
+                    "sample": "70城新房价格"
+                  },
+                  "group": {
+                    "type": "str",
+                    "len": 5,
+                    "sample": "70城房价"
+                  },
+                  "level": {
+                    "type": "int",
+                    "value": 1
+                  },
+                  "unit": {
+                    "type": "str",
+                    "len": 1,
+                    "sample": "%"
+                  },
+                  "valueLabel": {
+                    "type": "str",
+                    "len": 2,
+                    "sample": "环比"
+                  },
+                  "yoyLabel": {
+                    "type": "str",
+                    "len": 2,
+                    "sample": "同比"
+                  },
+                  "...": "3 more keys"
+                }
+              },
+              "resale_home_70_price": {
+                "type": "dict",
+                "len": 9,
+                "keys": {
+                  "name": {
+                    "type": "str",
+                    "len": 8,
+                    "sample": "70城二手房价格"
+                  },
+                  "group": {
+                    "type": "str",
+                    "len": 5,
+                    "sample": "70城房价"
+                  },
+                  "level": {
+                    "type": "int",
+                    "value": 1
+                  },
+                  "unit": {
+                    "type": "str",
+                    "len": 1,
+                    "sample": "%"
+                  },
+                  "valueLabel": {
+                    "type": "str",
+                    "len": 2,
+                    "sample": "环比"
+                  },
+                  "yoyLabel": {
+                    "type": "str",
+                    "len": 2,
+                    "sample": "同比"
+                  },
+                  "...": "3 more keys"
+                }
+              },
+              "new_home_up_cities": {
+                "type": "dict",
+                "len": 8,
+                "keys": {
+                  "name": {
+                    "type": "str",
+                    "len": 12,
+                    "sample": "70城新房环比上涨城市数"
+                  },
+                  "group": {
+                    "type": "str",
+                    "len": 5,
+                    "sample": "70城房价"
+                  },
+                  "level": {
+                    "type": "int",
+                    "value": 2
+                  },
+                  "unit": {
+                    "type": "str",
+                    "len": 1,
+                    "sample": "个"
+                  },
+                  "valueLabel": {
+                    "type": "str",
+                    "len": 3,
+                    "sample": "城市数"
+                  },
+                  "source_name": {
+                    "type": "str",
+                    "len": 7,
+                    "sample": "中国国家统计局"
+                  },
+                  "...": "2 more keys"
+                }
+              },
+              "resale_home_up_cities": {
+                "type": "dict",
+                "len": 8,
+                "keys": {
+                  "name": {
+                    "type": "str",
+                    "len": 13,
+                    "sample": "70城二手房环比上涨城市数"
+                  },
+                  "group": {
+                    "type": "str",
+                    "len": 5,
+                    "sample": "70城房价"
+                  },
+                  "level": {
+                    "type": "int",
+                    "value": 2
+                  },
+                  "unit": {
+                    "type": "str",
+                    "len": 1,
+                    "sample": "个"
+                  },
+                  "valueLabel": {
+                    "type": "str",
+                    "len": 3,
+                    "sample": "城市数"
+                  },
+                  "source_name": {
+                    "type": "str",
+                    "len": 7,
+                    "sample": "中国国家统计局"
+                  },
+                  "...": "2 more keys"
+                }
+              },
+              "real_estate_loan_balance": {
+                "type": "dict",
+                "len": 9,
+                "keys": {
+                  "name": {
+                    "type": "str",
+                    "len": 10,
+                    "sample": "人民币房地产贷款余额"
+                  },
+                  "group": {
+                    "type": "str",
+                    "len": 4,
+                    "sample": "房贷余额"
+                  },
+                  "level": {
+                    "type": "int",
+                    "value": 3
+                  },
+                  "unit": {
+                    "type": "str",
+                    "len": 2,
+                    "sample": "亿元"
+                  },
+                  "valueLabel": {
+                    "type": "str",
+                    "len": 2,
+                    "sample": "余额"
+                  },
+                  "yoyLabel": {
+                    "type": "str",
+                    "len": 2,
+                    "sample": "同比"
+                  },
+                  "...": "3 more keys"
+                }
+              },
+              "mortgage_balance": {
+                "type": "dict",
+                "len": 9,
+                "keys": {
+                  "name": {
+                    "type": "str",
+                    "len": 8,
+                    "sample": "个人住房贷款余额"
+                  },
+                  "group": {
+                    "type": "str",
+                    "len": 4,
+                    "sample": "房贷余额"
+                  },
+                  "level": {
+                    "type": "int",
+                    "value": 3
+                  },
+                  "unit": {
+                    "type": "str",
+                    "len": 2,
+                    "sample": "亿元"
+                  },
+                  "valueLabel": {
+                    "type": "str",
+                    "len": 2,
+                    "sample": "余额"
+                  },
+                  "yoyLabel": {
+                    "type": "str",
+                    "len": 2,
+                    "sample": "同比"
+                  },
+                  "...": "3 more keys"
+                }
+              },
+              "...": "8 more keys"
+            }
+          },
+          "preferred": {
+            "type": "list",
+            "len": 14,
+            "item_sample": {
+              "type": "str",
+              "len": 17,
+              "sample": "new_home_70_price"
+            }
+          },
+          "records": {
+            "type": "list",
+            "len": 185,
+            "item_sample": {
+              "type": "dict",
+              "len": 7,
+              "keys": {
+                "period": {
+                  "type": "str",
+                  "len": 7,
+                  "sample": "2011-01"
+                },
+                "year": {
+                  "type": "int",
+                  "value": 2011
+                },
+                "month": {
+                  "type": "int",
+                  "value": 1
+                },
+                "url": {
+                  "type": "str",
+                  "len": 73,
+                  "sample": "https://data.stats.gov.cn/dg/website/page.html#/pc/national/mainMonthData"
+                },
+                "source": {
+                  "type": "str",
+                  "len": 8,
+                  "sample": "nbs_data"
+                },
+                "metrics": {
+                  "type": "dict",
+                  "len": 4
+                },
+                "...": "1 more keys"
+              }
+            }
+          },
+          "...": "3 more keys"
+        }
+      },
+      "relationship_to_data_js": {
+        "compared_to": "data.js:property",
+        "byte_identical_json": false,
+        "numerically_identical_after_int_float_and_signed_zero_normalization": true,
+        "note": "Same content; only differences are JSON number-formatting artifacts (int vs float, e.g. 60 vs 60.0; and signed zero, e.g. -0.0 vs 0.0 from rounding), not a real data divergence."
+      }
+    },
+    "property_city_history.json": {
+      "path": "property_city_history.json",
+      "file_size_bytes": 7157960,
+      "shape": {
+        "type": "dict",
+        "len": 6,
+        "keys": {
+          "source": {
+            "type": "str",
+            "len": 31,
+            "sample": "国家数据：主要城市月度价格 / 70个大中城市住宅销售价格指数"
+          },
+          "source_url": {
+            "type": "str",
+            "len": 73,
+            "sample": "https://data.stats.gov.cn/dg/website/page.html#/pc/national/mainMonthData"
+          },
+          "source_scope": {
+            "type": "str",
+            "len": 74,
+            "sample": "官方国家数据主要城市月度价格，70个大中城市住宅销售价格指数；2011-01 至 2026-04（2026-05在国家数据表内为空，使用发布稿补齐）"
+          },
+          "fetchedAt": {
+            "type": "str",
+            "len": 24,
+            "sample": "2026-06-17T04:07:25.984Z"
+          },
+          "cities": {
+            "type": "list",
+            "len": 70,
+            "item_sample": {
+              "type": "str",
+              "len": 2,
+              "sample": "北京"
+            }
+          },
+          "records": {
+            "type": "list",
+            "len": 184,
+            "item_sample": {
+              "type": "dict",
+              "len": 2,
+              "keys": {
+                "period": {
+                  "type": "str",
+                  "len": 7,
+                  "sample": "2011-01"
+                },
+                "cities": {
+                  "type": "dict",
+                  "len": 70
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "property_city_history_raw.json": {
+      "path": "property_city_history_raw.json",
+      "file_size_bytes": 18736563,
+      "shape": {
+        "type": "dict",
+        "len": 10,
+        "keys": {
+          "source": {
+            "type": "str",
+            "len": 31,
+            "sample": "国家数据：主要城市月度价格 / 70个大中城市住宅销售价格指数"
+          },
+          "dateRange": {
+            "type": "str",
+            "len": 13,
+            "sample": "201101-202605"
+          },
+          "fetchedAt": {
+            "type": "str",
+            "len": 24,
+            "sample": "2026-06-17T04:07:25.984Z"
+          },
+          "cities": {
+            "type": "dict",
+            "len": 70,
+            "keys": {
+              "北京": {
+                "type": "dict",
+                "len": 3,
+                "keys": {
+                  "city": {
+                    "type": "str",
+                    "len": 2,
+                    "sample": "北京"
+                  },
+                  "inputs": {
+                    "type": "list",
+                    "len": 4
+                  },
+                  "tables": {
+                    "type": "list",
+                    "len": 4
+                  }
+                }
+              },
+              "石家庄": {
+                "type": "dict",
+                "len": 3,
+                "keys": {
+                  "city": {
+                    "type": "str",
+                    "len": 3,
+                    "sample": "石家庄"
+                  },
+                  "inputs": {
+                    "type": "list",
+                    "len": 4
+                  },
+                  "tables": {
+                    "type": "list",
+                    "len": 4
+                  }
+                }
+              },
+              "秦皇岛": {
+                "type": "dict",
+                "len": 3,
+                "keys": {
+                  "city": {
+                    "type": "str",
+                    "len": 3,
+                    "sample": "秦皇岛"
+                  },
+                  "inputs": {
+                    "type": "list",
+                    "len": 4
+                  },
+                  "tables": {
+                    "type": "list",
+                    "len": 4
+                  }
+                }
+              },
+              "呼和浩特": {
+                "type": "dict",
+                "len": 3,
+                "keys": {
+                  "city": {
+                    "type": "str",
+                    "len": 4,
+                    "sample": "呼和浩特"
+                  },
+                  "inputs": {
+                    "type": "list",
+                    "len": 4
+                  },
+                  "tables": {
+                    "type": "list",
+                    "len": 4
+                  }
+                }
+              },
+              "沈阳": {
+                "type": "dict",
+                "len": 3,
+                "keys": {
+                  "city": {
+                    "type": "str",
+                    "len": 2,
+                    "sample": "沈阳"
+                  },
+                  "inputs": {
+                    "type": "list",
+                    "len": 4
+                  },
+                  "tables": {
+                    "type": "list",
+                    "len": 4
+                  }
+                }
+              },
+              "丹东": {
+                "type": "dict",
+                "len": 3,
+                "keys": {
+                  "city": {
+                    "type": "str",
+                    "len": 2,
+                    "sample": "丹东"
+                  },
+                  "inputs": {
+                    "type": "list",
+                    "len": 4
+                  },
+                  "tables": {
+                    "type": "list",
+                    "len": 4
+                  }
+                }
+              },
+              "...": "64 more keys"
+            }
+          },
+          "errors": {
+            "type": "list",
+            "len": 35,
+            "item_sample": {
+              "type": "dict",
+              "len": 2,
+              "keys": {
+                "city": {
+                  "type": "str",
+                  "len": 2,
+                  "sample": "天津"
+                },
+                "message": {
+                  "type": "str",
+                  "len": 289,
+                  "sample": "Timed out after 3000ms waiting for selector internal:text=\"天津\"s: Browser Use enc...<truncated from 289 chars>"
+                }
+              }
+            }
+          },
+          "retryErrors": {
+            "type": "list",
+            "len": 17,
+            "item_sample": {
+              "type": "dict",
+              "len": 2,
+              "keys": {
+                "city": {
+                  "type": "str",
+                  "len": 2,
+                  "sample": "太原"
+                },
+                "message": {
+                  "type": "str",
+                  "len": 292,
+                  "sample": "Timed out after 3000ms waiting for selector internal:text=\"太原\"s: Browser Use enc...<truncated from 292 chars>"
+                }
+              }
+            }
+          },
+          "...": "4 more keys"
+        }
+      }
+    }
+  },
+  "app_js_dependency_audit": {
+    "dashboard_top_level_keys_read": [
+      "retail",
+      "income",
+      "property"
+    ],
+    "note_on_property": "app.js reads window.__DASHBOARD_DATA__.property for BOTH the propertyPrice and propertyCredit UI sections (data.js has no separate propertyCredit key).",
+    "series_meta_fields_read": [
+      "name",
+      "group",
+      "level",
+      "unit",
+      "valueLabel",
+      "yoyLabel",
+      "source_name",
+      "source_link_label",
+      "methodUrl"
+    ],
+    "record_fields_read": [
+      "period",
+      "period_label",
+      "year",
+      "month",
+      "historical_supplement",
+      "metrics",
+      "cities",
+      "url (latest record only, for the source link href)"
+    ],
+    "metric_fields_read": [
+      "month_value",
+      "month_yoy",
+      "latest_month_value",
+      "latest_month_yoy",
+      "published_month_value",
+      "published_month_yoy"
+    ],
+    "fields_present_in_data_but_never_read_by_app_js": [
+      "retail.generated_at",
+      "retail.coverage_note",
+      "retail.sources",
+      "retail.versioning_note",
+      "income.generated_at",
+      "income.section",
+      "income.section_name",
+      "income.frequency",
+      "income.coverage_note",
+      "income.sources",
+      "property.section",
+      "property.section_name",
+      "property.frequency",
+      "property.preferred (app.js has its own hardcoded `preferred` list per section in its `sections` config -- the data.js copy is unused/vestigial from the UI's perspective)",
+      "property.sources",
+      "property.notes",
+      "record.title",
+      "record.source",
+      "record.published_at",
+      "record.quarter",
+      "record.coverage_note (per-record, income historical-supplement rows)",
+      "record.title_period",
+      "record.release_published_at",
+      "record.release_title",
+      "metrics.<series>.ytd_value / ytd_yoy (retail only -- cumulative year-to-date, plain/latest/published variants: ytd_value, ytd_yoy, latest_ytd_value, latest_ytd_yoy, published_ytd_value, published_ytd_yoy -- all six unread)",
+      "metrics.<series>.real_yoy (income only -- inflation-adjusted 实际增长 YoY, present on income_disposable, income_disposable_urban, income_disposable_rural, consumption_expenditure, consumption_expenditure_urban, consumption_expenditure_rural; entirely unread -- the dashboard only ever shows nominal YoY)"
+    ],
+    "chart_mode_logic_keys_expected_by_app_js": {
+      "version": "state.version in {latest, published} -> selects published_month_* vs latest_month_*/month_* fields",
+      "mode": "state.mode in {value, yoy, trend} -> trend is property-price only, client-computed chained index",
+      "retailFrequency": "state.retailFrequency in {period, ttm} -> ttm is a client-computed 12-point rolling sum, NOT stored in data",
+      "incomeFrequency": "state.incomeFrequency in {quarter, ttm, annual} -> ttm is a client-computed 4-point rolling sum over quarterly deltas",
+      "incomeScale": "state.incomeScale in {percapita, national} -> national multiplies by hardcoded populationWan table in app.js, only when seriesUnit === '元'",
+      "propertyCity": "state.propertyCity in {overall, core, capitalNewTier, other} -> groups drawn from data.property.cities plus hardcoded city-group lists in app.js",
+      "TTM_note": "TTM is never a stored flag on a series; it is always a client-side rolling-window computation (window=12 for retail, window=4 for income quarterly points).",
+      "revision_variant_note": "retail.versioning_note (verbatim): 每个指标保留 latest_*（当前最新版本）与 published_*（发布日期版本）。month_* 字段保留为 latest_* 的兼容别名。"
+    }
+  },
+  "period_format_summary": {
+    "YYYY-MM": 705
+  },
+  "sanity_totals": {
+    "per_section": {
+      "retail": {
+        "series_count": 28,
+        "total_observations": 3103,
+        "record_count": 476
+      },
+      "income": {
+        "series_count": 21,
+        "total_observations": 762,
+        "record_count": 44
+      },
+      "property": {
+        "series_count": 14,
+        "total_observations": 1481,
+        "record_count": 185
+      }
+    },
+    "property_city_detail_series_equivalents": 140,
+    "property_city_detail_total_observations": 25691,
+    "grand_total_named_series": 63,
+    "grand_total_named_series_observations": 5346,
+    "grand_total_observations_including_city_detail": 31037,
+    "largest_single_named_series": {
+      "path": "retail.series.retail_total",
+      "observation_count": 467
+    }
+  },
+  "data_oddities": [
+    {
+      "kind": "zero_observation_series",
+      "section": "retail",
+      "series_ids": [
+        "books_magazines"
+      ],
+      "detail": "Declared in retail.series with name/group/unit metadata, but no record's metrics.<id> ever carries a non-null value. A migration script that assumes every declared series has >=1 observation will mis-handle these."
+    },
+    {
+      "kind": "missing_calendar_periods_in_records",
+      "section": "retail",
+      "cadence_assumed": "monthly",
+      "range": [
+        "1985-01",
+        "2026-05"
+      ],
+      "missing_count": 21,
+      "missing_sample": [
+        "2012-01",
+        "2012-02",
+        "2013-01",
+        "2013-02",
+        "2014-01",
+        "2014-02",
+        "2015-01",
+        "2015-02",
+        "2016-01",
+        "2016-02",
+        "2017-01",
+        "2017-02",
+        "2018-01",
+        "2019-01",
+        "2020-01"
+      ],
+      "detail": "21 periods within 1985-01..2026-05 have no record at all in retail.records (not just null metrics -- the whole record is absent). Lines up with years where NBS's Jan/Feb combined-reporting convention was encoded as 'no separate record' rather than 'record with null retail_total' (compare with the flagship_series_internal_nulls finding for retail_total, which is the same convention encoded the other way in later years)."
+    },
+    {
+      "kind": "missing_calendar_periods_in_records",
+      "section": "income",
+      "cadence_assumed": "quarter_end_months",
+      "range": [
+        "2013-12",
+        "2026-03"
+      ],
+      "missing_count": 6,
+      "missing_sample": [
+        "2014-03",
+        "2014-06",
+        "2014-09",
+        "2015-03",
+        "2015-06",
+        "2015-09"
+      ],
+      "detail": "6 periods within 2013-12..2026-03 have no record at all in income.records (not just null metrics -- the whole record is absent). Matches income.coverage_note: 2013-2015 is an annual-only historical-supplement layer, so the intervening quarters genuinely never existed as separate releases."
+    },
+    {
+      "kind": "flagship_series_internal_nulls",
+      "section": "retail",
+      "series_id": "retail_total",
+      "null_periods": [
+        "2018-02",
+        "2019-02",
+        "2020-02",
+        "2021-02",
+        "2022-02",
+        "2023-02",
+        "2024-02",
+        "2025-02",
+        "2026-02"
+      ],
+      "detail": "retail.records exist for these periods but metrics.retail_total has no non-null value."
+    },
+    {
+      "kind": "flagship_series_internal_nulls",
+      "section": "property",
+      "series_id": "new_home_70_price",
+      "null_periods": [
+        "2012-12"
+      ],
+      "detail": "property.records exist for these periods but metrics.new_home_70_price has no non-null value."
+    },
+    {
+      "kind": "record_schema_evolution",
+      "section": "retail",
+      "signature_count": 3,
+      "detail": "retail.records is not one uniform shape -- 3 distinct key-sets coexist (see records_summary.record_key_signatures for exact counts/keys). A migration script must treat extra provenance fields (release_published_at, release_title, title_period, coverage_note, historical_supplement, quarter) as optional per-record."
+    },
+    {
+      "kind": "record_schema_evolution",
+      "section": "income",
+      "signature_count": 2,
+      "detail": "income.records is not one uniform shape -- 2 distinct key-sets coexist (see records_summary.record_key_signatures for exact counts/keys). A migration script must treat extra provenance fields (release_published_at, release_title, title_period, coverage_note, historical_supplement, quarter) as optional per-record."
+    },
+    {
+      "kind": "property_city_coverage_gap",
+      "section": "property",
+      "records": [
+        {
+          "period": "2012-12",
+          "city_count": 1
+        },
+        {
+          "period": "2019-05",
+          "city_count": 65
+        },
+        {
+          "period": "2022-11",
+          "city_count": 62
+        }
+      ],
+      "detail": "3 of 185 property records have fewer than the declared 70 cities in their nested `cities` dict (likely scrape/source gaps -- see property_city_history_raw.json errors/retryErrors)."
+    },
+    {
+      "kind": "vestigial_metric_fields",
+      "section": "retail / income",
+      "detail": "retail metrics carry a full YTD family (ytd_value, ytd_yoy, latest_ytd_value, latest_ytd_yoy, published_ytd_value, published_ytd_yoy) and income metrics carry real_yoy (inflation-adjusted growth) on the 6 headline income/consumption series -- app.js reads neither. Live, real data that a redesigned dashboard could surface."
+    }
+  ]
+}
