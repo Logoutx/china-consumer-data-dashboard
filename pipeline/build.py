@@ -35,13 +35,40 @@ non-byte-identical for no reason. The one deliberately time-relative field is
 relative to "today" (an `as_of` date, defaulting to date.today() but
 injectable for tests) -- that is a property of *what the field means*, not an
 accident of using the wrong clock.
+
+Period FORMAT is not the same thing as a series' declared `freq` (hard lesson
+from the first real-build run): several freq=="Q" income series carry a
+2013-2016 annual-supplement layer whose observations are bare "YYYY" periods,
+not "YYYY-Qn" (pipeline/migrate/REPORT.md item 6). Every function that parses
+a period string (_period_label_zh, _resolve_prev, _prev_ytd_period, the
+streak history) dispatches on `_period_shape(period)` -- the string's own
+literal shape -- never on `entry["freq"]`. Even the `freq` passed into
+takeaways.py's TakeawayInput is shape-derived (_SHAPE_TO_FREQ_LETTER of
+`latest`'s own shape), not `entry["freq"]` verbatim, so the "较上月/上季度/
+上年" word choice stays correct for a same-shape comparison regardless of what
+the series is nominally declared as. `entry["freq"]` itself is still read, but
+only for the bundle's own `"freq"` metadata field exposed to the client (a
+description of the series, not of any single period string).
+
+`observations[]` is not always ascending by period either, despite DATA-
+CONTRACT §9's invariant: 10 real income/consumption series physically place
+their bare-"YYYY" annual-supplement row AFTER the quarterly rows for the same
+year (e.g. nbs-income-disposable has "...,2016-Q1,2016-Q2,2016-Q3,2016,2017-
+Q1,..."). `_resolve_prev`'s array-adjacent fallback therefore never trusts
+raw array position -- it sorts same-shape period STRINGS and finds the
+neighbor that way, which is correct regardless of how the array happens to be
+ordered on disk. (This data-quality issue itself -- observations[] not sorted
+-- is out of this module's scope to fix; data/series/ belongs to a different
+agent. Flagged back to the lead.)
 """
 from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
-from dataclasses import dataclass
+import time
+from dataclasses import dataclass, field
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -68,6 +95,31 @@ def _write_json(path: Path, obj) -> None:
     path.write_text(json.dumps(obj, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def _load_json_with_retry(path: Path, *, retries: int = 1, delay_seconds: float = 0.2) -> tuple[dict | None, str | None]:
+    """Read+parse a JSON file, retrying once on failure before giving up.
+
+    pipeline/backfill/ writes data/series/ (and potentially data/panels/)
+    concurrently with this build running -- a file caught mid-write is a
+    transient state (truncated/invalid JSON bytes), not a real error. One
+    retry after a short pause resolves the common case; a file that's STILL
+    unparseable after that is genuinely broken (or backfill is stuck on it)
+    and must not be allowed to take down the whole build -- the caller skips
+    it and surfaces a loud warning instead. Returns (parsed_dict, None) on
+    success or (None, error_message) after exhausting retries. Scoped to
+    read/parse failures only (json.JSONDecodeError, OSError) -- a downstream
+    processing bug (KeyError, etc.) is a real defect and must still raise.
+    """
+    last_error: Exception | None = None
+    for attempt in range(retries + 1):
+        try:
+            return _load_json(path), None
+        except (json.JSONDecodeError, OSError, UnicodeDecodeError) as error:
+            last_error = error
+            if attempt < retries:
+                time.sleep(delay_seconds)
+    return None, f"{path}: {last_error}"
+
+
 def _resolve_file_path(data_dir: Path, file_field: str) -> Path:
     """catalog entries' `file` is documented (catalog.schema.json) as "repo-
     relative", e.g. "data/series/nbs-retail-total.json" -- but --data points
@@ -89,15 +141,47 @@ def _resolve_caliber(calibers: list[str]) -> str:
     return "single" if "single" in calibers else "ytd"
 
 
+_ANNUAL_PERIOD_RE = re.compile(r"^\d{4}$")
+
+
+def _period_shape(period: str) -> str:
+    """Classify a period STRING by its own literal format -- "annual"
+    ("YYYY"), "quarterly" ("YYYY-Qn"), or "monthly" ("YYYY-MM"). Every period-
+    format-sensitive function below (labels, prev-resolution, streaks) MUST
+    dispatch on this, never on a series' declared `freq`. Real migrated data
+    proved the two can disagree: several freq=="Q" income series carry a
+    2013-2016 annual-supplement layer whose observations have bare "YYYY"
+    periods (pipeline/migrate/REPORT.md item 6) -- a freq-driven dispatch
+    crashes on those (`"2016".split("-Q")` has nothing to unpack), and even
+    where it wouldn't crash outright it would silently mislabel or mis-compare
+    them. Shape-based dispatch is correct regardless of which agent's data
+    model changes underneath."""
+    if _ANNUAL_PERIOD_RE.fullmatch(period):
+        return "annual"
+    if "-Q" in period:
+        return "quarterly"
+    return "monthly"
+
+
+_SHAPE_TO_FREQ_LETTER = {"annual": "A", "quarterly": "Q", "monthly": "M"}
+
+
 def _month_num(period: str) -> int | None:
-    if "-Q" in period or "-" not in period:
+    if _period_shape(period) != "monthly":
         return None
-    year, month = period.split("-")
-    return int(month)
+    return int(period.split("-")[1])
 
 
-def _period_label_zh(period: str, *, freq: str, caliber: str, span: int = 1) -> str:
-    """Human period label per DATA-CONTRACT §12 (Arabic numerals throughout).
+def _period_label_zh(period: str, *, caliber: str, span: int = 1) -> str:
+    """Human period label per DATA-CONTRACT §12 (Arabic numerals throughout),
+    dispatched on the period STRING's own shape (see _period_shape) -- NOT on
+    a series' declared freq, which real data has shown can disagree within a
+    single series (annual-supplement rows inside an otherwise quarterly
+    series). An annual-shaped period always renders "{YYYY} 年全年" ("full
+    year"), whether it comes from a genuinely annual series or is a stray
+    annual row mixed into quarterly/monthly data -- the label needs to read
+    unambiguously either way, and "全年" is accurate and no worse for a "pure"
+    annual series either.
 
     Lead decision, called out explicitly per the task spec: quarters render
     with an Arabic digit ("2026 年 2 季度"), not the conventional NBS prose
@@ -108,9 +192,10 @@ def _period_label_zh(period: str, *, freq: str, caliber: str, span: int = 1) -> 
     "1-{M} 月" YTD-only sentence prefix (plain hyphen, no year) -- that is
     deliberate, not an inconsistency; see takeaways.py's module docstring.
     """
-    if freq == "A":
-        return f"{period} 年"
-    if freq == "Q":
+    shape = _period_shape(period)
+    if shape == "annual":
+        return f"{period} 年全年"
+    if shape == "quarterly":
         year, q = period.split("-Q")
         return f"{year} 年 {q} 季度"
     year, month_str = period.split("-")
@@ -120,15 +205,17 @@ def _period_label_zh(period: str, *, freq: str, caliber: str, span: int = 1) -> 
     return f"{year} 年 {month} 月"
 
 
-def _prev_ytd_period(period: str, freq: str) -> str | None:
+def _prev_ytd_period(period: str, shape: str) -> str | None:
     """The same-year, one-period-earlier YTD anchor -- None at the year's
     first cumulative print (monthly: month<=2, since a YTD-only series never
     publishes a standalone January; quarterly: Q1). YTD resets every January,
-    so this is a calendar-anchored lookup, not array-adjacency. Only ever
-    called for freq in ("M", "Q") -- annual data has no intra-year cumulative-
-    reset concept, so annual ytd-caliber series fall through to plain array-
-    adjacency in _resolve_prev instead of reaching this function at all."""
-    if freq == "Q":
+    so this is a calendar-anchored lookup, not array-adjacency. `shape` is the
+    CONFIRMED shape of `period` (from _period_shape, checked by the caller) --
+    "quarterly" or "monthly" only. Annual data has no intra-year cumulative-
+    reset concept, so annual ytd-caliber series never reach this function;
+    they fall through to plain (same-shape-guarded) array-adjacency in
+    _resolve_prev instead."""
+    if shape == "quarterly":
         year, q_str = period.split("-Q")
         q = int(q_str)
         return None if q <= 1 else f"{year}-Q{q - 1}"
@@ -170,38 +257,56 @@ def _safe_yoy(obs: dict | None, yoy_field: str, breaks: list[dict]) -> float | N
 
 
 def _resolve_prev(
-    observations: list[dict], index_by_period: dict, latest: dict, *, caliber: str, freq: str, breaks: list[dict]
+    observations: list[dict], index_by_period: dict, latest: dict, *, caliber: str, breaks: list[dict]
 ) -> dict | None:
-    """The "correct comparable prior period" per DATA-CONTRACT §10.2:
+    """The "correct comparable prior period" per DATA-CONTRACT §10.2, dispatched
+    on `latest`'s own period SHAPE (_period_shape), never on a series' declared
+    freq -- see _period_shape's docstring for why (real freq=="Q" income series
+    carry bare-"YYYY" annual-supplement rows).
 
       - Jan-Feb print: prev is last year's Jan-Feb print (12 months back), not
         array-adjacent December -- spans don't match (2 vs 1), so a naive
         array lookup would compare incompatible aggregates.
-      - YTD caliber, monthly or quarterly: prev is the same-year, one-period-
-        earlier cumulative print, found by exact calendar lookup (not array-
-        adjacency) -- a genuine data gap must produce None here rather than
-        silently comparing against a cumulative window of the wrong width.
-        Annual ytd-caliber series have no intra-year reset concept, so they
-        skip this and fall through to plain array-adjacency below.
-      - Otherwise: array-adjacent previous observation.
+      - YTD caliber, monthly- or quarterly-shaped `latest`: prev is the same-
+        year, one-period-earlier cumulative print, found by exact calendar
+        lookup (not array-adjacency) -- a genuine data gap must produce None
+        here rather than silently comparing against a cumulative window of
+        the wrong width. Annual-shaped `latest` has no intra-year reset
+        concept, so it skips this and falls through to array-adjacency below.
+      - Otherwise: the chronologically-previous SAME-SHAPE observation, found
+        by sorting period STRINGS -- not by trusting observations[]'s array
+        position. Real migrated data proved this matters: several of the same
+        freq=="Q" income series with a bare-"YYYY" annual-supplement layer
+        also have that layer physically OUT of chronological order in the
+        array (the "2016" row sits *after* "2016-Q1/Q2/Q3", not before --
+        DATA-CONTRACT §9 says observations should be "ascending by period",
+        but the migrated data doesn't yet honor that for these splice points).
+        A quarterly latest whose chronologically-nearest same-shape
+        predecessor is one of the annual-supplement rows must never be
+        treated as "last quarter" either way (comparisons only between same-
+        format periods); it's simply not comparable, so prev is None there,
+        same as a genuine missing-history case.
 
     Then, regardless of which branch resolved a candidate: if that candidate
     sits on the *other side* of a no_yoy_across break from `latest`, the
     comparison is walled off entirely (return None) -- "never compare across".
     """
     period = latest["period"]
+    shape = _period_shape(period)
     flags = latest.get("flags", [])
 
     if "jan_feb" in flags:
         year = int(period[:4])
         candidate = index_by_period.get(f"{year - 1}-02")
         prev = candidate if candidate and "jan_feb" in candidate.get("flags", []) else None
-    elif caliber == "ytd" and freq in ("M", "Q"):
-        target = _prev_ytd_period(period, freq)
+    elif caliber == "ytd" and shape in ("monthly", "quarterly"):
+        target = _prev_ytd_period(period, shape)
         prev = index_by_period.get(target) if target else None
     else:
-        pos = next(i for i, obs in enumerate(observations) if obs["period"] == period)
-        prev = observations[pos - 1] if pos > 0 else None
+        same_shape_periods = sorted(obs["period"] for obs in observations if _period_shape(obs["period"]) == shape)
+        idx = same_shape_periods.index(period)
+        prev_period = same_shape_periods[idx - 1] if idx > 0 else None
+        prev = index_by_period.get(prev_period) if prev_period is not None else None
 
     if prev is not None:
         for brk in breaks:
@@ -371,13 +476,6 @@ def _empty_series_entry(entry: dict, observations: list[dict], breaks: list[dict
 def _build_series_entry(entry: dict, series: dict, annotations: dict, as_of: date) -> dict:
     calibers = entry["calibers"]
     caliber = _resolve_caliber(calibers)
-    # The "1-{M} 月...累计" phrasing is inherently monthly (M is a month
-    # number). Real catalog data includes ~20 quarterly series with
-    # calibers==["ytd"] and no real_yoy (income/consumption sub-components) --
-    # those must NOT take this branch (there is no month number to plug in);
-    # they fall through to the plain sign-matrix template instead, which
-    # takeaways.py picks a freq-correct "previous period" word for.
-    is_ytd_only = entry["freq"] == "M" and "single" not in calibers and "ytd" in calibers
     value_field, yoy_field = _MEASURE_FIELDS[caliber]
 
     observations = series.get("observations", [])
@@ -392,16 +490,46 @@ def _build_series_entry(entry: dict, series: dict, annotations: dict, as_of: dat
     if latest is None:
         return _empty_series_entry(entry, observations, breaks, yoy_field, value_field, annotations)
 
-    prev = _resolve_prev(observations, index_by_period, latest, caliber=caliber, freq=entry["freq"], breaks=breaks)
+    latest_shape = _period_shape(latest["period"])
+    # The "1-{M} 月...累计" phrasing is inherently monthly (M is a month
+    # number). Real catalog data includes ~20 quarterly series with
+    # calibers==["ytd"] and no real_yoy (income/consumption sub-components),
+    # PLUS an annual-supplement layer wedged into some of those same series
+    # (pipeline/migrate/REPORT.md item 6) -- so this is gated on the LATEST
+    # observation's own period shape, not the series' declared freq: neither
+    # a quarterly nor an annual latest period has a month number to plug in.
+    # They fall through to the plain sign-matrix template instead, which
+    # takeaways.py picks a shape/freq-correct "previous period" word for.
+    is_ytd_only = latest_shape == "monthly" and "single" not in calibers and "ytd" in calibers
+
+    prev = _resolve_prev(observations, index_by_period, latest, caliber=caliber, breaks=breaks)
     y = _safe_yoy(latest, yoy_field, breaks)
     yp = _safe_yoy(prev, yoy_field, breaks)
     is_break_first = _is_break_first(latest, prev, yp, breaks)
 
-    latest_label = _period_label_zh(latest["period"], freq=entry["freq"], caliber=caliber, span=latest.get("span", 1))
+    latest_label = _period_label_zh(latest["period"], caliber=caliber, span=latest.get("span", 1))
 
+    # takeaways.py's `freq` is the CONFIRMED comparison cadence, not the
+    # series' nominal declared freq -- _resolve_prev already guarantees `prev`
+    # (when not None) shares `latest`'s shape, so this mapping is always a
+    # legitimate description of what's actually being compared (e.g. an
+    # annual-supplement observation inside a nominally quarterly series
+    # correctly gets "A", so takeaways.py says "较上年", never "较上季度").
+    takeaway_freq = _SHAPE_TO_FREQ_LETTER[latest_shape]
+
+    # Streaks are an explicitly monthly narrative (compute_streak's "sign_down"
+    # / "delta_*" months). Gate on the LATEST period's own shape and
+    # additionally null out any history entry whose period isn't monthly-
+    # shaped -- belt-and-suspenders against the same annual-supplement-layer
+    # issue contaminating a delta computed across a shape seam (an annual
+    # YoY% and a monthly YoY% are not adjacent, comparable data points even
+    # though both are plain floats and would subtract fine without error).
     streak_n, streak_kind = 0, None
-    if entry["freq"] == "M" and y is not None and not is_break_first:
-        history = [pt["yoy"] for pt in _build_yoy_series(observations, yoy_field, breaks)]
+    if latest_shape == "monthly" and y is not None and not is_break_first:
+        history = [
+            pt["yoy"] if _period_shape(pt["period"]) == "monthly" else None
+            for pt in _build_yoy_series(observations, yoy_field, breaks)
+        ]
         streak_n, streak_kind = compute_streak(history)
 
     takeaway = None
@@ -413,7 +541,7 @@ def _build_series_entry(entry: dict, series: dict, annotations: dict, as_of: dat
             latest_yoy=y,
             prev_yoy=yp,
             real_yoy=_safe_yoy(latest, "real_yoy", breaks),
-            freq=entry["freq"],
+            freq=takeaway_freq,
             is_jan_feb="jan_feb" in latest.get("flags", []),
             is_break_first=is_break_first,
             is_ytd_only=is_ytd_only,
@@ -435,7 +563,7 @@ def _build_series_entry(entry: dict, series: dict, annotations: dict, as_of: dat
 
     prev_block = None
     if prev is not None:
-        prev_label = _period_label_zh(prev["period"], freq=entry["freq"], caliber=caliber, span=prev.get("span", 1))
+        prev_label = _period_label_zh(prev["period"], caliber=caliber, span=prev.get("span", 1))
         prev_block = _measure_block(prev, prev_label, breaks)
 
     return {
@@ -601,26 +729,39 @@ class BuildReport:
     series: int
     panels: int
     tiles: int
+    skipped: list[str] = field(default_factory=list)  # series/panel ids skipped after a transient read failure
 
 
 def build_site_data(data_dir: Path, out_dir: Path, *, as_of: date | None = None) -> BuildReport:
     as_of = as_of or date.today()
-    catalog = _load_json(data_dir / "catalog.json")
+    catalog = _load_json(data_dir / "catalog.json")  # not retried: a different agent's manifest, not backfill's concern
     annotations_path = data_dir / "annotations.json"
     annotations = _load_json(annotations_path) if annotations_path.exists() else {}
     generated_at = catalog["generated_at"]  # deterministic passthrough -- see module docstring
 
     series_by_id: dict[str, dict] = {}
     panel_entries: list[dict] = []
+    skipped: list[str] = []
     for entry in catalog["series"]:
         if entry.get("panel"):
             panel_entries.append(entry)
-        else:
-            series_by_id[entry["id"]] = _load_json(_resolve_file_path(data_dir, entry["file"]))
+            continue
+        # pipeline/backfill/ writes data/series/ concurrently with this build
+        # (this wave) -- a file caught mid-write is transient, not a defect.
+        # Retry once, then skip (with a loud warning) rather than let one
+        # in-flight write take down the whole build.
+        series, error = _load_json_with_retry(_resolve_file_path(data_dir, entry["file"]))
+        if series is None:
+            print(f"[build] WARNING: skipping series {entry['id']!r}, failed to read after retry: {error}", file=sys.stderr)
+            skipped.append(entry["id"])
+            continue
+        series_by_id[entry["id"]] = series
 
     section_bundles: dict[str, dict] = {}
     for section in catalog["sections"]:
-        entries = [e for e in catalog["series"] if e["section"] == section["id"] and not e.get("panel")]
+        entries = [
+            e for e in catalog["series"] if e["section"] == section["id"] and not e.get("panel") and e["id"] in series_by_id
+        ]
         section_bundles[section["id"]] = _build_section_bundle(
             section["id"], entries, series_by_id, annotations, catalog["version"], generated_at, as_of
         )
@@ -640,12 +781,21 @@ def build_site_data(data_dir: Path, out_dir: Path, *, as_of: date | None = None)
         panels_dir = out_dir / "panels"
         panels_dir.mkdir(parents=True, exist_ok=True)
         for entry in panel_entries:
-            panel = _load_json(_resolve_file_path(data_dir, entry["file"]))
+            panel, error = _load_json_with_retry(_resolve_file_path(data_dir, entry["file"]))
+            if panel is None:
+                print(f"[build] WARNING: skipping panel {entry['id']!r}, failed to read after retry: {error}", file=sys.stderr)
+                skipped.append(entry["id"])
+                continue
             _write_json(panels_dir / f"{entry['id']}.json", _build_panel_bundle(panel))
             panels_written += 1
 
+    if skipped:
+        print(f"[build] WARNING: {len(skipped)} id(s) skipped due to unreadable source file(s): {sorted(skipped)}", file=sys.stderr)
+
     total_series = sum(len(bundle["series"]) for bundle in section_bundles.values())
-    return BuildReport(sections=len(section_bundles), series=total_series, panels=panels_written, tiles=len(index["tiles"]))
+    return BuildReport(
+        sections=len(section_bundles), series=total_series, panels=panels_written, tiles=len(index["tiles"]), skipped=sorted(skipped)
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -659,6 +809,8 @@ def main(argv: list[str] | None = None) -> int:
         f"[build] wrote {report.sections} section bundle(s), {report.series} series, "
         f"{report.panels} panel bundle(s), {report.tiles} tier-1 tile(s) -> {args.out}"
     )
+    if report.skipped:
+        print(f"[build] {len(report.skipped)} id(s) skipped (unreadable after retry): {report.skipped}", file=sys.stderr)
     return 0
 
 

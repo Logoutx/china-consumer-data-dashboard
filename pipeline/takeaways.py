@@ -251,8 +251,10 @@ class TakeawayInput:
     period_label_zh: str  # e.g. "2026 年 5 月" / "2026 年 2 季度"; unused when is_ytd_only
     latest_yoy: float | None  # the sign-matrix value y (m_yoy or ytd_yoy, whichever caliber build.py chose)
     prev_yoy: float | None = None  # y at the comparable prior period; None => "missing previous"
-    real_yoy: float | None = None  # triggers the quarterly-income pattern when freq=="Q" and this is not None
-    freq: str = "M"  # "M" | "Q" | "A"
+    real_yoy: float | None = None  # triggers the quarterly-income pattern whenever this is not None
+    freq: str = "M"  # "M" | "Q" | "A" -- the CONFIRMED shape of latest_yoy/prev_yoy's period(s) (build.py
+    # derives this from _period_shape, not a series' nominal declared freq -- prev_yoy, when present, is
+    # guaranteed same-shape as latest_yoy, so this is always a legitimate comparison cadence, never a guess)
     is_jan_feb: bool = False  # latest observation carries flags:["jan_feb"]
     is_break_first: bool = False  # previous is across a no_yoy_across break, or this is a new id's first obs
     is_ytd_only: bool = False  # series' only caliber is "ytd" AND freq=="M" (e.g. FAI) -- switches to "1-{M} 月...累计" phrasing
@@ -267,12 +269,16 @@ JAN_FEB_PREFIX = "1-2 月合并统计，"
 # data isn't all monthly, though: ~20 real series (nbs-income-median,
 # nbs-consumption-expenditure-*, nbs-income-wage, ...) are freq=="Q" with
 # calibers==["ytd"] and no real_yoy, so they hit neither the quarterly-income
-# pattern nor (after the freq=="M" guard on is_ytd_only, see build.py) the
+# pattern nor (after the shape-based guard on is_ytd_only, see build.py) the
 # YTD-only pattern -- they fall through to this plain sign-matrix branch. Since
 # "较上月" would be factually wrong there (comparing consecutive quarters, not
-# months), the reference word is chosen by freq. This isn't a new template
-# shape, just the obvious freq-correct word in the existing "较{...}" slot the
-# spec already established for the monthly case.
+# months), the reference word is chosen by `inp.freq` -- which build.py
+# derives from the CONFIRMED shape of the compared periods (_period_shape),
+# not the series' nominal freq, so this stays correct even for the annual-
+# supplement-vs-annual-supplement comparisons within an otherwise quarterly
+# series (uses "上年", not "上季度", there). This isn't a new template shape,
+# just the obvious freq-correct word in the existing "较{...}" slot the spec
+# already established for the monthly case.
 _PREV_PERIOD_WORD = {"M": "上月", "Q": "上季度", "A": "上年"}
 
 
@@ -348,7 +354,14 @@ def generate_takeaway(inp: TakeawayInput) -> str:
 
     prefix = JAN_FEB_PREFIX if inp.is_jan_feb else ""
 
-    if inp.freq == "Q" and inp.real_yoy is not None:
+    # The task spec conditions this pattern only on "when real_yoy present" --
+    # no freq check. An earlier draft added "freq=='Q'" as extra caution, but
+    # that turned out actively wrong: a real income series' annual-supplement
+    # observations (bare "YYYY" periods, see build.py's _period_shape) still
+    # legitimately carry real_yoy and should still get this template -- the
+    # sentence reads fine regardless of period shape, since it only ever
+    # interpolates the already-formatted period_label_zh, never parses it.
+    if inp.real_yoy is not None:
         return _assert_conservative(_join(prefix, _quarterly_income_sentence(inp)))
 
     if inp.is_ytd_only:

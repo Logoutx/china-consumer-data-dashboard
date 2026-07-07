@@ -76,6 +76,27 @@
       "file": "series/test-fai-ytd.json"
     },
     {
+      "id": "test-income-mixed-annual",
+      "name_zh": "测试_人均可支配收入中位数",
+      "name_en": "TEST median disposable income (mixed annual/quarterly)",
+      "section": "macro",
+      "tier": 3,
+      "unit_zh": "元",
+      "unit_en": "CNY",
+      "value_type": "level",
+      "decimals": 1,
+      "freq": "Q",
+      "calibers": ["ytd"],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（非真实序列，仅供 build.py 契约测试使用）",
+        "dataset_en": "Synthetic test series for build.py contract tests (not real data)",
+        "url": "https://example.invalid/test-income-mixed-annual"
+      },
+      "derived": null,
+      "file": "series/test-income-mixed-annual.json"
+    },
+    {
       "id": "test-70city-panel",
       "name_zh": "测试_70 个大中城市房价",
       "name_en": "TEST 70-city price",

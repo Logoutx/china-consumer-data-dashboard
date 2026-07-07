@@ -1,0 +1,29 @@
+{
+  "schema": "series/v1",
+  "id": "test-income-mixed-annual",
+  "name_zh": "测试_人均可支配收入中位数",
+  "name_en": "TEST median disposable income (mixed annual/quarterly)",
+  "unit_zh": "元",
+  "unit_en": "CNY",
+  "value_type": "level",
+  "freq": "Q",
+  "calibers": ["ytd"],
+  "decimals": 1,
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（非真实序列，仅供 build.py 契约测试使用）",
+    "dataset_en": "Synthetic test series for build.py contract tests (not real data)",
+    "url": "https://example.invalid/test-income-mixed-annual"
+  },
+  "derived": null,
+  "coverage_note_zh": "测试用混合口径序列：2015-2016 为年度补充层（裸 YYYY 期间），2017 起恢复季度累计，复现 pipeline/migrate/REPORT.md 第 6 条的真实数据形状。",
+  "observations": [
+    { "period": "2015", "ytd": 15000, "ytd_yoy": 7.0, "src": "rel:test-2015-annual" },
+    { "period": "2016", "ytd": 16000, "ytd_yoy": 6.7, "src": "rel:test-2016-annual" },
+    { "period": "2017-Q1", "ytd": 4200, "ytd_yoy": 6.0, "src": "rel:test-2017-q1" },
+    { "period": "2017-Q2", "ytd": 8700, "ytd_yoy": 6.2, "src": "rel:test-2017-q2" }
+  ],
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-06-20T00:00:00Z"
+}

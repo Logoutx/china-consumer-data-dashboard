@@ -3,12 +3,15 @@ pipeline/tests/fixtures/build/ -- NEVER the real data/ tree, which concurrent
 agents are writing in this same rebuild this wave.
 
 Fixture roster (pipeline/tests/fixtures/build/):
-    catalog.json                        4 entries across 4 sections + 1 panel
-    series/test-cpi-break.json          a no_yoy_across rebase break
-    series/test-retail-revised.json     a revision log (one recent, one old) + Jan-Feb
-    series/test-fai-ytd.json            calibers:["ytd"] only (no "single" lane)
-    panels/test-70city-panel.json       2 cities x 2 metrics x 2 periods, one null cell
-    annotations.json                    series-level + period-specific notes
+    catalog.json                             5 entries across 4 sections + 1 panel
+    series/test-cpi-break.json               a no_yoy_across rebase break
+    series/test-retail-revised.json          a revision log (one recent, one old) + Jan-Feb
+    series/test-fai-ytd.json                 calibers:["ytd"] only (no "single" lane)
+    series/test-income-mixed-annual.json     freq=="Q" + a 2015-2016 bare-"YYYY" annual-
+                                              supplement layer before quarterly resumes --
+                                              reproduces pipeline/migrate/REPORT.md item 6
+    panels/test-70city-panel.json            2 cities x 2 metrics x 2 periods, one null cell
+    annotations.json                         series-level + period-specific notes
 
 `as_of` is pinned to 2026-07-08 throughout so the 90-day revisions_recent /
 12-month break_recent windows are test-stable regardless of when this suite
@@ -27,8 +30,10 @@ from pipeline.build import (
     BuildReport,
     _in_no_yoy_window,
     _is_break_first,
+    _load_json_with_retry,
     _month_num,
     _period_label_zh,
+    _period_shape,
     _prev_ytd_period,
     _recent_revisions,
     _resolve_file_path,
@@ -63,9 +68,9 @@ def test_build_report_counts(built):
     report, _out_dir = built
     assert isinstance(report, BuildReport)
     assert report.sections == 4  # prices, consumption, macro, property
-    assert report.series == 3  # cpi-break, retail-revised, fai-ytd (panel excluded)
+    assert report.series == 4  # cpi-break, retail-revised, fai-ytd, income-mixed-annual (panel excluded)
     assert report.panels == 1
-    assert report.tiles == 2  # tier-1, non-panel: cpi-break + retail-revised (fai-ytd is tier 2)
+    assert report.tiles == 2  # tier-1, non-panel: cpi-break + retail-revised (fai-ytd/income-mixed-annual are tier 2/3)
 
 
 def test_expected_files_are_written(built):
@@ -221,7 +226,7 @@ def test_retail_jan_feb_observation_is_in_yoy_series_with_correct_label():
     yoy = _build_yoy_series(series["observations"], "m_yoy", [])
     by_period = {pt["period"]: pt["yoy"] for pt in yoy}
     assert by_period["2026-02"] == 4.0
-    label = _period_label_zh("2026-02", freq="M", caliber="single", span=2)
+    label = _period_label_zh("2026-02", caliber="single", span=2)
     assert label == "2026 年 1—2 月"
 
 
@@ -256,6 +261,114 @@ def test_quarterly_ytd_only_series_without_real_yoy_does_not_crash():
     bundle_entry = _build_series_entry(entry, series, {}, AS_OF)
     assert bundle_entry["headline"]["caliber"] == "ytd"
     assert bundle_entry["takeaway"] == "2026 年 2 季度测试_人均可支配收入中位数同比增长 5.0%，增速较上季度加快 1.0 个百分点"
+
+
+# -- mixed quarterly + annual-supplement series (pipeline/migrate/REPORT.md item 6) --
+
+
+def test_mixed_annual_quarterly_series_builds_without_crashing(built):
+    """Regression, exact real shape: freq=='Q', calibers==['ytd'], a 2015-2016
+    bare-"YYYY" annual-supplement layer before quarterly data resumes at
+    2017-Q1. Before the _period_shape dispatch fix, _period_label_zh crashed
+    on any bare-"YYYY" period passed through with freq=='Q'
+    ("2016".split("-Q") has nothing to unpack)."""
+    _report, out_dir = built
+    macro = _load(out_dir / "sections" / "macro.json")
+    mixed = _series_by_id(macro, "test-income-mixed-annual")
+
+    # latest is the most recent quarterly observation, not touched by the
+    # annual rows at all (ytd-caliber prev resolution is a calendar lookup
+    # that never reaches array-adjacency here).
+    assert mixed["latest"]["period"] == "2017-Q2"
+    assert mixed["latest"]["period_label_zh"] == "2017 年 2 季度"
+    assert mixed["prev"]["period"] == "2017-Q1"
+    assert mixed["takeaway"] == "2017 年 2 季度测试_人均可支配收入中位数同比增长 6.2%，增速较上季度加快 0.2 个百分点"
+
+    # the annual rows are still safely represented in the chart series (no
+    # crash building them), each with the "全年" label baked into nothing here
+    # (yoy_series only carries {period, yoy} -- label formatting is exercised
+    # separately below) but present and correctly valued.
+    by_period = {pt["period"]: pt["yoy"] for pt in mixed["yoy_series"]}
+    assert by_period["2015"] == 7.0
+    assert by_period["2016"] == 6.7
+    assert by_period["2017-Q1"] == 6.0
+    assert by_period["2017-Q2"] == 6.2
+
+
+def test_annual_label_used_for_bare_year_period_inside_quarterly_series():
+    assert _period_label_zh("2016", caliber="ytd") == "2016 年全年"
+
+
+def test_prev_resolution_allows_annual_to_annual_same_shape_comparison():
+    """White-box, truncated to just the annual-supplement rows: latest=="2016"
+    is itself annual-shaped (not monthly/quarterly), so ytd-caliber's calendar
+    lookup doesn't apply -- it falls to array-adjacency, which must still work
+    correctly when the predecessor is ALSO annual-shaped (not reject a
+    legitimate same-shape comparison just because the series is nominally
+    quarterly)."""
+    from pipeline.build import _build_series_entry
+
+    entry = {
+        "id": "test-income-mixed-annual-truncated",
+        "name_zh": "测试_人均可支配收入中位数",
+        "name_en": "TEST",
+        "unit_zh": "元",
+        "unit_en": "CNY",
+        "value_type": "level",
+        "freq": "Q",
+        "tier": 3,
+        "calibers": ["ytd"],
+        "derived": None,
+    }
+    series = {
+        "observations": [
+            {"period": "2015", "ytd": 15000, "ytd_yoy": 7.0},
+            {"period": "2016", "ytd": 16000, "ytd_yoy": 6.7},
+        ],
+        "revisions": [],
+        "breaks": [],
+    }
+    bundle_entry = _build_series_entry(entry, series, {}, AS_OF)
+    assert bundle_entry["latest"]["period"] == "2016"
+    assert bundle_entry["latest"]["period_label_zh"] == "2016 年全年"
+    assert bundle_entry["prev"]["period"] == "2015"  # array-adjacent, same shape -- allowed
+    # freq passed to takeaways.py is shape-derived ("A"), not the series'
+    # nominal "Q" -- so the reference word is "上年", never "较上季度".
+    assert bundle_entry["takeaway"] == "2016 年全年测试_人均可支配收入中位数同比增长 6.7%，增速较上年放缓 0.3 个百分点"
+
+
+def test_prev_resolution_rejects_annual_to_quarterly_shape_mismatch():
+    """White-box: a caliber=='single' quarterly series (so prev resolution
+    always takes the array-adjacent branch, never the ytd calendar lookup)
+    whose immediate predecessor is an annual-supplement row. Before the same-
+    shape guard, this would have been treated as "last quarter" and later
+    crashed _period_label_zh; now it must resolve to no comparable previous."""
+    from pipeline.build import _build_series_entry
+
+    entry = {
+        "id": "test-single-caliber-mixed",
+        "name_zh": "测试_单一口径混合序列",
+        "name_en": "TEST",
+        "unit_zh": "元",
+        "unit_en": "CNY",
+        "value_type": "level",
+        "freq": "Q",
+        "tier": 3,
+        "calibers": ["single"],
+        "derived": None,
+    }
+    series = {
+        "observations": [
+            {"period": "2016", "m": 16000, "m_yoy": 6.7},
+            {"period": "2017-Q1", "m": 4200, "m_yoy": 6.0},
+        ],
+        "revisions": [],
+        "breaks": [],
+    }
+    bundle_entry = _build_series_entry(entry, series, {}, AS_OF)
+    assert bundle_entry["latest"]["period"] == "2017-Q1"
+    assert bundle_entry["prev"] is None  # NOT "2016" -- different period shape, not comparable
+    assert bundle_entry["takeaway"] == "2017 年 1 季度测试_单一口径混合序列同比增长 6.0%"
 
 
 # -- FAI: ytd-only headline caliber --------------------------------------------------
@@ -340,7 +453,7 @@ def test_missing_annotations_file_is_treated_as_empty(tmp_path):
     (data_copy / "annotations.json").unlink()  # simulate "may not exist yet"
 
     report = build_site_data(data_copy, tmp_path / "out", as_of=AS_OF)
-    assert report.series == 3
+    assert report.series == 4
 
     consumption = _load(tmp_path / "out" / "sections" / "consumption.json")
     retail = _series_by_id(consumption, "test-retail-revised")
@@ -359,33 +472,45 @@ def test_cli_main_writes_expected_files(tmp_path, capsys):
     assert "wrote 4 section bundle(s)" in captured.out
 
 
-# -- white-box: period labels, break windows, prev-resolution, path handling ----------
+# -- white-box: period shapes, labels, break windows, prev-resolution, paths ---------
 
 
 @pytest.mark.parametrize(
-    "period,freq,caliber,span,expected",
+    "period,expected",
     [
-        ("2026-05", "M", "single", 1, "2026 年 5 月"),
-        ("2026-02", "M", "single", 2, "2026 年 1—2 月"),  # Jan-Feb: em dash, per DATA-CONTRACT §12
-        ("2026-05", "M", "ytd", 1, "2026 年 1—5 月"),  # cumulative caliber headlined, even without span>1
-        ("2026-Q2", "Q", "single", 1, "2026 年 2 季度"),  # Arabic digit, lead's typography decision
-        ("2026", "A", "single", 1, "2026 年"),
+        ("2026-05", "monthly"),
+        ("2026-Q2", "quarterly"),
+        ("2026", "annual"),
     ],
 )
-def test_period_label_zh(period, freq, caliber, span, expected):
-    assert _period_label_zh(period, freq=freq, caliber=caliber, span=span) == expected
+def test_period_shape(period, expected):
+    assert _period_shape(period) == expected
+
+
+@pytest.mark.parametrize(
+    "period,caliber,span,expected",
+    [
+        ("2026-05", "single", 1, "2026 年 5 月"),
+        ("2026-02", "single", 2, "2026 年 1—2 月"),  # Jan-Feb: em dash, per DATA-CONTRACT §12
+        ("2026-05", "ytd", 1, "2026 年 1—5 月"),  # cumulative caliber headlined, even without span>1
+        ("2026-Q2", "single", 1, "2026 年 2 季度"),  # Arabic digit, lead's typography decision
+        ("2026", "single", 1, "2026 年全年"),  # bare "YYYY" -- shape-dispatched regardless of declared freq
+    ],
+)
+def test_period_label_zh(period, caliber, span, expected):
+    assert _period_label_zh(period, caliber=caliber, span=span) == expected
 
 
 def test_prev_ytd_period_is_none_at_years_first_print():
-    assert _prev_ytd_period("2026-02", "M") is None
-    assert _prev_ytd_period("2026-03", "M") == "2026-02"
-    assert _prev_ytd_period("2026-12", "M") == "2026-11"
+    assert _prev_ytd_period("2026-02", "monthly") is None
+    assert _prev_ytd_period("2026-03", "monthly") == "2026-02"
+    assert _prev_ytd_period("2026-12", "monthly") == "2026-11"
 
 
 def test_prev_ytd_period_quarterly():
-    assert _prev_ytd_period("2026-Q1", "Q") is None
-    assert _prev_ytd_period("2026-Q2", "Q") == "2026-Q1"
-    assert _prev_ytd_period("2026-Q4", "Q") == "2026-Q3"
+    assert _prev_ytd_period("2026-Q1", "quarterly") is None
+    assert _prev_ytd_period("2026-Q2", "quarterly") == "2026-Q1"
+    assert _prev_ytd_period("2026-Q4", "quarterly") == "2026-Q3"
 
 
 def test_month_num():
@@ -410,7 +535,7 @@ def test_resolve_prev_jan_feb_jumps_12_months_not_array_adjacent():
     ]
     index_by_period = {o["period"]: o for o in observations}
     latest = observations[-1]
-    prev = _resolve_prev(observations, index_by_period, latest, caliber="single", freq="M", breaks=[])
+    prev = _resolve_prev(observations, index_by_period, latest, caliber="single", breaks=[])
     assert prev["period"] == "2025-02"  # NOT "2025-03" (which would be array-adjacent)
 
 
@@ -421,7 +546,7 @@ def test_resolve_prev_returns_none_across_a_break_wall():
     ]
     index_by_period = {o["period"]: o for o in observations}
     breaks = [{"effective": "2026-01", "no_yoy_across": True}]
-    prev = _resolve_prev(observations, index_by_period, observations[-1], caliber="single", freq="M", breaks=breaks)
+    prev = _resolve_prev(observations, index_by_period, observations[-1], caliber="single", breaks=breaks)
     assert prev is None
 
 
@@ -434,7 +559,7 @@ def test_resolve_prev_quarterly_ytd_is_none_at_q1():
         {"period": "2026-Q1", "ytd_yoy": 4.0},
     ]
     index_by_period = {o["period"]: o for o in observations}
-    prev = _resolve_prev(observations, index_by_period, observations[-1], caliber="ytd", freq="Q", breaks=[])
+    prev = _resolve_prev(observations, index_by_period, observations[-1], caliber="ytd", breaks=[])
     assert prev is None  # NOT 2025-Q4 (which would be array-adjacent, but a different year)
 
 
@@ -444,21 +569,58 @@ def test_resolve_prev_quarterly_ytd_uses_same_year_prior_quarter():
         {"period": "2026-Q2", "ytd_yoy": 5.0},
     ]
     index_by_period = {o["period"]: o for o in observations}
-    prev = _resolve_prev(observations, index_by_period, observations[-1], caliber="ytd", freq="Q", breaks=[])
+    prev = _resolve_prev(observations, index_by_period, observations[-1], caliber="ytd", breaks=[])
     assert prev["period"] == "2026-Q1"
 
 
 def test_resolve_prev_annual_ytd_falls_back_to_array_adjacency():
     """Annual data has no intra-year cumulative-reset concept -- ytd caliber
-    at freq=='A' must not attempt the monthly/quarterly calendar lookup (which
-    would crash trying to parse "2026" as "YYYY-MM")."""
+    whose latest period is annual-shaped must not attempt the monthly/
+    quarterly calendar lookup (which would crash trying to parse "2026" as
+    "YYYY-MM"); it falls through to (same-shape-guarded) array-adjacency."""
     observations = [
         {"period": "2025", "ytd_yoy": 4.5},
         {"period": "2026", "ytd_yoy": 5.0},
     ]
     index_by_period = {o["period"]: o for o in observations}
-    prev = _resolve_prev(observations, index_by_period, observations[-1], caliber="ytd", freq="A", breaks=[])
+    prev = _resolve_prev(observations, index_by_period, observations[-1], caliber="ytd", breaks=[])
     assert prev["period"] == "2025"
+
+
+def test_resolve_prev_never_bridges_a_period_shape_seam():
+    """Core regression for pipeline/migrate/REPORT.md item 6: array-adjacency
+    must refuse to treat an annual-supplement row as "the previous quarter"
+    just because it happens to sit immediately before in the array."""
+    observations = [
+        {"period": "2016", "m_yoy": 6.7},
+        {"period": "2017-Q1", "m_yoy": 6.0},
+    ]
+    index_by_period = {o["period"]: o for o in observations}
+    prev = _resolve_prev(observations, index_by_period, observations[-1], caliber="single", breaks=[])
+    assert prev is None
+
+
+def test_resolve_prev_is_robust_to_an_unsorted_observations_array():
+    """Regression, found while verifying the shape-dispatch fix against real
+    data: 10 real income/consumption series physically place their bare-
+    "YYYY" annual-supplement row AFTER same-year quarterly rows, e.g.
+    nbs-income-disposable's actual on-disk order is "...,2016-Q1,2016-Q2,
+    2016-Q3,2016,2017-Q1,...". DATA-CONTRACT §9 says observations[] should be
+    ascending by period; this data isn't (out of this module's scope to fix),
+    so array-adjacent lookups must not trust raw position -- the previous
+    same-shape period must be found by sorting period strings, not by
+    `observations[pos - 1]`."""
+    observations = [
+        {"period": "2016-Q1", "m_yoy": 8.7},
+        {"period": "2016-Q2", "m_yoy": 8.7},
+        {"period": "2016-Q3", "m_yoy": 8.4},
+        {"period": "2016", "m_yoy": 8.4},  # out of order on disk: annual row after the quarters it covers
+        {"period": "2017-Q1", "m_yoy": 8.5},
+    ]
+    index_by_period = {o["period"]: o for o in observations}
+    latest = observations[-1]  # "2017-Q1"
+    prev = _resolve_prev(observations, index_by_period, latest, caliber="single", breaks=[])
+    assert prev["period"] == "2016-Q3"  # the true chronological predecessor, NOT "2016" (array-adjacent but wrong shape)
 
 
 def test_is_break_first_true_when_prev_yoy_blocked_by_break():
@@ -493,3 +655,48 @@ def test_recent_revisions_window():
 def test_resolve_file_path_strips_redundant_data_prefix(tmp_path):
     assert _resolve_file_path(tmp_path, "data/series/x.json") == tmp_path / "series" / "x.json"
     assert _resolve_file_path(tmp_path, "series/x.json") == tmp_path / "series" / "x.json"
+
+
+# -- transient read failures: pipeline/backfill/ writes data/series/ concurrently ----
+
+
+def test_load_json_with_retry_succeeds_on_a_valid_file(tmp_path):
+    path = tmp_path / "ok.json"
+    path.write_text('{"a": 1}', encoding="utf-8")
+    value, error = _load_json_with_retry(path, delay_seconds=0)
+    assert value == {"a": 1}
+    assert error is None
+
+
+def test_load_json_with_retry_gives_up_after_one_retry_on_a_corrupt_file(tmp_path):
+    path = tmp_path / "corrupt.json"
+    path.write_text('{"a": 1,  "b":', encoding="utf-8")  # truncated mid-write
+    value, error = _load_json_with_retry(path, retries=1, delay_seconds=0)
+    assert value is None
+    assert "corrupt.json" in error
+
+
+def test_build_skips_an_unparseable_series_file_with_a_loud_warning(tmp_path, capsys):
+    """Simulates pipeline/backfill/ catching a series file mid-write: build
+    must skip just that series (with a warning naming it), not crash, and
+    every other series must still build normally."""
+    data_copy = tmp_path / "data"
+    shutil.copytree(FIXTURES_DIR, data_copy)
+    (data_copy / "series" / "test-fai-ytd.json").write_text('{"observations": [', encoding="utf-8")  # truncated
+
+    report = build_site_data(data_copy, tmp_path / "out", as_of=AS_OF)
+
+    assert report.skipped == ["test-fai-ytd"]
+    assert report.series == 3  # cpi-break, retail-revised, income-mixed-annual (fai-ytd skipped)
+
+    stderr = capsys.readouterr().err
+    assert "test-fai-ytd" in stderr
+    assert "WARNING" in stderr
+
+    macro = _load(tmp_path / "out" / "sections" / "macro.json")
+    assert all(s["id"] != "test-fai-ytd" for s in macro["series"])
+    assert any(s["id"] == "test-income-mixed-annual" for s in macro["series"])  # unaffected sibling still built
+
+    # other sections are completely unaffected
+    prices = _load(tmp_path / "out" / "sections" / "prices.json")
+    assert any(s["id"] == "test-cpi-break" for s in prices["series"])
