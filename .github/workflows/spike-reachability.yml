@@ -1,0 +1,35 @@
+name: "Spike: China official-stats reachability probe"
+
+# Phase 0 spike only. Lives on spike/ci-reachability so it doesn't affect main
+# or any scheduled workflow. Answers one question: can a plain GitHub Actions
+# ubuntu-latest (US-based) runner reach the sites this dashboard depends on?
+
+on:
+  push:
+    branches:
+      - spike/ci-reachability
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Runner egress context (for the report)
+        continue-on-error: true
+        run: |
+          echo "Runner public IP / geolocation:"
+          curl -s --max-time 10 https://ifconfig.co/json || echo "(ifconfig.co lookup failed, non-fatal)"
+
+      - name: Run reachability probe
+        continue-on-error: true
+        run: python3 spike/reachability_probe.py
