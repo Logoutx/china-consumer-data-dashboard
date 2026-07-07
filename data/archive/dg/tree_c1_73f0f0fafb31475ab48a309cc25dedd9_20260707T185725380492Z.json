@@ -1,0 +1,42 @@
+{
+  "url": "https://data.stats.gov.cn/dg/website/publicrelease/web/external/new/queryIndexTreeAsync?code=1&pid=73f0f0fafb31475ab48a309cc25dedd9",
+  "request": null,
+  "response": {
+    "data": [
+      {
+        "explain": "进出口数据来源于海关总署。1978年为外贸业务统计数，1980年起为海关进出口统计数。",
+        "sdate": "1995",
+        "_name": "货物进出口总额",
+        "treeinfo_pid": "73f0f0fafb31475ab48a309cc25dedd9",
+        "treeinfo_level": 4,
+        "type": "catalog",
+        "edate": null,
+        "isLeaf": true,
+        "treeinfo_globalid": "69c574ab128a44e595cc0b24502b771b.fc982599aa684be7969d7b90b1bd0e84.73f0f0fafb31475ab48a309cc25dedd9.7e11b47c828d4e4e925f1c5a98305558",
+        "name": "货物进出口总额",
+        "_id": "7e11b47c828d4e4e925f1c5a98305558",
+        "publicrelease_web_catalog_id": "7e11b47c828d4e4e925f1c5a98305558",
+        "treeinfo_icon": null
+      },
+      {
+        "explain": "外资数据来源于商务部。从2001年起，外商投资合同金额和实际使用外资额均不包括对外借款。从2007年起商务部不再对外公布外资合同金额数据。",
+        "sdate": null,
+        "_name": "外商直接投资",
+        "treeinfo_pid": "73f0f0fafb31475ab48a309cc25dedd9",
+        "treeinfo_level": 4,
+        "type": "catalog",
+        "edate": "2019",
+        "isLeaf": true,
+        "treeinfo_globalid": "69c574ab128a44e595cc0b24502b771b.fc982599aa684be7969d7b90b1bd0e84.73f0f0fafb31475ab48a309cc25dedd9.aea8dbdf934e4b6ea154e679c8d4a0e9",
+        "name": "外商直接投资",
+        "_id": "aea8dbdf934e4b6ea154e679c8d4a0e9",
+        "publicrelease_web_catalog_id": "aea8dbdf934e4b6ea154e679c8d4a0e9",
+        "treeinfo_icon": null
+      }
+    ],
+    "success": true,
+    "state": 20000,
+    "message": "成功"
+  },
+  "fetched_at": "20260707T185725380492Z"
+}

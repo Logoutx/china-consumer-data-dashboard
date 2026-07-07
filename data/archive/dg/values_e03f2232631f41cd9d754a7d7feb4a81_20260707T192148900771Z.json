@@ -1,0 +1,92 @@
+{
+  "url": "https://data.stats.gov.cn/dg/website/publicrelease/web/external/getEsDataByIndicatorIdAndDa",
+  "request": {
+    "cid": "82130c6621a745cda3d64b090e733383",
+    "id": "e03f2232631f41cd9d754a7d7feb4a81",
+    "da": "000000000000",
+    "dt": "",
+    "rootId": "4fb2f4d836a24c1a824a26e2b04b7009",
+    "dts": [
+      "202601MM",
+      "202602MM",
+      "202603MM",
+      "202604MM",
+      "202605MM",
+      "202606MM"
+    ]
+  },
+  "response": {
+    "data": [
+      {
+        "dt": "202601MM",
+        "du": "414774dee2bc47f392cf13abfa9de882",
+        "unit": "%",
+        "code": "000000000000",
+        "dt_name": "2026年1月",
+        "v": "9.0",
+        "i": "37bea7cb68064788b91d4c1aa46bf97a",
+        "i_name": "货币和准货币(M2)供应量",
+        "du_name": "%"
+      },
+      {
+        "dt": "202602MM",
+        "du": "414774dee2bc47f392cf13abfa9de882",
+        "unit": "%",
+        "code": "000000000000",
+        "dt_name": "2026年2月",
+        "v": "9.0",
+        "i": "37bea7cb68064788b91d4c1aa46bf97a",
+        "i_name": "货币和准货币(M2)供应量",
+        "du_name": "%"
+      },
+      {
+        "dt": "202603MM",
+        "du": "414774dee2bc47f392cf13abfa9de882",
+        "unit": "%",
+        "code": "000000000000",
+        "dt_name": "2026年3月",
+        "v": "8.5",
+        "i": "37bea7cb68064788b91d4c1aa46bf97a",
+        "i_name": "货币和准货币(M2)供应量",
+        "du_name": "%"
+      },
+      {
+        "dt": "202604MM",
+        "du": "414774dee2bc47f392cf13abfa9de882",
+        "unit": "%",
+        "code": "000000000000",
+        "dt_name": "2026年4月",
+        "v": "8.6",
+        "i": "37bea7cb68064788b91d4c1aa46bf97a",
+        "i_name": "货币和准货币(M2)供应量",
+        "du_name": "%"
+      },
+      {
+        "dt": "202605MM",
+        "du": "",
+        "unit": "",
+        "code": "000000000000",
+        "dt_name": "2026年5月",
+        "v": "",
+        "i": "",
+        "i_name": "",
+        "du_name": ""
+      },
+      {
+        "dt": "202606MM",
+        "du": "",
+        "unit": "",
+        "code": "000000000000",
+        "dt_name": "2026年6月",
+        "v": "",
+        "i": "",
+        "i_name": "",
+        "du_name": ""
+      }
+    ],
+    "success": true,
+    "state": 20000,
+    "message": "成功"
+  },
+  "fetched_at": "20260707T192148900771Z"
+}
