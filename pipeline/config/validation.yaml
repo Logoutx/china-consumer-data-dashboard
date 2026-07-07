@@ -1,0 +1,126 @@
+# pipeline/config/validation.yaml -- Gate A (ingest validation) tuning knobs.
+#
+# Consumed by pipeline/validate/config.py::load_validation_config(). See
+# docs/DATA-CONTRACT.md section 11 ("validate/ -- ingest gate") for where Gate
+# A sits in the pipeline, and pipeline/validate/checks/*.py for exactly how
+# each field below is read. Every check id referenced here is one of the
+# gate_a.* checks documented in those modules.
+
+defaults:
+  z_warn: 4.0
+  z_block: 7.0
+  yoy_base_tol_pp: 3.0
+  unit_slip_factor: 100
+  min_history:
+    M: 24
+    Q: 8
+  revision_flood:
+    max_per_release: 6
+    max_fraction: 0.10
+    panel_max_periods: 3
+  yoy_band: [-40, 60]
+  sum_of_parts_rel_tol: 0.02
+  # Global excluded periods for gate_a.seasonal_z baselines -- known demand
+  # shocks that would otherwise poison the robust-z history/cohort pools.
+  # Empty by default; populate once a documented shock period is identified,
+  # e.g. shock_periods: ["2020-02", "2020-03"] for the initial COVID-19 shock.
+  shock_periods: []
+
+# Per-value_type overrides of the defaults above. A series-level override in
+# by_series (below) wins over this; this wins over defaults.
+by_value_type:
+  index:
+    # CPI/PPI-family YoY historically runs a much narrower band than a level
+    # series' YoY -- +-40/60 would essentially never fire for these.
+    yoy_band: [-10, 15]
+  rate_pct:
+    # Survey unemployment rate YoY/pp-change: real moves are small.
+    yoy_band: [-5, 5]
+  mom_pct:
+    # 70-city price index MoM/YoY style series.
+    yoy_band: [-30, 30]
+
+# Per-series overrides. `seasonal: true` routes gate_a.seasonal_z toward the
+# same-calendar-cohort fallback transform more readily (still tried as a
+# fallback for every series regardless -- this flag is informational/
+# reserved for a future per-series transform choice, kept here so the task's
+# required series are on record). Populated per the task spec's explicit list
+# (金银珠宝/餐饮/汽车/化妆品) plus one judgment call of our own:
+#   - nbs-fai: Spring-Festival-sensitive by construction -- its YTD-YoY print
+#     is anchored at the Jan-Feb combined release and swings hard around that
+#     seam every year (e.g. the real series prints -24.5 at 2020-02 and +35.0
+#     at 2021-02 -- see data/series/nbs-fai.json), even outside any demand
+#     shock.
+by_series:
+  nbs-retail-cat-gold-jewelry:
+    seasonal: true
+  nbs-retail-catering:
+    seasonal: true
+  nbs-retail-above-quota-catering:
+    seasonal: true
+  nbs-retail-auto:
+    seasonal: true
+  nbs-retail-cat-cosmetics:
+    seasonal: true
+  nbs-fai:
+    seasonal: true
+
+# Cross-agency republication pairs for gate_a.triangulate_pbc_nbs. Empty by
+# default: as of this milestone, data/catalog.json does not yet carry a
+# duplicate PBoC-vs-NBS-republished pair for any series (pbc-m1/pbc-m2 are
+# each a single catalog entry sourced from the DG mirror, not two competing
+# ids) -- populate once/if one exists. Shape:
+#
+# source_pairs:
+#   - primary: pbc
+#     secondary: nbs
+#     tol: 0.5
+#     series:
+#       - [pbc-m1, nbs-m1-republished]
+#       - [pbc-m2, nbs-m2-republished]
+source_pairs: []
+
+# Config-acknowledged exceptions, consulted by gate_a.sum_of_parts (skip a
+# known-incomplete period), gate_a.revision_flood (ack a real benchmark
+# revision spike so it demotes BLOCK -> WARN instead of blocking forever),
+# and gate_a.calendar_expected (ack a genuine one-time historical catch-up
+# so a big step-jump doesn't read as "the wrong release landed"). `series`/
+# `periods`/`checks` are each optional; omitting one makes that dimension
+# match everything.
+known_disagreements:
+  - series: mof-real-estate-tax-total
+    periods: ["2018-06", "2018-07", "2018-09", "2018-10", "2018-11"]
+    checks: ["gate_a.sum_of_parts"]
+    note: >-
+      pipeline/migrate/REPORT.md: at least one of the 5 MoF tax components
+      is missing in each of these periods, so the derived total excludes
+      them entirely -- nothing to sum against, not a real disagreement.
+  - series: nbs-retail-cat-grain-food
+    periods: ["2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12",
+              "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07",
+              "2025-08", "2025-09", "2025-10", "2025-11", "2025-12",
+              "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07",
+              "2026-08", "2026-09", "2026-10", "2026-11", "2026-12"]
+    checks: ["gate_a.calendar_expected"]
+    note: >-
+      This series' history has a 2024-06..2026-04 hole from a legacy
+      migration that stopped at 2024-05 (pipeline/migrate/REPORT.md) --
+      OUR OWN archive gap, not an NBS discontinuation (the 2026-05 retail
+      release still carries this category; see data/annotations.json).
+      Whichever period first lands the real catch-up will legitimately be
+      a large step-jump, not a wrong-article mistake. If a real live run
+      lands the catch-up after 2026-12, extend this period list.
+
+source_reliability:
+  nbs: official
+  pbc: official
+  gacc: official
+  cflp: official
+  cpca: association
+  caam: association
+
+# Series ids allowed to exist without a matching data/catalog.json entry
+# (gate_a.catalog_consistency would otherwise BLOCK). Empty by default --
+# every real series should be cataloged; this is an escape hatch for a
+# deliberately-uncataloged scratch/test id, not a routine allowance.
+orphan_ok: []

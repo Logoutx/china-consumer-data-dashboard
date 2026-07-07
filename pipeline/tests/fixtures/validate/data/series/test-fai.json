@@ -1,0 +1,577 @@
+{
+  "schema": "series/v1",
+  "id": "test-fai",
+  "name_zh": "测试_test-fai",
+  "name_en": "TEST FAI ytd yoy",
+  "unit_zh": "%",
+  "unit_en": "%",
+  "value_type": "yoy_pct",
+  "freq": "M",
+  "calibers": [
+    "ytd"
+  ],
+  "decimals": 1,
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（合成，非真实序列，仅供 Gate A 测试使用）",
+    "dataset_en": "Synthetic test series for Gate A tests (not real data)",
+    "url": "https://example.invalid/test-fai"
+  },
+  "derived": null,
+  "coverage_note_zh": null,
+  "observations": [
+    {
+      "period": "2016-02",
+      "ytd_yoy": 8.0,
+      "src": "rel:test-2016-02"
+    },
+    {
+      "period": "2016-03",
+      "ytd_yoy": 6.0,
+      "src": "rel:test-2016-03"
+    },
+    {
+      "period": "2016-04",
+      "ytd_yoy": 6.0,
+      "src": "rel:test-2016-04"
+    },
+    {
+      "period": "2016-05",
+      "ytd_yoy": 6.0,
+      "src": "rel:test-2016-05"
+    },
+    {
+      "period": "2016-06",
+      "ytd_yoy": 6.0,
+      "src": "rel:test-2016-06"
+    },
+    {
+      "period": "2016-07",
+      "ytd_yoy": 6.0,
+      "src": "rel:test-2016-07"
+    },
+    {
+      "period": "2016-08",
+      "ytd_yoy": 6.0,
+      "src": "rel:test-2016-08"
+    },
+    {
+      "period": "2016-09",
+      "ytd_yoy": 6.0,
+      "src": "rel:test-2016-09"
+    },
+    {
+      "period": "2016-10",
+      "ytd_yoy": 6.0,
+      "src": "rel:test-2016-10"
+    },
+    {
+      "period": "2016-11",
+      "ytd_yoy": 6.0,
+      "src": "rel:test-2016-11"
+    },
+    {
+      "period": "2016-12",
+      "ytd_yoy": 6.0,
+      "src": "rel:test-2016-12"
+    },
+    {
+      "period": "2017-02",
+      "ytd_yoy": 7.8,
+      "src": "rel:test-2017-02"
+    },
+    {
+      "period": "2017-03",
+      "ytd_yoy": 5.8,
+      "src": "rel:test-2017-03"
+    },
+    {
+      "period": "2017-04",
+      "ytd_yoy": 5.8,
+      "src": "rel:test-2017-04"
+    },
+    {
+      "period": "2017-05",
+      "ytd_yoy": 5.8,
+      "src": "rel:test-2017-05"
+    },
+    {
+      "period": "2017-06",
+      "ytd_yoy": 5.8,
+      "src": "rel:test-2017-06"
+    },
+    {
+      "period": "2017-07",
+      "ytd_yoy": 5.8,
+      "src": "rel:test-2017-07"
+    },
+    {
+      "period": "2017-08",
+      "ytd_yoy": 5.8,
+      "src": "rel:test-2017-08"
+    },
+    {
+      "period": "2017-09",
+      "ytd_yoy": 5.8,
+      "src": "rel:test-2017-09"
+    },
+    {
+      "period": "2017-10",
+      "ytd_yoy": 5.8,
+      "src": "rel:test-2017-10"
+    },
+    {
+      "period": "2017-11",
+      "ytd_yoy": 5.8,
+      "src": "rel:test-2017-11"
+    },
+    {
+      "period": "2017-12",
+      "ytd_yoy": 5.8,
+      "src": "rel:test-2017-12"
+    },
+    {
+      "period": "2018-02",
+      "ytd_yoy": 7.6,
+      "src": "rel:test-2018-02"
+    },
+    {
+      "period": "2018-03",
+      "ytd_yoy": 5.6,
+      "src": "rel:test-2018-03"
+    },
+    {
+      "period": "2018-04",
+      "ytd_yoy": 5.6,
+      "src": "rel:test-2018-04"
+    },
+    {
+      "period": "2018-05",
+      "ytd_yoy": 5.6,
+      "src": "rel:test-2018-05"
+    },
+    {
+      "period": "2018-06",
+      "ytd_yoy": 5.6,
+      "src": "rel:test-2018-06"
+    },
+    {
+      "period": "2018-07",
+      "ytd_yoy": 5.6,
+      "src": "rel:test-2018-07"
+    },
+    {
+      "period": "2018-08",
+      "ytd_yoy": 5.6,
+      "src": "rel:test-2018-08"
+    },
+    {
+      "period": "2018-09",
+      "ytd_yoy": 5.6,
+      "src": "rel:test-2018-09"
+    },
+    {
+      "period": "2018-10",
+      "ytd_yoy": 5.6,
+      "src": "rel:test-2018-10"
+    },
+    {
+      "period": "2018-11",
+      "ytd_yoy": 5.6,
+      "src": "rel:test-2018-11"
+    },
+    {
+      "period": "2018-12",
+      "ytd_yoy": 5.6,
+      "src": "rel:test-2018-12"
+    },
+    {
+      "period": "2019-02",
+      "ytd_yoy": 7.4,
+      "src": "rel:test-2019-02"
+    },
+    {
+      "period": "2019-03",
+      "ytd_yoy": 5.4,
+      "src": "rel:test-2019-03"
+    },
+    {
+      "period": "2019-04",
+      "ytd_yoy": 5.4,
+      "src": "rel:test-2019-04"
+    },
+    {
+      "period": "2019-05",
+      "ytd_yoy": 5.4,
+      "src": "rel:test-2019-05"
+    },
+    {
+      "period": "2019-06",
+      "ytd_yoy": 5.4,
+      "src": "rel:test-2019-06"
+    },
+    {
+      "period": "2019-07",
+      "ytd_yoy": 5.4,
+      "src": "rel:test-2019-07"
+    },
+    {
+      "period": "2019-08",
+      "ytd_yoy": 5.4,
+      "src": "rel:test-2019-08"
+    },
+    {
+      "period": "2019-09",
+      "ytd_yoy": 5.4,
+      "src": "rel:test-2019-09"
+    },
+    {
+      "period": "2019-10",
+      "ytd_yoy": 5.4,
+      "src": "rel:test-2019-10"
+    },
+    {
+      "period": "2019-11",
+      "ytd_yoy": 5.4,
+      "src": "rel:test-2019-11"
+    },
+    {
+      "period": "2019-12",
+      "ytd_yoy": 5.4,
+      "src": "rel:test-2019-12"
+    },
+    {
+      "period": "2020-02",
+      "ytd_yoy": 7.2,
+      "src": "rel:test-2020-02"
+    },
+    {
+      "period": "2020-03",
+      "ytd_yoy": 5.2,
+      "src": "rel:test-2020-03"
+    },
+    {
+      "period": "2020-04",
+      "ytd_yoy": 5.2,
+      "src": "rel:test-2020-04"
+    },
+    {
+      "period": "2020-05",
+      "ytd_yoy": 5.2,
+      "src": "rel:test-2020-05"
+    },
+    {
+      "period": "2020-06",
+      "ytd_yoy": 5.2,
+      "src": "rel:test-2020-06"
+    },
+    {
+      "period": "2020-07",
+      "ytd_yoy": 5.2,
+      "src": "rel:test-2020-07"
+    },
+    {
+      "period": "2020-08",
+      "ytd_yoy": 5.2,
+      "src": "rel:test-2020-08"
+    },
+    {
+      "period": "2020-09",
+      "ytd_yoy": 5.2,
+      "src": "rel:test-2020-09"
+    },
+    {
+      "period": "2020-10",
+      "ytd_yoy": 5.2,
+      "src": "rel:test-2020-10"
+    },
+    {
+      "period": "2020-11",
+      "ytd_yoy": 5.2,
+      "src": "rel:test-2020-11"
+    },
+    {
+      "period": "2020-12",
+      "ytd_yoy": 5.2,
+      "src": "rel:test-2020-12"
+    },
+    {
+      "period": "2021-02",
+      "ytd_yoy": 7.0,
+      "src": "rel:test-2021-02"
+    },
+    {
+      "period": "2021-03",
+      "ytd_yoy": 5.0,
+      "src": "rel:test-2021-03"
+    },
+    {
+      "period": "2021-04",
+      "ytd_yoy": 5.0,
+      "src": "rel:test-2021-04"
+    },
+    {
+      "period": "2021-05",
+      "ytd_yoy": 5.0,
+      "src": "rel:test-2021-05"
+    },
+    {
+      "period": "2021-06",
+      "ytd_yoy": 5.0,
+      "src": "rel:test-2021-06"
+    },
+    {
+      "period": "2021-07",
+      "ytd_yoy": 5.0,
+      "src": "rel:test-2021-07"
+    },
+    {
+      "period": "2021-08",
+      "ytd_yoy": 5.0,
+      "src": "rel:test-2021-08"
+    },
+    {
+      "period": "2021-09",
+      "ytd_yoy": 5.0,
+      "src": "rel:test-2021-09"
+    },
+    {
+      "period": "2021-10",
+      "ytd_yoy": 5.0,
+      "src": "rel:test-2021-10"
+    },
+    {
+      "period": "2021-11",
+      "ytd_yoy": 5.0,
+      "src": "rel:test-2021-11"
+    },
+    {
+      "period": "2021-12",
+      "ytd_yoy": 5.0,
+      "src": "rel:test-2021-12"
+    },
+    {
+      "period": "2022-02",
+      "ytd_yoy": 6.8,
+      "src": "rel:test-2022-02"
+    },
+    {
+      "period": "2022-03",
+      "ytd_yoy": 4.8,
+      "src": "rel:test-2022-03"
+    },
+    {
+      "period": "2022-04",
+      "ytd_yoy": 4.8,
+      "src": "rel:test-2022-04"
+    },
+    {
+      "period": "2022-05",
+      "ytd_yoy": 4.8,
+      "src": "rel:test-2022-05"
+    },
+    {
+      "period": "2022-06",
+      "ytd_yoy": 4.8,
+      "src": "rel:test-2022-06"
+    },
+    {
+      "period": "2022-07",
+      "ytd_yoy": 4.8,
+      "src": "rel:test-2022-07"
+    },
+    {
+      "period": "2022-08",
+      "ytd_yoy": 4.8,
+      "src": "rel:test-2022-08"
+    },
+    {
+      "period": "2022-09",
+      "ytd_yoy": 4.8,
+      "src": "rel:test-2022-09"
+    },
+    {
+      "period": "2022-10",
+      "ytd_yoy": 4.8,
+      "src": "rel:test-2022-10"
+    },
+    {
+      "period": "2022-11",
+      "ytd_yoy": 4.8,
+      "src": "rel:test-2022-11"
+    },
+    {
+      "period": "2022-12",
+      "ytd_yoy": 4.8,
+      "src": "rel:test-2022-12"
+    },
+    {
+      "period": "2023-02",
+      "ytd_yoy": 6.6,
+      "src": "rel:test-2023-02"
+    },
+    {
+      "period": "2023-03",
+      "ytd_yoy": 4.6,
+      "src": "rel:test-2023-03"
+    },
+    {
+      "period": "2023-04",
+      "ytd_yoy": 4.6,
+      "src": "rel:test-2023-04"
+    },
+    {
+      "period": "2023-05",
+      "ytd_yoy": 4.6,
+      "src": "rel:test-2023-05"
+    },
+    {
+      "period": "2023-06",
+      "ytd_yoy": 4.6,
+      "src": "rel:test-2023-06"
+    },
+    {
+      "period": "2023-07",
+      "ytd_yoy": 4.6,
+      "src": "rel:test-2023-07"
+    },
+    {
+      "period": "2023-08",
+      "ytd_yoy": 4.6,
+      "src": "rel:test-2023-08"
+    },
+    {
+      "period": "2023-09",
+      "ytd_yoy": 4.6,
+      "src": "rel:test-2023-09"
+    },
+    {
+      "period": "2023-10",
+      "ytd_yoy": 4.6,
+      "src": "rel:test-2023-10"
+    },
+    {
+      "period": "2023-11",
+      "ytd_yoy": 4.6,
+      "src": "rel:test-2023-11"
+    },
+    {
+      "period": "2023-12",
+      "ytd_yoy": 4.6,
+      "src": "rel:test-2023-12"
+    },
+    {
+      "period": "2024-02",
+      "ytd_yoy": 6.4,
+      "src": "rel:test-2024-02"
+    },
+    {
+      "period": "2024-03",
+      "ytd_yoy": 4.4,
+      "src": "rel:test-2024-03"
+    },
+    {
+      "period": "2024-04",
+      "ytd_yoy": 4.4,
+      "src": "rel:test-2024-04"
+    },
+    {
+      "period": "2024-05",
+      "ytd_yoy": 4.4,
+      "src": "rel:test-2024-05"
+    },
+    {
+      "period": "2024-06",
+      "ytd_yoy": 4.4,
+      "src": "rel:test-2024-06"
+    },
+    {
+      "period": "2024-07",
+      "ytd_yoy": 4.4,
+      "src": "rel:test-2024-07"
+    },
+    {
+      "period": "2024-08",
+      "ytd_yoy": 4.4,
+      "src": "rel:test-2024-08"
+    },
+    {
+      "period": "2024-09",
+      "ytd_yoy": 4.4,
+      "src": "rel:test-2024-09"
+    },
+    {
+      "period": "2024-10",
+      "ytd_yoy": 4.4,
+      "src": "rel:test-2024-10"
+    },
+    {
+      "period": "2024-11",
+      "ytd_yoy": 4.4,
+      "src": "rel:test-2024-11"
+    },
+    {
+      "period": "2024-12",
+      "ytd_yoy": 4.4,
+      "src": "rel:test-2024-12"
+    },
+    {
+      "period": "2025-02",
+      "ytd_yoy": 6.2,
+      "src": "rel:test-2025-02"
+    },
+    {
+      "period": "2025-03",
+      "ytd_yoy": 4.2,
+      "src": "rel:test-2025-03"
+    },
+    {
+      "period": "2025-04",
+      "ytd_yoy": 4.2,
+      "src": "rel:test-2025-04"
+    },
+    {
+      "period": "2025-05",
+      "ytd_yoy": 4.2,
+      "src": "rel:test-2025-05"
+    },
+    {
+      "period": "2025-06",
+      "ytd_yoy": 4.2,
+      "src": "rel:test-2025-06"
+    },
+    {
+      "period": "2025-07",
+      "ytd_yoy": 4.2,
+      "src": "rel:test-2025-07"
+    },
+    {
+      "period": "2025-08",
+      "ytd_yoy": 4.2,
+      "src": "rel:test-2025-08"
+    },
+    {
+      "period": "2025-09",
+      "ytd_yoy": 4.2,
+      "src": "rel:test-2025-09"
+    },
+    {
+      "period": "2025-10",
+      "ytd_yoy": 4.2,
+      "src": "rel:test-2025-10"
+    },
+    {
+      "period": "2025-11",
+      "ytd_yoy": 4.2,
+      "src": "rel:test-2025-11"
+    },
+    {
+      "period": "2025-12",
+      "ytd_yoy": 4.2,
+      "src": "rel:test-2025-12"
+    }
+  ],
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-06-01T00:00:00Z"
+}

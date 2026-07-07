@@ -1,0 +1,50 @@
+# pipeline/config/release_calendar.yaml -- expected NBS/PBoC/CFLP/GACC release
+# windows, day-of-month (Beijing time), for gate_a.calendar_window and (per
+# docs/DATA-CONTRACT.md section 11.2) the GitHub Actions poller.
+#
+# Consumed by pipeline/validate/config.py::load_release_calendar(). Each entry
+# is either day-of-month shaped (window_days: [a, b], inclusive) or lag-shaped
+# (lag_days: N, measured from the reference period's end) -- exactly one of
+# the two should be set. grace_days extends the window on both ends when
+# gate_a.calendar_window checks an actual published_at (a WARN-level advisory
+# check, not a hard gate -- see checks/lifecycle.py).
+#
+# pipeline/validate/config.py::ARCHIVE_SOURCE_TO_CALENDAR_KEY maps a runner.py
+# SOURCES[...]["archive_source"] (e.g. "nbs-cpi") to the calendar key below
+# (e.g. "cpi_ppi") that governs it.
+
+pmi:
+  window_days: [25, 31]  # last business day of the month (CFLP manufacturing/non-manufacturing PMI)
+  freq: M
+  grace_days: 2
+
+trade:
+  window_days: [7, 14]  # GACC exports/imports
+  freq: M
+  grace_days: 2
+
+cpi_ppi:
+  window_days: [9, 13]  # NBS CPI/PPI
+  freq: M
+  grace_days: 1
+
+pbc_money:
+  window_days: [10, 15]  # PBoC money & credit (M0/M1/M2, TSF stock+flow)
+  freq: M
+  grace_days: 2
+
+nbs_activity:
+  window_days: [14, 18]  # NBS monthly activity batch: retail, industrial value-add, FAI
+  freq: M
+  quarterly_months: [1, 4, 7, 10]  # GDP + income also release inside this window in these months
+  grace_days: 2
+
+lpr:
+  window_days: [20, 21]  # PBoC Loan Prime Rate fixing
+  freq: M
+  grace_days: 1
+
+consumer_confidence:
+  lag_days: 40  # ~40-day publication lag from the reference period's end, not a day-of-month window
+  freq: M
+  grace_days: 10

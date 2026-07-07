@@ -14,23 +14,30 @@ import pytest
 
 from pipeline.takeaways import (
     BANNED_SUBSTRINGS,
+    LevelTakeawayInput,
     TakeawayInput,
     _assert_conservative,
     _join,
     choose_verb,
     compute_streak,
+    generate_level_takeaway,
     generate_takeaway,
 )
 
 # -- pangu-spacing safety net (regex, independent of the hand-verified exact strings) --
 
 _CJK = "一-鿿㐀-䶿豈-﫿"
-_CJK_TOUCHING_DIGIT_RE = re.compile(rf"[{_CJK}]\d|\d[{_CJK}]")
+# Widened from digits-only to Latin-or-digit (matching DATA-CONTRACT §12's own
+# "CJK and adjacent Latin/digits" wording) once catalog `name_short` values
+# could carry bare Latin letters ("CPI", "PPI", "M1", "M2", "GDP", "制造业
+# PMI", ...) -- a digit-only safety net would have missed exactly the "PMI为"
+# regression this widening was written to catch.
+_CJK_TOUCHING_LATIN_OR_DIGIT_RE = re.compile(rf"[{_CJK}][A-Za-z0-9]|[A-Za-z0-9][{_CJK}]")
 _SPACE_BEFORE_PERCENT_RE = re.compile(r"\d\s+%")
 
 
 def assert_pangu_ok(text: str) -> None:
-    assert not _CJK_TOUCHING_DIGIT_RE.search(text), f"missing pangu space (CJK<->digit) in: {text!r}"
+    assert not _CJK_TOUCHING_LATIN_OR_DIGIT_RE.search(text), f"missing pangu space (CJK<->Latin/digit) in: {text!r}"
     assert not _SPACE_BEFORE_PERCENT_RE.search(text), f"unwanted space before %% in: {text!r}"
 
 
@@ -175,11 +182,25 @@ def test_break_first_ignores_streak_and_jan_feb():
 # -- Jan-Feb ------------------------------------------------------------------
 
 
-def test_jan_feb_prefix():
+def test_jan_feb_suffix():
+    """The period is stated exactly once (in period_label_zh); the Jan-Feb
+    caveat is a trailing parenthetical, not a leading prefix that restates
+    the span a second time (2026-07-08 typography fix)."""
     text = generate_takeaway(
-        _base(is_jan_feb=True, period_label_zh="2026 年 1—2 月", latest_yoy=4.0, prev_yoy=None)
+        _base(is_jan_feb=True, period_label_zh="2026 年 1-2 月", latest_yoy=4.0, prev_yoy=None)
     )
-    assert text == "1-2 月合并统计，2026 年 1—2 月测试系列同比增长 4.0%"
+    assert text == "2026 年 1-2 月测试系列同比增长 4.0%（1-2 月合并统计）"
+    assert_pangu_ok(text)
+
+
+def test_jan_feb_suffix_comes_after_the_streak_clause():
+    text = generate_takeaway(
+        _base(
+            is_jan_feb=True, period_label_zh="2026 年 1-2 月", latest_yoy=-3.0, prev_yoy=-3.0,
+            streak=2, streak_kind="sign_down",
+        )
+    )
+    assert text == "2026 年 1-2 月测试系列同比下降 3.0%，与上月持平，连续 2 个月同比下降（1-2 月合并统计）"
     assert_pangu_ok(text)
 
 
@@ -223,7 +244,7 @@ def test_streak_cap_at_24_triggered_above_24():
 
 def test_streak_only_applies_to_monthly_freq():
     text = generate_takeaway(
-        _base(freq="Q", latest_yoy=-3.0, prev_yoy=-3.0, streak=5, streak_kind="sign_down", period_label_zh="2026 年 2 季度")
+        _base(freq="Q", latest_yoy=-3.0, prev_yoy=-3.0, streak=5, streak_kind="sign_down", period_label_zh="2026 年二季度")
     )
     assert "连续" not in text
 
@@ -278,14 +299,14 @@ def test_quarterly_non_income_ytd_series_uses_last_quarter_wording():
     text = generate_takeaway(
         _base(
             name_zh="测试_人均可支配收入中位数",
-            period_label_zh="2026 年 2 季度",
+            period_label_zh="2026 年二季度",
             freq="Q",
             is_ytd_only=False,
             latest_yoy=5.0,
             prev_yoy=4.0,
         )
     )
-    assert text == "2026 年 2 季度测试_人均可支配收入中位数同比增长 5.0%，增速较上季度加快 1.0 个百分点"
+    assert text == "2026 年二季度测试_人均可支配收入中位数同比增长 5.0%，增速较上季度加快 1.0 个百分点"
     assert_pangu_ok(text)
 
 
@@ -295,7 +316,7 @@ def test_quarterly_income_pattern_still_takes_priority_when_real_yoy_present():
     text = generate_takeaway(
         _base(
             name_zh="全国居民人均可支配收入",
-            period_label_zh="2026 年 2 季度",
+            period_label_zh="2026 年二季度",
             freq="Q",
             latest_yoy=5.2,
             real_yoy=3.8,
@@ -312,13 +333,13 @@ def test_quarterly_income_pattern():
     text = generate_takeaway(
         _base(
             name_zh="全国居民人均可支配收入",
-            period_label_zh="2026 年 2 季度",
+            period_label_zh="2026 年二季度",
             freq="Q",
             latest_yoy=5.2,
             real_yoy=3.8,
         )
     )
-    assert text == "2026 年 2 季度全国居民人均可支配收入同比名义增长 5.2%，实际增长 3.8%"
+    assert text == "2026 年二季度全国居民人均可支配收入同比名义增长 5.2%，实际增长 3.8%"
     assert_pangu_ok(text)
 
 
@@ -326,13 +347,13 @@ def test_quarterly_income_pattern_negative_real_growth():
     text = generate_takeaway(
         _base(
             name_zh="全国居民人均可支配收入",
-            period_label_zh="2026 年 2 季度",
+            period_label_zh="2026 年二季度",
             freq="Q",
             latest_yoy=1.0,
             real_yoy=-0.5,
         )
     )
-    assert text == "2026 年 2 季度全国居民人均可支配收入同比名义增长 1.0%，实际下降 0.5%"
+    assert text == "2026 年二季度全国居民人均可支配收入同比名义增长 1.0%，实际下降 0.5%"
     assert_pangu_ok(text)
 
 
@@ -470,3 +491,89 @@ def test_join_inserts_space_between_word_and_number():
 def test_join_no_space_around_full_width_punctuation():
     assert _join("统计，", "2026 年") == "统计，2026 年"
     assert _join("5.9%", "，", "增速") == "5.9%，增速"
+
+
+# -- level-only takeaway (no published YoY, e.g. PMI) ------------------------------
+
+
+def _level_base(**overrides) -> LevelTakeawayInput:
+    fields = dict(
+        name_zh="制造业 PMI",
+        period_label_zh="2026 年 6 月",
+        latest_level=48.6,
+        prev_level=48.0,
+    )
+    fields.update(overrides)
+    return LevelTakeawayInput(**fields)
+
+
+def test_level_takeaway_rising():
+    text = generate_level_takeaway(_level_base(latest_level=48.6, prev_level=48.0))
+    assert text == "2026 年 6 月制造业 PMI 为 48.6%，比上月上升 0.6 个点"
+    assert_pangu_ok(text)
+
+
+def test_level_takeaway_falling():
+    text = generate_level_takeaway(_level_base(latest_level=52.0, prev_level=53.0))
+    assert text == "2026 年 6 月制造业 PMI 为 52.0%，比上月回落 1.0 个点"
+    assert_pangu_ok(text)
+
+
+def test_level_takeaway_flat():
+    text = generate_level_takeaway(_level_base(latest_level=49.0, prev_level=49.0))
+    assert text == "2026 年 6 月制造业 PMI 为 49.0%，与上月持平"
+    assert_pangu_ok(text)
+
+
+def test_level_takeaway_crossing_50_upward_appends_above_the_line():
+    text = generate_level_takeaway(_level_base(latest_level=50.2, prev_level=49.5))
+    assert text == "2026 年 6 月制造业 PMI 为 50.2%，比上月上升 0.7 个点，位于荣枯线上方"
+    assert_pangu_ok(text)
+
+
+def test_level_takeaway_crossing_50_downward_appends_below_the_line():
+    text = generate_level_takeaway(_level_base(latest_level=49.6, prev_level=50.3))
+    assert text == "2026 年 6 月制造业 PMI 为 49.6%，比上月回落 0.7 个点，位于荣枯线下方"
+    assert_pangu_ok(text)
+
+
+def test_level_takeaway_near_50_without_crossing_still_appends_the_line_note():
+    """Same side both periods (no crossing) but the latest print sits within
+    0.5 of 50 -- the 荣枯线 note fires on proximity alone."""
+    text = generate_level_takeaway(_level_base(latest_level=50.3, prev_level=50.6))
+    assert text == "2026 年 6 月制造业 PMI 为 50.3%，比上月回落 0.3 个点，位于荣枯线上方"
+    assert_pangu_ok(text)
+
+
+def test_level_takeaway_first_obs_has_no_comparison_or_line_note():
+    """No previous print to compare against -- a plain statement, same
+    "missing previous" conservatism as the sign-matrix template. Also away
+    from 50, so no 荣枯线 clause either (there is nothing to be "near" or
+    "cross" relative to without both sides having some data point)."""
+    text = generate_level_takeaway(_level_base(latest_level=47.0, prev_level=None))
+    assert text == "2026 年 6 月制造业 PMI 为 47.0%"
+    assert_pangu_ok(text)
+
+
+def test_level_takeaway_first_obs_near_50_still_gets_the_line_note():
+    """A first observation CAN still be "near" 50 on its own -- only
+    "crossing" requires a previous print to compare against."""
+    text = generate_level_takeaway(_level_base(latest_level=50.1, prev_level=None))
+    assert text == "2026 年 6 月制造业 PMI 为 50.1%，位于荣枯线上方"
+    assert_pangu_ok(text)
+
+
+def test_level_takeaway_bare_unit_omits_percent_sign():
+    text = generate_level_takeaway(
+        _level_base(latest_level=48.6, prev_level=48.0, is_percent_unit=False)
+    )
+    assert text == "2026 年 6 月制造业 PMI 为 48.6，比上月上升 0.6 个点"
+    assert_pangu_ok(text)
+
+
+def test_level_takeaway_boom_bust_line_can_be_disabled():
+    text = generate_level_takeaway(
+        _level_base(latest_level=50.2, prev_level=49.5, boom_bust_line=None)
+    )
+    assert text == "2026 年 6 月制造业 PMI 为 50.2%，比上月上升 0.7 个点"
+    assert "荣枯线" not in text

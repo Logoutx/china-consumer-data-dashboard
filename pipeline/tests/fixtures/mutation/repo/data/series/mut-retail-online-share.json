@@ -1,0 +1,63 @@
+{
+  "schema": "series/v1",
+  "id": "mut-retail-online-share",
+  "name_zh": "测试_MUT_网上商品零售额占比",
+  "name_en": "MUT online retail share",
+  "unit_zh": "%",
+  "unit_en": "%",
+  "value_type": "ratio",
+  "freq": "M",
+  "calibers": [
+    "single"
+  ],
+  "decimals": 4,
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（合成，非真实序列，仅供 mutation-gate 测试使用）",
+    "dataset_en": "Synthetic test series for the mutation-gate harness (not real data)",
+    "url": "https://example.invalid/mut-retail-online-share"
+  },
+  "derived": {
+    "rule": "ratio",
+    "inputs": [
+      "mut-retail-online-goods",
+      "mut-retail-ex-auto"
+    ],
+    "caliber": "single"
+  },
+  "coverage_note_zh": null,
+  "observations": [
+    {
+      "period": "2026-02",
+      "m": 104.06,
+      "src": "derived:ratio:2026-02",
+      "span": 2,
+      "flags": [
+        "jan_feb"
+      ]
+    },
+    {
+      "period": "2026-03",
+      "m": 28.5201,
+      "src": "derived:ratio:2026-03"
+    },
+    {
+      "period": "2026-04",
+      "m": 27.9707,
+      "src": "derived:ratio:2026-04"
+    },
+    {
+      "period": "2026-05",
+      "m": 30.5259,
+      "src": "derived:ratio:2026-05"
+    },
+    {
+      "period": "2026-06",
+      "m": 30.8901,
+      "src": "derived:ratio:2026-06"
+    }
+  ],
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-07-20T00:00:00Z"
+}

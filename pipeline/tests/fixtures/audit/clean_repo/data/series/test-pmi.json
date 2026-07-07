@@ -1,0 +1,37 @@
+{
+  "schema": "series/v1",
+  "unit_en": "%",
+  "decimals": 1,
+  "coverage_note_zh": null,
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-07-08T00:00:00Z",
+  "id": "test-pmi",
+  "name_zh": "测试_采购经理指数",
+  "name_en": "TEST PMI",
+  "unit_zh": "%",
+  "value_type": "index",
+  "freq": "M",
+  "calibers": [
+    "single"
+  ],
+  "source": {
+    "agency": "cflp",
+    "dataset_zh": "测试数据集（pmi，DG 接口，非真实序列）",
+    "dataset_en": "Synthetic DG-sourced test series (pmi, not real data)",
+    "url": "https://data.stats.gov.cn/dg/website/page.html"
+  },
+  "derived": null,
+  "observations": [
+    {
+      "period": "2026-05",
+      "m": 50.3,
+      "src": "dg:bbbb2222bbbb2222bbbb2222bbbb2222"
+    },
+    {
+      "period": "2026-06",
+      "m": 49.8,
+      "src": "dg:bbbb2222bbbb2222bbbb2222bbbb2222"
+    }
+  ]
+}

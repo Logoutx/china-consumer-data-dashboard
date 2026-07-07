@@ -1,0 +1,748 @@
+{
+  "schema": "catalog/v1",
+  "version": "1.0.0-test",
+  "generated_at": "2026-06-01T00:00:00Z",
+  "sections": [
+    {
+      "id": "prices",
+      "name_zh": "物价",
+      "name_en": "Prices",
+      "order": 0
+    },
+    {
+      "id": "consumption",
+      "name_zh": "消费",
+      "name_en": "Consumption",
+      "order": 1
+    },
+    {
+      "id": "income-confidence",
+      "name_zh": "收入与信心",
+      "name_en": "Income & Confidence",
+      "order": 2
+    },
+    {
+      "id": "employment",
+      "name_zh": "就业",
+      "name_en": "Employment",
+      "order": 3
+    },
+    {
+      "id": "property",
+      "name_zh": "楼市",
+      "name_en": "Property",
+      "order": 4
+    },
+    {
+      "id": "money-credit",
+      "name_zh": "钱与信贷",
+      "name_en": "Money & Credit",
+      "order": 5
+    },
+    {
+      "id": "macro",
+      "name_zh": "宏观大盘",
+      "name_en": "Macro",
+      "order": 6
+    },
+    {
+      "id": "high-frequency",
+      "name_zh": "高频脉搏",
+      "name_en": "High-Frequency Pulse",
+      "order": 7
+    }
+  ],
+  "series": [
+    {
+      "id": "nbs-retail-total",
+      "name_zh": "测试_nbs-retail-total",
+      "name_en": "nbs-retail-total",
+      "section": "consumption",
+      "tier": 1,
+      "unit_zh": "亿元",
+      "unit_en": "100M CNY",
+      "value_type": "level",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single",
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/nbs-retail-total"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/nbs-retail-total.json"
+    },
+    {
+      "id": "nbs-retail-urban",
+      "name_zh": "测试_nbs-retail-urban",
+      "name_en": "nbs-retail-urban",
+      "section": "consumption",
+      "tier": 2,
+      "unit_zh": "亿元",
+      "unit_en": "100M CNY",
+      "value_type": "level",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single",
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/nbs-retail-urban"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/nbs-retail-urban.json"
+    },
+    {
+      "id": "nbs-retail-rural",
+      "name_zh": "测试_nbs-retail-rural",
+      "name_en": "nbs-retail-rural",
+      "section": "consumption",
+      "tier": 2,
+      "unit_zh": "亿元",
+      "unit_en": "100M CNY",
+      "value_type": "level",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single",
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/nbs-retail-rural"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/nbs-retail-rural.json"
+    },
+    {
+      "id": "nbs-retail-goods",
+      "name_zh": "测试_nbs-retail-goods",
+      "name_en": "nbs-retail-goods",
+      "section": "consumption",
+      "tier": 2,
+      "unit_zh": "亿元",
+      "unit_en": "100M CNY",
+      "value_type": "level",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single",
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/nbs-retail-goods"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/nbs-retail-goods.json"
+    },
+    {
+      "id": "nbs-retail-catering",
+      "name_zh": "测试_nbs-retail-catering",
+      "name_en": "nbs-retail-catering",
+      "section": "consumption",
+      "tier": 2,
+      "unit_zh": "亿元",
+      "unit_en": "100M CNY",
+      "value_type": "level",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single",
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/nbs-retail-catering"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/nbs-retail-catering.json"
+    },
+    {
+      "id": "nbs-retail-online-goods",
+      "name_zh": "测试_nbs-retail-online-goods",
+      "name_en": "nbs-retail-online-goods",
+      "section": "consumption",
+      "tier": 2,
+      "unit_zh": "亿元",
+      "unit_en": "100M CNY",
+      "value_type": "level",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single",
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/nbs-retail-online-goods"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/nbs-retail-online-goods.json"
+    },
+    {
+      "id": "nbs-retail-ex-auto",
+      "name_zh": "测试_nbs-retail-ex-auto",
+      "name_en": "nbs-retail-ex-auto",
+      "section": "consumption",
+      "tier": 2,
+      "unit_zh": "亿元",
+      "unit_en": "100M CNY",
+      "value_type": "level",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single",
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/nbs-retail-ex-auto"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/nbs-retail-ex-auto.json"
+    },
+    {
+      "id": "nbs-retail-online-share",
+      "name_zh": "测试_nbs-retail-online-share",
+      "name_en": "nbs-retail-online-share",
+      "section": "consumption",
+      "tier": 2,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "ratio",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/nbs-retail-online-share"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/nbs-retail-online-share.json"
+    },
+    {
+      "id": "mof-deed-tax",
+      "name_zh": "测试_mof-deed-tax",
+      "name_en": "mof-deed-tax",
+      "section": "property",
+      "tier": 3,
+      "unit_zh": "亿元",
+      "unit_en": "100M CNY",
+      "value_type": "level",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/mof-deed-tax"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/mof-deed-tax.json"
+    },
+    {
+      "id": "mof-property-tax",
+      "name_zh": "测试_mof-property-tax",
+      "name_en": "mof-property-tax",
+      "section": "property",
+      "tier": 3,
+      "unit_zh": "亿元",
+      "unit_en": "100M CNY",
+      "value_type": "level",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/mof-property-tax"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/mof-property-tax.json"
+    },
+    {
+      "id": "mof-urban-land-use-tax",
+      "name_zh": "测试_mof-urban-land-use-tax",
+      "name_en": "mof-urban-land-use-tax",
+      "section": "property",
+      "tier": 3,
+      "unit_zh": "亿元",
+      "unit_en": "100M CNY",
+      "value_type": "level",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/mof-urban-land-use-tax"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/mof-urban-land-use-tax.json"
+    },
+    {
+      "id": "mof-land-vat",
+      "name_zh": "测试_mof-land-vat",
+      "name_en": "mof-land-vat",
+      "section": "property",
+      "tier": 3,
+      "unit_zh": "亿元",
+      "unit_en": "100M CNY",
+      "value_type": "level",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/mof-land-vat"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/mof-land-vat.json"
+    },
+    {
+      "id": "mof-farmland-occupation-tax",
+      "name_zh": "测试_mof-farmland-occupation-tax",
+      "name_en": "mof-farmland-occupation-tax",
+      "section": "property",
+      "tier": 3,
+      "unit_zh": "亿元",
+      "unit_en": "100M CNY",
+      "value_type": "level",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/mof-farmland-occupation-tax"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/mof-farmland-occupation-tax.json"
+    },
+    {
+      "id": "mof-real-estate-tax-total",
+      "name_zh": "测试_mof-real-estate-tax-total",
+      "name_en": "mof-real-estate-tax-total",
+      "section": "property",
+      "tier": 2,
+      "unit_zh": "亿元",
+      "unit_en": "100M CNY",
+      "value_type": "level",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/mof-real-estate-tax-total"
+      },
+      "derived": {
+        "rule": "sum",
+        "inputs": [
+          "mof-deed-tax",
+          "mof-property-tax",
+          "mof-urban-land-use-tax",
+          "mof-land-vat",
+          "mof-farmland-occupation-tax"
+        ]
+      },
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/mof-real-estate-tax-total.json"
+    },
+    {
+      "id": "nbs-cpi-yoy",
+      "name_zh": "测试_nbs-cpi-yoy",
+      "name_en": "nbs-cpi-yoy",
+      "section": "prices",
+      "tier": 1,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "index",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/nbs-cpi-yoy"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/nbs-cpi-yoy.json"
+    },
+    {
+      "id": "nbs-cpi-food-yoy",
+      "name_zh": "测试_nbs-cpi-food-yoy",
+      "name_en": "nbs-cpi-food-yoy",
+      "section": "prices",
+      "tier": 2,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "index",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/nbs-cpi-food-yoy"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/nbs-cpi-food-yoy.json"
+    },
+    {
+      "id": "nbs-cpi-nonfood-yoy",
+      "name_zh": "测试_nbs-cpi-nonfood-yoy",
+      "name_en": "nbs-cpi-nonfood-yoy",
+      "section": "prices",
+      "tier": 2,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "index",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/nbs-cpi-nonfood-yoy"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/nbs-cpi-nonfood-yoy.json"
+    },
+    {
+      "id": "nbs-cpi-core-yoy",
+      "name_zh": "测试_nbs-cpi-core-yoy",
+      "name_en": "nbs-cpi-core-yoy",
+      "section": "prices",
+      "tier": 2,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "index",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/nbs-cpi-core-yoy"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/nbs-cpi-core-yoy.json"
+    },
+    {
+      "id": "nbs-cpi-services-yoy",
+      "name_zh": "测试_nbs-cpi-services-yoy",
+      "name_en": "nbs-cpi-services-yoy",
+      "section": "prices",
+      "tier": 2,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "index",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/nbs-cpi-services-yoy"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/nbs-cpi-services-yoy.json"
+    },
+    {
+      "id": "nbs-cpi-goods-yoy",
+      "name_zh": "测试_nbs-cpi-goods-yoy",
+      "name_en": "nbs-cpi-goods-yoy",
+      "section": "prices",
+      "tier": 2,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "index",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/nbs-cpi-goods-yoy"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/nbs-cpi-goods-yoy.json"
+    },
+    {
+      "id": "test-unemp",
+      "name_zh": "测试_test-unemp",
+      "name_en": "test-unemp",
+      "section": "employment",
+      "tier": 1,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "rate_pct",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/test-unemp"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/test-unemp.json"
+    },
+    {
+      "id": "test-fai",
+      "name_zh": "测试_test-fai",
+      "name_en": "test-fai",
+      "section": "macro",
+      "tier": 1,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "yoy_pct",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/test-fai"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/test-fai.json"
+    },
+    {
+      "id": "test-cpi-break",
+      "name_zh": "测试_test-cpi-break",
+      "name_en": "test-cpi-break",
+      "section": "prices",
+      "tier": 2,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "index",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/test-cpi-break"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/test-cpi-break.json"
+    },
+    {
+      "id": "test-old-series",
+      "name_zh": "测试_test-old-series",
+      "name_en": "test-old-series",
+      "section": "employment",
+      "tier": 3,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "rate_pct",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/test-old-series"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/test-old-series.json"
+    },
+    {
+      "id": "test-new-series",
+      "name_zh": "测试_test-new-series",
+      "name_en": "test-new-series",
+      "section": "employment",
+      "tier": 3,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "rate_pct",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/test-new-series"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/test-new-series.json"
+    },
+    {
+      "id": "test-pbc-m1",
+      "name_zh": "测试_test-pbc-m1",
+      "name_en": "test-pbc-m1",
+      "section": "money-credit",
+      "tier": 1,
+      "unit_zh": "亿元",
+      "unit_en": "100M CNY",
+      "value_type": "level",
+      "decimals": 2,
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/test-pbc-m1"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/test-pbc-m1.json"
+    },
+    {
+      "id": "test-nbs-m1-republished",
+      "name_zh": "测试_test-nbs-m1-republished",
+      "name_en": "test-nbs-m1-republished",
+      "section": "money-credit",
+      "tier": 3,
+      "unit_zh": "亿元",
+      "unit_en": "100M CNY",
+      "value_type": "level",
+      "decimals": 2,
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试",
+        "dataset_en": "test",
+        "url": "https://example.invalid/test-nbs-m1-republished"
+      },
+      "derived": null,
+      "start": "2016-02",
+      "latest": "2025-12",
+      "file": "data/series/test-nbs-m1-republished.json"
+    }
+  ]
+}

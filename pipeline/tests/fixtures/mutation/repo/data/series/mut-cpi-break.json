@@ -1,0 +1,117 @@
+{
+  "schema": "series/v1",
+  "id": "mut-cpi-break",
+  "name_zh": "测试_MUT_居民消费价格指数",
+  "name_en": "MUT CPI (rebase break)",
+  "unit_zh": "%",
+  "unit_en": "%",
+  "value_type": "index",
+  "freq": "M",
+  "calibers": [
+    "single"
+  ],
+  "decimals": 1,
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（合成，非真实序列，仅供 mutation-gate 测试使用）",
+    "dataset_en": "Synthetic test series for the mutation-gate harness (not real data)",
+    "url": "https://example.invalid/mut-cpi-break"
+  },
+  "derived": null,
+  "coverage_note_zh": null,
+  "observations": [
+    {
+      "period": "2025-05",
+      "m": 101.8,
+      "src": "rel:2025-05"
+    },
+    {
+      "period": "2025-06",
+      "m": 101.9,
+      "src": "rel:2025-06"
+    },
+    {
+      "period": "2025-07",
+      "m": 100.1,
+      "src": "rel:2025-07",
+      "flags": [
+        "old_caliber"
+      ]
+    },
+    {
+      "period": "2025-08",
+      "m": 100.3,
+      "src": "rel:2025-08"
+    },
+    {
+      "period": "2025-09",
+      "m": 100.5,
+      "src": "rel:2025-09"
+    },
+    {
+      "period": "2025-10",
+      "m": 100.7,
+      "src": "rel:2025-10"
+    },
+    {
+      "period": "2025-11",
+      "m": 100.9,
+      "src": "rel:2025-11"
+    },
+    {
+      "period": "2025-12",
+      "m": 101.0,
+      "src": "rel:2025-12"
+    },
+    {
+      "period": "2026-01",
+      "m": 101.1,
+      "src": "rel:2026-01"
+    },
+    {
+      "period": "2026-02",
+      "m": 101.2,
+      "src": "rel:2026-02"
+    },
+    {
+      "period": "2026-03",
+      "m": 101.3,
+      "src": "rel:2026-03"
+    },
+    {
+      "period": "2026-04",
+      "m": 101.4,
+      "src": "rel:2026-04"
+    },
+    {
+      "period": "2026-05",
+      "m": 101.5,
+      "src": "rel:2026-05"
+    },
+    {
+      "period": "2026-06",
+      "m": 101.6,
+      "src": "rel:2026-06"
+    },
+    {
+      "period": "2026-07",
+      "m": 101.7,
+      "m_yoy": 1.6,
+      "src": "rel:2026-07"
+    }
+  ],
+  "revisions": [],
+  "breaks": [
+    {
+      "effective": "2025-07",
+      "kind": "rebase",
+      "no_yoy_across": true,
+      "yoy_valid_from": "2026-07",
+      "supersedes": null,
+      "superseded_by": null,
+      "note_zh": "测试断点：跨基期同比不可比，2026-07 起同比恢复发布。",
+      "note_en": "test break: YoY not comparable across the rebase seam; resumes 2026-07."
+    }
+  ],
+  "generated_at": "2026-07-20T00:00:00Z"
+}

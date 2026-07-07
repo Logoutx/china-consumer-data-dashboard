@@ -1,0 +1,527 @@
+{
+  "section": "macro",
+  "generated_at": "2026-07-20T00:00:00Z",
+  "catalog_version": "1.0.0-mutation-test",
+  "series": [
+    {
+      "id": "mut-fai",
+      "name_zh": "测试_MUT_固定资产投资完成额",
+      "name_en": "MUT FAI ytd yoy",
+      "name_short": null,
+      "unit_zh": "%",
+      "value_type": "yoy_pct",
+      "freq": "M",
+      "tier": 1,
+      "calibers": [
+        "ytd"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/mut-fai"
+      },
+      "decimals": 1,
+      "latest": {
+        "period": "2026-06",
+        "period_label_zh": "2026 年 1-6 月",
+        "ytd_yoy": 4.8
+      },
+      "prev": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 1-5 月",
+        "ytd_yoy": 4.8
+      },
+      "headline": {
+        "caliber": "ytd",
+        "direction": "up",
+        "latest_yoy": 4.8,
+        "delta_pp_vs_prev": 0.0,
+        "streak": 0,
+        "period_label_zh": "2026 年 1-6 月"
+      },
+      "takeaway": "1-6 月测试_MUT_固定资产投资完成额累计同比增长 4.8%，与 1-5 月持平",
+      "plot_kind": "yoy",
+      "yoy_series": [
+        {
+          "period": "2025-02",
+          "yoy": 7.0
+        },
+        {
+          "period": "2025-03",
+          "yoy": 5.0
+        },
+        {
+          "period": "2025-04",
+          "yoy": 5.0
+        },
+        {
+          "period": "2025-05",
+          "yoy": 5.0
+        },
+        {
+          "period": "2025-06",
+          "yoy": 5.0
+        },
+        {
+          "period": "2025-07",
+          "yoy": 5.0
+        },
+        {
+          "period": "2025-08",
+          "yoy": 5.0
+        },
+        {
+          "period": "2025-09",
+          "yoy": 5.0
+        },
+        {
+          "period": "2025-10",
+          "yoy": 5.0
+        },
+        {
+          "period": "2025-11",
+          "yoy": 5.0
+        },
+        {
+          "period": "2025-12",
+          "yoy": 5.0
+        },
+        {
+          "period": "2026-02",
+          "yoy": 6.8
+        },
+        {
+          "period": "2026-03",
+          "yoy": 4.8
+        },
+        {
+          "period": "2026-04",
+          "yoy": 4.8
+        },
+        {
+          "period": "2026-05",
+          "yoy": 4.8
+        },
+        {
+          "period": "2026-06",
+          "yoy": 4.8
+        }
+      ],
+      "level_series": [
+        {
+          "period": "2025-02",
+          "m": 7.0
+        },
+        {
+          "period": "2025-03",
+          "m": 5.0
+        },
+        {
+          "period": "2025-04",
+          "m": 5.0
+        },
+        {
+          "period": "2025-05",
+          "m": 5.0
+        },
+        {
+          "period": "2025-06",
+          "m": 5.0
+        },
+        {
+          "period": "2025-07",
+          "m": 5.0
+        },
+        {
+          "period": "2025-08",
+          "m": 5.0
+        },
+        {
+          "period": "2025-09",
+          "m": 5.0
+        },
+        {
+          "period": "2025-10",
+          "m": 5.0
+        },
+        {
+          "period": "2025-11",
+          "m": 5.0
+        },
+        {
+          "period": "2025-12",
+          "m": 5.0
+        },
+        {
+          "period": "2026-02",
+          "m": 6.8
+        },
+        {
+          "period": "2026-03",
+          "m": 4.8
+        },
+        {
+          "period": "2026-04",
+          "m": 4.8
+        },
+        {
+          "period": "2026-05",
+          "m": 4.8
+        },
+        {
+          "period": "2026-06",
+          "m": 4.8
+        }
+      ],
+      "spark": [
+        7.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        6.8,
+        4.8,
+        4.8,
+        4.8,
+        4.8
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [],
+      "revisions_recent": []
+    },
+    {
+      "id": "mut-income-quarterly",
+      "name_zh": "测试_MUT_居民人均可支配收入",
+      "name_en": "MUT quarterly income (real_yoy)",
+      "name_short": null,
+      "unit_zh": "元",
+      "value_type": "level",
+      "freq": "Q",
+      "tier": 1,
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/mut-income-quarterly"
+      },
+      "decimals": 1,
+      "latest": {
+        "period": "2026-Q2",
+        "period_label_zh": "2026 年二季度",
+        "m": 34332.5,
+        "m_yoy": 4.9,
+        "real_yoy": 3.7
+      },
+      "prev": {
+        "period": "2026-Q1",
+        "period_label_zh": "2026 年一季度",
+        "m": 33562.1,
+        "m_yoy": 4.7,
+        "real_yoy": 3.2
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": "up",
+        "latest_yoy": 4.9,
+        "delta_pp_vs_prev": 0.2,
+        "streak": 0,
+        "period_label_zh": "2026 年二季度"
+      },
+      "takeaway": "2026 年二季度测试_MUT_居民人均可支配收入同比名义增长 4.9%，实际增长 3.7%",
+      "plot_kind": "level",
+      "yoy_series": [
+        {
+          "period": "2024-Q1",
+          "yoy": null
+        },
+        {
+          "period": "2024-Q2",
+          "yoy": null
+        },
+        {
+          "period": "2024-Q3",
+          "yoy": null
+        },
+        {
+          "period": "2024-Q4",
+          "yoy": null
+        },
+        {
+          "period": "2025-Q1",
+          "yoy": 5.1
+        },
+        {
+          "period": "2025-Q2",
+          "yoy": 4.9
+        },
+        {
+          "period": "2025-Q3",
+          "yoy": 5.2
+        },
+        {
+          "period": "2025-Q4",
+          "yoy": 4.8
+        },
+        {
+          "period": "2026-Q1",
+          "yoy": 4.7
+        },
+        {
+          "period": "2026-Q2",
+          "yoy": 4.9
+        }
+      ],
+      "level_series": [
+        {
+          "period": "2024-Q1",
+          "m": 30500.0
+        },
+        {
+          "period": "2024-Q2",
+          "m": 31200.0
+        },
+        {
+          "period": "2024-Q3",
+          "m": 32100.0
+        },
+        {
+          "period": "2024-Q4",
+          "m": 33500.0
+        },
+        {
+          "period": "2025-Q1",
+          "m": 32055.5
+        },
+        {
+          "period": "2025-Q2",
+          "m": 32728.8
+        },
+        {
+          "period": "2025-Q3",
+          "m": 33769.2
+        },
+        {
+          "period": "2025-Q4",
+          "m": 35108.0
+        },
+        {
+          "period": "2026-Q1",
+          "m": 33562.1
+        },
+        {
+          "period": "2026-Q2",
+          "m": 34332.5
+        }
+      ],
+      "spark": [
+        30500.0,
+        31200.0,
+        32100.0,
+        33500.0,
+        32055.5,
+        32728.8,
+        33769.2,
+        35108.0,
+        33562.1,
+        34332.5
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [],
+      "revisions_recent": []
+    },
+    {
+      "id": "mut-tsf-flow",
+      "name_zh": "测试_MUT_社会融资规模增量",
+      "name_en": "MUT TSF flow",
+      "name_short": null,
+      "unit_zh": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "tier": 1,
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/mut-tsf-flow"
+      },
+      "decimals": 1,
+      "latest": {
+        "period": "2026-06",
+        "period_label_zh": "2026 年 6 月",
+        "m": 23200.0
+      },
+      "prev": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 5 月",
+        "m": 23000.0
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": null,
+        "latest_yoy": null,
+        "delta_pp_vs_prev": null,
+        "streak": 0,
+        "period_label_zh": "2026 年 6 月"
+      },
+      "takeaway": null,
+      "plot_kind": "level",
+      "yoy_series": [
+        {
+          "period": "2026-01",
+          "yoy": null
+        },
+        {
+          "period": "2026-02",
+          "yoy": null
+        },
+        {
+          "period": "2026-03",
+          "yoy": null
+        },
+        {
+          "period": "2026-04",
+          "yoy": null
+        },
+        {
+          "period": "2026-05",
+          "yoy": null
+        },
+        {
+          "period": "2026-06",
+          "yoy": null
+        }
+      ],
+      "level_series": [
+        {
+          "period": "2026-01",
+          "m": 22000.0
+        },
+        {
+          "period": "2026-02",
+          "m": 22300.0
+        },
+        {
+          "period": "2026-03",
+          "m": 22550.0
+        },
+        {
+          "period": "2026-04",
+          "m": 22800.0
+        },
+        {
+          "period": "2026-05",
+          "m": 23000.0
+        },
+        {
+          "period": "2026-06",
+          "m": 23200.0
+        }
+      ],
+      "spark": [
+        22000.0,
+        22300.0,
+        22550.0,
+        22800.0,
+        23000.0,
+        23200.0
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [],
+      "revisions_recent": []
+    },
+    {
+      "id": "mut-dg-level",
+      "name_zh": "测试_MUT_DG层级指标",
+      "name_en": "MUT DG level indicator",
+      "name_short": null,
+      "unit_zh": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "tier": 1,
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://data.stats.gov.cn/dg/website/page.html"
+      },
+      "decimals": 1,
+      "latest": {
+        "period": "2026-06",
+        "period_label_zh": "2026 年 6 月",
+        "m": 1250.0
+      },
+      "prev": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 5 月",
+        "m": 1300.0
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": null,
+        "latest_yoy": null,
+        "delta_pp_vs_prev": null,
+        "streak": 0,
+        "period_label_zh": "2026 年 6 月"
+      },
+      "takeaway": null,
+      "plot_kind": "level",
+      "yoy_series": [
+        {
+          "period": "2026-03",
+          "yoy": null
+        },
+        {
+          "period": "2026-04",
+          "yoy": null
+        },
+        {
+          "period": "2026-05",
+          "yoy": null
+        },
+        {
+          "period": "2026-06",
+          "yoy": null
+        }
+      ],
+      "level_series": [
+        {
+          "period": "2026-03",
+          "m": 1150.0
+        },
+        {
+          "period": "2026-04",
+          "m": 1200.0
+        },
+        {
+          "period": "2026-05",
+          "m": 1300.0
+        },
+        {
+          "period": "2026-06",
+          "m": 1250.0
+        }
+      ],
+      "spark": [
+        1150.0,
+        1200.0,
+        1300.0,
+        1250.0
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [],
+      "revisions_recent": []
+    }
+  ]
+}

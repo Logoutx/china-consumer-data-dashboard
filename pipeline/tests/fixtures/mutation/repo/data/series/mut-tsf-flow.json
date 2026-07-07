@@ -1,0 +1,57 @@
+{
+  "schema": "series/v1",
+  "id": "mut-tsf-flow",
+  "name_zh": "测试_MUT_社会融资规模增量",
+  "name_en": "MUT TSF flow",
+  "unit_zh": "亿元",
+  "unit_en": "100M CNY",
+  "value_type": "level",
+  "freq": "M",
+  "calibers": [
+    "single"
+  ],
+  "decimals": 1,
+  "source": {
+    "agency": "pbc",
+    "dataset_zh": "测试数据集（合成，非真实序列，仅供 mutation-gate 测试使用）",
+    "dataset_en": "Synthetic test series for the mutation-gate harness (not real data)",
+    "url": "https://example.invalid/mut-tsf-flow"
+  },
+  "derived": null,
+  "coverage_note_zh": null,
+  "observations": [
+    {
+      "period": "2026-01",
+      "m": 22000.0,
+      "src": "rel:2026-01"
+    },
+    {
+      "period": "2026-02",
+      "m": 22300.0,
+      "src": "rel:2026-02"
+    },
+    {
+      "period": "2026-03",
+      "m": 22550.0,
+      "src": "rel:2026-03"
+    },
+    {
+      "period": "2026-04",
+      "m": 22800.0,
+      "src": "rel:2026-04"
+    },
+    {
+      "period": "2026-05",
+      "m": 23000.0,
+      "src": "rel:2026-05"
+    },
+    {
+      "period": "2026-06",
+      "m": 23200.0,
+      "src": "rel:2026-06"
+    }
+  ],
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-07-20T00:00:00Z"
+}

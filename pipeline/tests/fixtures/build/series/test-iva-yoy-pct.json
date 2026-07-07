@@ -1,0 +1,29 @@
+{
+  "schema": "series/v1",
+  "id": "test-iva-yoy-pct",
+  "name_zh": "测试_规模以上工业增加值同比增长",
+  "name_en": "TEST industrial value added YoY growth",
+  "name_short": "测试_工业增加值",
+  "unit_zh": "%",
+  "unit_en": "%",
+  "value_type": "yoy_pct",
+  "freq": "M",
+  "calibers": ["single", "ytd"],
+  "decimals": 1,
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（非真实序列，仅供 build.py 契约测试使用）",
+    "dataset_en": "Synthetic test series for build.py contract tests (not real data)",
+    "url": "https://example.invalid/test-iva-yoy-pct"
+  },
+  "derived": null,
+  "coverage_note_zh": "真实 nbs-industrial-va 的精确复刻形状：m/ytd 都已经是百分比同比增速，从不出现 m_yoy/ytd_yoy（国家统计局不公布绝对值）。",
+  "observations": [
+    { "period": "2026-03", "m": 5.7, "ytd": 6.1, "src": "dg:test" },
+    { "period": "2026-04", "m": 4.1, "ytd": 5.6, "src": "dg:test" },
+    { "period": "2026-05", "m": 4.5, "ytd": 5.4, "src": "dg:test" }
+  ],
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-06-20T00:00:00Z"
+}

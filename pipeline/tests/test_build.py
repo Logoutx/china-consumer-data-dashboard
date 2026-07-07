@@ -68,9 +68,13 @@ def test_build_report_counts(built):
     report, _out_dir = built
     assert isinstance(report, BuildReport)
     assert report.sections == 4  # prices, consumption, macro, property
-    assert report.series == 4  # cpi-break, retail-revised, fai-ytd, income-mixed-annual (panel excluded)
+    # cpi-break, retail-revised, fai-ytd, income-mixed-annual, fai-yoy-pct,
+    # iva-yoy-pct, gdp-contribution-ratio (panel excluded)
+    assert report.series == 7
     assert report.panels == 1
-    assert report.tiles == 2  # tier-1, non-panel: cpi-break + retail-revised (fai-ytd/income-mixed-annual are tier 2/3)
+    # tier-1, non-panel: cpi-break + retail-revised + iva-yoy-pct (fai-ytd/
+    # income-mixed-annual/fai-yoy-pct/gdp-contribution-ratio are tier 2/3)
+    assert report.tiles == 3
 
 
 def test_expected_files_are_written(built):
@@ -219,7 +223,7 @@ def test_retail_latest_is_a_sign_flip_takeaway(built):
 
 def test_retail_jan_feb_observation_is_in_yoy_series_with_correct_label():
     """White-box on _period_label_zh + the raw yoy_series build: the Jan-Feb
-    row must carry the cumulative (em-dash) label form, not a bare month."""
+    row must carry the cumulative (hyphen) label form, not a bare month."""
     from pipeline.build import _build_yoy_series
 
     series = json.loads((FIXTURES_DIR / "series" / "test-retail-revised.json").read_text(encoding="utf-8"))
@@ -227,7 +231,7 @@ def test_retail_jan_feb_observation_is_in_yoy_series_with_correct_label():
     by_period = {pt["period"]: pt["yoy"] for pt in yoy}
     assert by_period["2026-02"] == 4.0
     label = _period_label_zh("2026-02", caliber="single", span=2)
-    assert label == "2026 年 1—2 月"
+    assert label == "2026 年 1-2 月"
 
 
 def test_quarterly_ytd_only_series_without_real_yoy_does_not_crash():
@@ -260,7 +264,7 @@ def test_quarterly_ytd_only_series_without_real_yoy_does_not_crash():
     }
     bundle_entry = _build_series_entry(entry, series, {}, AS_OF)
     assert bundle_entry["headline"]["caliber"] == "ytd"
-    assert bundle_entry["takeaway"] == "2026 年 2 季度测试_人均可支配收入中位数同比增长 5.0%，增速较上季度加快 1.0 个百分点"
+    assert bundle_entry["takeaway"] == "2026 年二季度测试_人均可支配收入中位数同比增长 5.0%，增速较上季度加快 1.0 个百分点"
 
 
 # -- mixed quarterly + annual-supplement series (pipeline/migrate/REPORT.md item 6) --
@@ -280,9 +284,9 @@ def test_mixed_annual_quarterly_series_builds_without_crashing(built):
     # annual rows at all (ytd-caliber prev resolution is a calendar lookup
     # that never reaches array-adjacency here).
     assert mixed["latest"]["period"] == "2017-Q2"
-    assert mixed["latest"]["period_label_zh"] == "2017 年 2 季度"
+    assert mixed["latest"]["period_label_zh"] == "2017 年二季度"
     assert mixed["prev"]["period"] == "2017-Q1"
-    assert mixed["takeaway"] == "2017 年 2 季度测试_人均可支配收入中位数同比增长 6.2%，增速较上季度加快 0.2 个百分点"
+    assert mixed["takeaway"] == "2017 年二季度测试_人均可支配收入中位数同比增长 6.2%，增速较上季度加快 0.2 个百分点"
 
     # the annual rows are still safely represented in the chart series (no
     # crash building them), each with the "全年" label baked into nothing here
@@ -368,7 +372,7 @@ def test_prev_resolution_rejects_annual_to_quarterly_shape_mismatch():
     bundle_entry = _build_series_entry(entry, series, {}, AS_OF)
     assert bundle_entry["latest"]["period"] == "2017-Q1"
     assert bundle_entry["prev"] is None  # NOT "2016" -- different period shape, not comparable
-    assert bundle_entry["takeaway"] == "2017 年 1 季度测试_单一口径混合序列同比增长 6.0%"
+    assert bundle_entry["takeaway"] == "2017 年一季度测试_单一口径混合序列同比增长 6.0%"
 
 
 # -- FAI: ytd-only headline caliber --------------------------------------------------
@@ -396,6 +400,392 @@ def test_fai_is_tier_2_and_excluded_from_tiles_but_present_in_freshness(built):
     index = _load(out_dir / "index.json")
     assert all(t["id"] != "test-fai-ytd" for t in index["tiles"])
     assert any(f["id"] == "test-fai-ytd" for f in index["freshness"])
+
+
+# -- value_type=="yoy_pct": FAI/industrial-va's REAL shape (no absolute level at
+# all, not even the "test-fai-ytd" fixture above's synthetic ytd level) -------------
+#
+# test-fai-ytd (fixture above) has calibers==["ytd"] with a genuine "ytd" level
+# alongside "ytd_yoy" -- a plausible shape in the abstract, but NOT the real
+# nbs-fai.json's shape (DG publishes no absolute FAI level at all, ever -- see
+# pipeline/backfill/backfill.py's build_fai coverage_note_zh). Before the
+# value_type=="yoy_pct" fix, a series shaped like the real FAI (value_field
+# "ytd" never populated, only "ytd_yoy") hit the top-of-function
+# `if latest is None: return _empty_series_entry(...)` and got a permanently
+# null latest/headline/takeaway -- "build.py currently emits an empty bundle
+# entry for it" (the exact bug this fix addresses). industrial-va's real shape
+# is the mirror image: its own "m"/"ytd" fields (not "m_yoy"/"ytd_yoy") ARE
+# populated, but the fields are already YoY growth rates, not a true level --
+# "latest" WAS found (so not empty), but yoy_series/headline/takeaway were
+# stuck null since m_yoy never exists.
+
+
+def test_fai_real_shape_no_longer_returns_an_empty_bundle(built):
+    _report, out_dir = built
+    macro = _load(out_dir / "sections" / "macro.json")
+    fai = _series_by_id(macro, "test-fai-yoy-pct")
+    assert fai["plot_kind"] == "yoy"
+    assert fai["latest"]["period"] == "2026-05"
+    assert fai["latest"]["ytd_yoy"] == -4.1
+    assert fai["headline"]["direction"] == "down"
+    assert fai["headline"]["latest_yoy"] == -4.1
+    assert fai["yoy_series"] == [
+        {"period": "2026-03", "yoy": 1.7},
+        {"period": "2026-04", "yoy": -1.6},
+        {"period": "2026-05", "yoy": -4.1},
+    ]
+    assert fai["takeaway"] == (
+        "1-5 月测试_固定资产投资累计同比下降 4.1%，降幅较 1-4 月扩大 2.5 个百分点，连续 2 个月同比下降"
+    )
+
+
+def test_industrial_va_real_shape_gets_a_populated_yoy_series_and_takeaway(built):
+    """industrial-va's real shape: value_field ("m"/"ytd") IS populated (so
+    the old code never hit the empty-bundle path at all), but with a growth
+    rate, not a level -- yoy_field ("m_yoy") never exists, so headline/
+    takeaway/yoy_series were stuck null/empty before this fix."""
+    _report, out_dir = built
+    macro = _load(out_dir / "sections" / "macro.json")
+    iva = _series_by_id(macro, "test-iva-yoy-pct")
+    assert iva["plot_kind"] == "yoy"
+    assert iva["latest"]["period"] == "2026-05"
+    assert iva["latest"]["m"] == 4.5
+    assert iva["headline"]["direction"] == "up"
+    assert iva["headline"]["latest_yoy"] == 4.5
+    assert iva["yoy_series"] == [
+        {"period": "2026-03", "yoy": 5.7},
+        {"period": "2026-04", "yoy": 4.1},
+        {"period": "2026-05", "yoy": 4.5},
+    ]
+    assert iva["takeaway"] == "2026 年 5 月测试_工业增加值同比增长 4.5%，增速较上月加快 0.4 个百分点"
+
+
+def test_iva_is_tier_1_and_included_in_tiles(built):
+    """Unlike FAI (tier 2), industrial-va is tier 1 -- once its takeaway is no
+    longer permanently null, it must actually show up as a landing tile."""
+    _report, out_dir = built
+    index = _load(out_dir / "index.json")
+    tile = next((t for t in index["tiles"] if t["id"] == "test-iva-yoy-pct"), None)
+    assert tile is not None
+    assert tile["takeaway"] is not None
+
+
+# -- value_type=="ratio": GDP-contribution's real shape (a point-in-time share,
+# not a YoY rate -- widens the level-only path, gated off the boom-bust line) ------
+
+
+def test_gdp_contribution_ratio_gets_a_level_only_takeaway_not_null(built):
+    """GDP-contribution shares (value_type=='ratio') never publish a YoY --
+    before widening _is_level_only_series, this stayed takeaway=None forever
+    (excluded from the level-only path by the value_type=='index' gate,
+    matching PMI's fix but not shares). Must also use the FREQ-correct
+    previous-period word ("比上季度", not a hardcoded "比上月") since this
+    series is quarterly -- a pre-existing gap in generate_level_takeaway that
+    widening this path exposed and this change also fixes."""
+    _report, out_dir = built
+    macro = _load(out_dir / "sections" / "macro.json")
+    contrib = _series_by_id(macro, "test-gdp-contribution-ratio")
+    assert contrib["plot_kind"] == "level"  # a share is a genuine level, not a rate -- unaffected by the yoy_pct fix
+    assert contrib["headline"]["direction"] is None  # no YoY concept at all for a contribution share
+    assert contrib["takeaway"] == "2026 年一季度测试_消费贡献率为 46.7%，比上季度回落 6.2 个点"
+    assert "荣枯线" not in contrib["takeaway"]  # boom-bust line is meaningless for a contribution share
+
+
+def test_gdp_contribution_ratio_yoy_series_is_all_null_not_fabricated(built):
+    """A share has no YoY concept -- yoy_series must stay all-null (a
+    legitimately empty chart line), never fabricated from the share itself
+    (that would misrepresent a level as if it were a rate of change)."""
+    _report, out_dir = built
+    macro = _load(out_dir / "sections" / "macro.json")
+    contrib = _series_by_id(macro, "test-gdp-contribution-ratio")
+    assert all(pt["yoy"] is None for pt in contrib["yoy_series"])
+    assert contrib["level_series"] == [{"period": "2025-Q4", "m": 52.9}, {"period": "2026-Q1", "m": 46.7}]
+
+
+def test_plot_kind_defaults_to_level_for_an_ordinary_series(built):
+    _report, out_dir = built
+    prices = _load(out_dir / "sections" / "prices.json")
+    cpi = _series_by_id(prices, "test-cpi-break")
+    assert cpi["plot_kind"] == "level"
+
+
+def test_yoy_only_populated_field_direct():
+    """Unit test on the helper itself: whichever of (value_field, yoy_field)
+    actually has non-null data, scanning most-recent-first, wins -- covers
+    both real-world directions (FAI: only the yoy slot; industrial-va: only
+    the value slot) plus the "neither populated yet" edge case."""
+    from pipeline.build import _yoy_only_populated_field
+
+    assert _yoy_only_populated_field("ytd", "ytd_yoy", [{"period": "2026-05", "ytd_yoy": -4.1}]) == "ytd_yoy"
+    assert _yoy_only_populated_field("m", "m_yoy", [{"period": "2026-05", "m": 4.5}]) == "m"
+    assert _yoy_only_populated_field("m", "m_yoy", [{"period": "2026-05"}]) is None
+
+
+# -- name_short passthrough (catalog schema addition) ----------------------------------
+
+
+def test_name_short_is_used_in_the_takeaway_and_passed_through_to_the_bundle():
+    """catalog.schema.json's optional `name_short` -- pipeline/takeaways.py
+    renders it instead of name_zh when present, and build.py also surfaces it
+    as its own bundle field (for the site to use in tiles) rather than only
+    consuming it internally."""
+    from pipeline.build import _build_series_entry
+
+    entry = {
+        "id": "test-cpi-short",
+        "name_zh": "居民消费价格指数",
+        "name_en": "TEST CPI",
+        "name_short": "CPI",
+        "unit_zh": "%",
+        "unit_en": "%",
+        "value_type": "index",
+        "freq": "M",
+        "tier": 1,
+        "calibers": ["single"],
+        "derived": None,
+    }
+    series = {
+        "observations": [
+            {"period": "2026-04", "m": 100.3, "m_yoy": 0.3},
+            {"period": "2026-05", "m": 101.2, "m_yoy": 1.2},
+        ],
+        "revisions": [],
+        "breaks": [],
+    }
+    bundle_entry = _build_series_entry(entry, series, {}, AS_OF)
+    assert bundle_entry["name_short"] == "CPI"
+    # value_type=="index" -> choose_verb() heuristic picks 上涨 (price-type wording);
+    # name_short "CPI" is Latin, so a pangu space is required on both sides of it.
+    assert bundle_entry["takeaway"] == "2026 年 5 月 CPI 同比上涨 1.2%，涨幅较上月扩大 0.9 个百分点"
+
+
+def test_name_short_absent_falls_back_to_name_zh_and_bundle_field_is_none():
+    from pipeline.build import _build_series_entry
+
+    entry = {
+        "id": "test-no-short",
+        "name_zh": "测试_无简称序列",
+        "name_en": "TEST no-short series",
+        "unit_zh": "%",
+        "unit_en": "%",
+        "value_type": "level",
+        "freq": "M",
+        "tier": 2,
+        "calibers": ["single"],
+        "derived": None,
+    }
+    series = {
+        "observations": [{"period": "2026-05", "m": 10.0, "m_yoy": 5.0}],
+        "revisions": [],
+        "breaks": [],
+    }
+    bundle_entry = _build_series_entry(entry, series, {}, AS_OF)
+    assert bundle_entry["name_short"] is None
+    assert "测试_无简称序列" in bundle_entry["takeaway"]
+
+
+# -- level-only takeaway wiring (PMI: no published YoY, ever) --------------------------
+
+
+def test_level_only_series_gets_a_level_takeaway_instead_of_null():
+    """A series that NEVER carries m_yoy anywhere (PMI's real shape: only
+    "m" is ever published) must fall back to the level-only template rather
+    than leaving takeaway permanently null."""
+    from pipeline.build import _build_series_entry
+
+    entry = {
+        "id": "test-pmi",
+        "name_zh": "测试_制造业采购经理指数",
+        "name_en": "TEST manufacturing PMI",
+        "name_short": "测试 PMI",
+        "unit_zh": "%",
+        "unit_en": "%",
+        "value_type": "index",
+        "freq": "M",
+        "tier": 1,
+        "calibers": ["single"],
+        "derived": None,
+    }
+    series = {
+        "observations": [
+            {"period": "2026-05", "m": 48.0},
+            {"period": "2026-06", "m": 48.6},
+        ],
+        "revisions": [],
+        "breaks": [],
+    }
+    bundle_entry = _build_series_entry(entry, series, {}, AS_OF)
+    assert bundle_entry["headline"]["direction"] is None  # no YoY concept at all -- still "unknown", not fabricated
+    assert bundle_entry["takeaway"] == "2026 年 6 月测试 PMI 为 48.6%，比上月上升 0.6 个点"
+
+
+def test_level_only_series_bare_unit_when_catalog_unit_is_not_percent():
+    from pipeline.build import _build_series_entry
+
+    entry = {
+        "id": "test-diffusion-points",
+        "name_zh": "测试_扩散指数",
+        "name_en": "TEST diffusion index",
+        "unit_zh": "点",
+        "unit_en": "points",
+        "value_type": "index",
+        "freq": "M",
+        "tier": 2,
+        "calibers": ["single"],
+        "derived": None,
+    }
+    series = {
+        "observations": [{"period": "2026-05", "m": 48.0}, {"period": "2026-06", "m": 49.0}],
+        "revisions": [],
+        "breaks": [],
+    }
+    bundle_entry = _build_series_entry(entry, series, {}, AS_OF)
+    assert bundle_entry["takeaway"] == "2026 年 6 月测试_扩散指数为 49.0，比上月上升 1.0 个点"
+
+
+def test_level_only_gate_requires_value_type_index_not_just_absent_m_yoy():
+    """Regression, found against the real catalog: a currency-level series
+    (nbs-gdp's real shape -- value_type=="level", carries `real_yoy` but
+    never `m_yoy` for its "single" caliber) must NOT fall into the level-only
+    template just because its OWN caliber's yoy_field happens to be absent.
+    A "为 334192.9，比上月回落 53718.4 个点，位于荣枯线上方" sentence is nonsense
+    for a GDP level -- the level-only template is for diffusion indices
+    (value_type=="index") specifically, not any series lacking a same-
+    caliber YoY. Because `real_yoy` IS present here, this also is not a
+    "no YoY published at all" series -- it correctly falls through to
+    takeaway=None, exactly as it did before generate_level_takeaway existed."""
+    from pipeline.build import _build_series_entry
+
+    entry = {
+        "id": "test-gdp-level",
+        "name_zh": "测试_国内生产总值",
+        "name_en": "TEST GDP",
+        "unit_zh": "亿元",
+        "unit_en": "100M CNY",
+        "value_type": "level",
+        "freq": "Q",
+        "tier": 1,
+        "calibers": ["single", "ytd"],
+        "derived": None,
+    }
+    series = {
+        "observations": [
+            {"period": "2025-Q4", "m": 387911.3, "real_yoy": 5.4},
+            {"period": "2026-Q1", "m": 334192.9, "real_yoy": 5.4},
+        ],
+        "revisions": [],
+        "breaks": [],
+    }
+    bundle_entry = _build_series_entry(entry, series, {}, AS_OF)
+    assert bundle_entry["headline"]["direction"] is None
+    assert bundle_entry["takeaway"] is None
+
+
+def test_level_only_gate_excludes_a_count_type_series():
+    """A city-count series (nbs-70city-*-up-count's real shape --
+    value_type=="count", never publishes m_yoy) must also stay
+    takeaway=None, not get a "位于荣枯线" note attached to a city count."""
+    from pipeline.build import _build_series_entry
+
+    entry = {
+        "id": "test-city-count",
+        "name_zh": "测试_上涨城市数",
+        "name_en": "TEST up-count",
+        "unit_zh": "个",
+        "unit_en": "cities",
+        "value_type": "count",
+        "freq": "M",
+        "tier": 2,
+        "calibers": ["single"],
+        "derived": None,
+    }
+    series = {
+        "observations": [{"period": "2026-05", "m": 23}, {"period": "2026-06", "m": 25}],
+        "revisions": [],
+        "breaks": [],
+    }
+    bundle_entry = _build_series_entry(entry, series, {}, AS_OF)
+    assert bundle_entry["takeaway"] is None
+
+
+def test_break_blocked_yoy_capable_series_still_gets_null_takeaway_not_level_fallback():
+    """Regression guard on _is_level_only_series: a series that DOES carry
+    m_yoy elsewhere in its history (CPI-shaped) but whose latest period sits
+    inside a no_yoy_across window must keep takeaway=None -- it must NOT fall
+    through to the level-only template just because `y` is None *this*
+    period. Reuses the real test-cpi-break fixture shape, truncated to the
+    blocked window, matching test_headline_direction_is_none_not_flat_...'s
+    setup."""
+    from pipeline.build import _build_series_entry
+
+    series = json.loads((FIXTURES_DIR / "series" / "test-cpi-break.json").read_text(encoding="utf-8"))
+    catalog = json.loads((FIXTURES_DIR / "catalog.json").read_text(encoding="utf-8"))
+    entry = next(e for e in catalog["series"] if e["id"] == "test-cpi-break")
+    truncated = dict(series, observations=[o for o in series["observations"] if o["period"] <= "2026-02"])
+
+    bundle_entry = _build_series_entry(entry, truncated, {}, AS_OF)
+    assert bundle_entry["takeaway"] is None
+
+
+# -- source / decimals bundle fields (DATA-CONTRACT §10.2) -----------------------------
+
+
+def test_bundle_source_and_decimals_from_catalog(built):
+    _report, out_dir = built
+    prices = _load(out_dir / "sections" / "prices.json")
+    cpi = _series_by_id(prices, "test-cpi-break")
+    # fixture catalog entries have no agency_zh -- degrades to "" rather than KeyError
+    assert cpi["source"] == {"agency_zh": "", "url": "https://example.invalid/test-cpi-break"}
+    assert cpi["decimals"] == 1  # catalog declares decimals:1 explicitly
+
+
+def test_bundle_source_uses_agency_zh_and_omits_url_when_absent():
+    from pipeline.build import _build_series_entry
+
+    entry = {
+        "id": "test-source",
+        "name_zh": "测试_来源字段",
+        "name_en": "TEST source field",
+        "unit_zh": "%",
+        "unit_en": "%",
+        "value_type": "level",
+        "freq": "M",
+        "tier": 2,
+        "calibers": ["single"],
+        "derived": None,
+        "source": {"agency": "nbs", "agency_zh": "国家统计局"},
+    }
+    series = {"observations": [{"period": "2026-05", "m": 1.0}], "revisions": [], "breaks": []}
+    bundle_entry = _build_series_entry(entry, series, {}, AS_OF)
+    assert bundle_entry["source"] == {"agency_zh": "国家统计局"}
+
+
+def test_bundle_decimals_inferred_when_catalog_omits_it():
+    from pipeline.build import _build_series_entry
+
+    entry = {
+        "id": "test-decimals-inferred",
+        "name_zh": "测试_精度推断",
+        "name_en": "TEST inferred decimals",
+        "unit_zh": "亿元",
+        "unit_en": "100M CNY",
+        "value_type": "level",
+        "freq": "M",
+        "tier": 2,
+        "calibers": ["single"],
+        "derived": None,
+        # no "decimals" key -- must be inferred from the observations themselves
+    }
+    series = {
+        "observations": [
+            {"period": "2026-04", "m": 40940},
+            {"period": "2026-05", "m": 41090.5},
+        ],
+        "revisions": [],
+        "breaks": [],
+    }
+    bundle_entry = _build_series_entry(entry, series, {}, AS_OF)
+    assert bundle_entry["decimals"] == 1  # max precision actually present (41090.5) is 1 decimal
 
 
 # -- panel bundle ---------------------------------------------------------------------
@@ -453,7 +843,7 @@ def test_missing_annotations_file_is_treated_as_empty(tmp_path):
     (data_copy / "annotations.json").unlink()  # simulate "may not exist yet"
 
     report = build_site_data(data_copy, tmp_path / "out", as_of=AS_OF)
-    assert report.series == 4
+    assert report.series == 7
 
     consumption = _load(tmp_path / "out" / "sections" / "consumption.json")
     retail = _series_by_id(consumption, "test-retail-revised")
@@ -491,9 +881,9 @@ def test_period_shape(period, expected):
     "period,caliber,span,expected",
     [
         ("2026-05", "single", 1, "2026 年 5 月"),
-        ("2026-02", "single", 2, "2026 年 1—2 月"),  # Jan-Feb: em dash, per DATA-CONTRACT §12
-        ("2026-05", "ytd", 1, "2026 年 1—5 月"),  # cumulative caliber headlined, even without span>1
-        ("2026-Q2", "single", 1, "2026 年 2 季度"),  # Arabic digit, lead's typography decision
+        ("2026-02", "single", 2, "2026 年 1-2 月"),  # Jan-Feb: hyphen, per DATA-CONTRACT §12 (2026-07-08 unification)
+        ("2026-05", "ytd", 1, "2026 年 1-5 月"),  # cumulative caliber headlined, even without span>1
+        ("2026-Q2", "single", 1, "2026 年二季度"),  # conventional ordinal, per DATA-CONTRACT §12's own worked example
         ("2026", "single", 1, "2026 年全年"),  # bare "YYYY" -- shape-dispatched regardless of declared freq
     ],
 )
@@ -687,7 +1077,7 @@ def test_build_skips_an_unparseable_series_file_with_a_loud_warning(tmp_path, ca
     report = build_site_data(data_copy, tmp_path / "out", as_of=AS_OF)
 
     assert report.skipped == ["test-fai-ytd"]
-    assert report.series == 3  # cpi-break, retail-revised, income-mixed-annual (fai-ytd skipped)
+    assert report.series == 6  # everything except fai-ytd (skipped)
 
     stderr = capsys.readouterr().err
     assert "test-fai-ytd" in stderr

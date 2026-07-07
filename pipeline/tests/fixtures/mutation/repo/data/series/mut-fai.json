@@ -1,0 +1,115 @@
+{
+  "schema": "series/v1",
+  "id": "mut-fai",
+  "name_zh": "测试_MUT_固定资产投资完成额",
+  "name_en": "MUT FAI ytd yoy",
+  "unit_zh": "%",
+  "unit_en": "%",
+  "value_type": "yoy_pct",
+  "freq": "M",
+  "calibers": [
+    "ytd"
+  ],
+  "decimals": 1,
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（合成，非真实序列，仅供 mutation-gate 测试使用）",
+    "dataset_en": "Synthetic test series for the mutation-gate harness (not real data)",
+    "url": "https://example.invalid/mut-fai"
+  },
+  "derived": null,
+  "coverage_note_zh": null,
+  "observations": [
+    {
+      "period": "2025-02",
+      "ytd_yoy": 7.0,
+      "span": 2,
+      "flags": [
+        "jan_feb"
+      ],
+      "src": "rel:2025-02"
+    },
+    {
+      "period": "2025-03",
+      "ytd_yoy": 5.0,
+      "src": "rel:2025-03"
+    },
+    {
+      "period": "2025-04",
+      "ytd_yoy": 5.0,
+      "src": "rel:2025-04"
+    },
+    {
+      "period": "2025-05",
+      "ytd_yoy": 5.0,
+      "src": "rel:2025-05"
+    },
+    {
+      "period": "2025-06",
+      "ytd_yoy": 5.0,
+      "src": "rel:2025-06"
+    },
+    {
+      "period": "2025-07",
+      "ytd_yoy": 5.0,
+      "src": "rel:2025-07"
+    },
+    {
+      "period": "2025-08",
+      "ytd_yoy": 5.0,
+      "src": "rel:2025-08"
+    },
+    {
+      "period": "2025-09",
+      "ytd_yoy": 5.0,
+      "src": "rel:2025-09"
+    },
+    {
+      "period": "2025-10",
+      "ytd_yoy": 5.0,
+      "src": "rel:2025-10"
+    },
+    {
+      "period": "2025-11",
+      "ytd_yoy": 5.0,
+      "src": "rel:2025-11"
+    },
+    {
+      "period": "2025-12",
+      "ytd_yoy": 5.0,
+      "src": "rel:2025-12"
+    },
+    {
+      "period": "2026-02",
+      "ytd_yoy": 6.8,
+      "span": 2,
+      "flags": [
+        "jan_feb"
+      ],
+      "src": "rel:2026-02"
+    },
+    {
+      "period": "2026-03",
+      "ytd_yoy": 4.8,
+      "src": "rel:2026-03"
+    },
+    {
+      "period": "2026-04",
+      "ytd_yoy": 4.8,
+      "src": "rel:2026-04"
+    },
+    {
+      "period": "2026-05",
+      "ytd_yoy": 4.8,
+      "src": "rel:2026-05"
+    },
+    {
+      "period": "2026-06",
+      "ytd_yoy": 4.8,
+      "src": "rel:2026-06"
+    }
+  ],
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-07-20T00:00:00Z"
+}

@@ -1,0 +1,204 @@
+{
+  "section": "prices",
+  "generated_at": "2026-07-20T00:00:00Z",
+  "catalog_version": "1.0.0-mutation-test",
+  "series": [
+    {
+      "id": "mut-cpi-break",
+      "name_zh": "测试_MUT_居民消费价格指数",
+      "name_en": "MUT CPI (rebase break)",
+      "name_short": null,
+      "unit_zh": "%",
+      "value_type": "index",
+      "freq": "M",
+      "tier": 1,
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/mut-cpi-break"
+      },
+      "decimals": 1,
+      "latest": {
+        "period": "2026-07",
+        "period_label_zh": "2026 年 7 月",
+        "m": 101.7,
+        "m_yoy": 1.6
+      },
+      "prev": {
+        "period": "2026-06",
+        "period_label_zh": "2026 年 6 月",
+        "m": 101.6
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": "up",
+        "latest_yoy": 1.6,
+        "delta_pp_vs_prev": null,
+        "streak": 0,
+        "period_label_zh": "2026 年 7 月"
+      },
+      "takeaway": "口径调整后首期数据：测试_MUT_居民消费价格指数上涨 1.6%（与旧口径不可比）",
+      "plot_kind": "level",
+      "yoy_series": [
+        {
+          "period": "2025-05",
+          "yoy": null
+        },
+        {
+          "period": "2025-06",
+          "yoy": null
+        },
+        {
+          "period": "2025-07",
+          "yoy": null
+        },
+        {
+          "period": "2025-08",
+          "yoy": null
+        },
+        {
+          "period": "2025-09",
+          "yoy": null
+        },
+        {
+          "period": "2025-10",
+          "yoy": null
+        },
+        {
+          "period": "2025-11",
+          "yoy": null
+        },
+        {
+          "period": "2025-12",
+          "yoy": null
+        },
+        {
+          "period": "2026-01",
+          "yoy": null
+        },
+        {
+          "period": "2026-02",
+          "yoy": null
+        },
+        {
+          "period": "2026-03",
+          "yoy": null
+        },
+        {
+          "period": "2026-04",
+          "yoy": null
+        },
+        {
+          "period": "2026-05",
+          "yoy": null
+        },
+        {
+          "period": "2026-06",
+          "yoy": null
+        },
+        {
+          "period": "2026-07",
+          "yoy": 1.6
+        }
+      ],
+      "level_series": [
+        {
+          "period": "2025-05",
+          "m": 101.8
+        },
+        {
+          "period": "2025-06",
+          "m": 101.9
+        },
+        {
+          "period": "2025-07",
+          "m": 100.1
+        },
+        {
+          "period": "2025-08",
+          "m": 100.3
+        },
+        {
+          "period": "2025-09",
+          "m": 100.5
+        },
+        {
+          "period": "2025-10",
+          "m": 100.7
+        },
+        {
+          "period": "2025-11",
+          "m": 100.9
+        },
+        {
+          "period": "2025-12",
+          "m": 101.0
+        },
+        {
+          "period": "2026-01",
+          "m": 101.1
+        },
+        {
+          "period": "2026-02",
+          "m": 101.2
+        },
+        {
+          "period": "2026-03",
+          "m": 101.3
+        },
+        {
+          "period": "2026-04",
+          "m": 101.4
+        },
+        {
+          "period": "2026-05",
+          "m": 101.5
+        },
+        {
+          "period": "2026-06",
+          "m": 101.6
+        },
+        {
+          "period": "2026-07",
+          "m": 101.7
+        }
+      ],
+      "spark": [
+        101.8,
+        101.9,
+        100.1,
+        100.3,
+        100.5,
+        100.7,
+        100.9,
+        101.0,
+        101.1,
+        101.2,
+        101.3,
+        101.4,
+        101.5,
+        101.6,
+        101.7
+      ],
+      "breaks": [
+        {
+          "effective": "2025-07",
+          "kind": "rebase",
+          "no_yoy_across": true,
+          "yoy_valid_from": "2026-07",
+          "supersedes": null,
+          "superseded_by": null,
+          "note_zh": "测试断点：跨基期同比不可比，2026-07 起同比恢复发布。",
+          "note_en": "test break: YoY not comparable across the rebase seam; resumes 2026-07."
+        }
+      ],
+      "annotations": [],
+      "flags_latest": [
+        "break_recent"
+      ],
+      "revisions_recent": []
+    }
+  ]
+}

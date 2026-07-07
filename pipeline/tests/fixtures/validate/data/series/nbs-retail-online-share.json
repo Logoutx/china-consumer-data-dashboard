@@ -1,0 +1,192 @@
+{
+  "schema": "series/v1",
+  "id": "nbs-retail-online-share",
+  "name_zh": "测试_nbs-retail-online-share",
+  "name_en": "TEST online share",
+  "unit_zh": "%",
+  "unit_en": "%",
+  "value_type": "ratio",
+  "freq": "M",
+  "calibers": [
+    "single"
+  ],
+  "decimals": 1,
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（合成，非真实序列，仅供 Gate A 测试使用）",
+    "dataset_en": "Synthetic test series for Gate A tests (not real data)",
+    "url": "https://example.invalid/nbs-retail-online-share"
+  },
+  "derived": null,
+  "coverage_note_zh": null,
+  "observations": [
+    {
+      "period": "2023-02",
+      "m": 22.22,
+      "src": "rel:test-2023-02"
+    },
+    {
+      "period": "2023-03",
+      "m": 22.22,
+      "src": "rel:test-2023-03"
+    },
+    {
+      "period": "2023-04",
+      "m": 22.22,
+      "src": "rel:test-2023-04"
+    },
+    {
+      "period": "2023-05",
+      "m": 22.22,
+      "src": "rel:test-2023-05"
+    },
+    {
+      "period": "2023-06",
+      "m": 22.22,
+      "src": "rel:test-2023-06"
+    },
+    {
+      "period": "2023-07",
+      "m": 22.22,
+      "src": "rel:test-2023-07"
+    },
+    {
+      "period": "2023-08",
+      "m": 22.22,
+      "src": "rel:test-2023-08"
+    },
+    {
+      "period": "2023-09",
+      "m": 22.22,
+      "src": "rel:test-2023-09"
+    },
+    {
+      "period": "2023-10",
+      "m": 22.22,
+      "src": "rel:test-2023-10"
+    },
+    {
+      "period": "2023-11",
+      "m": 22.22,
+      "src": "rel:test-2023-11"
+    },
+    {
+      "period": "2023-12",
+      "m": 22.22,
+      "src": "rel:test-2023-12"
+    },
+    {
+      "period": "2024-02",
+      "m": 22.74,
+      "src": "rel:test-2024-02"
+    },
+    {
+      "period": "2024-03",
+      "m": 22.74,
+      "src": "rel:test-2024-03"
+    },
+    {
+      "period": "2024-04",
+      "m": 22.73,
+      "src": "rel:test-2024-04"
+    },
+    {
+      "period": "2024-05",
+      "m": 22.73,
+      "src": "rel:test-2024-05"
+    },
+    {
+      "period": "2024-06",
+      "m": 22.72,
+      "src": "rel:test-2024-06"
+    },
+    {
+      "period": "2024-07",
+      "m": 22.72,
+      "src": "rel:test-2024-07"
+    },
+    {
+      "period": "2024-08",
+      "m": 22.71,
+      "src": "rel:test-2024-08"
+    },
+    {
+      "period": "2024-09",
+      "m": 22.71,
+      "src": "rel:test-2024-09"
+    },
+    {
+      "period": "2024-10",
+      "m": 22.71,
+      "src": "rel:test-2024-10"
+    },
+    {
+      "period": "2024-11",
+      "m": 22.7,
+      "src": "rel:test-2024-11"
+    },
+    {
+      "period": "2024-12",
+      "m": 22.7,
+      "src": "rel:test-2024-12"
+    },
+    {
+      "period": "2025-02",
+      "m": 23.22,
+      "src": "rel:test-2025-02"
+    },
+    {
+      "period": "2025-03",
+      "m": 23.21,
+      "src": "rel:test-2025-03"
+    },
+    {
+      "period": "2025-04",
+      "m": 23.2,
+      "src": "rel:test-2025-04"
+    },
+    {
+      "period": "2025-05",
+      "m": 23.19,
+      "src": "rel:test-2025-05"
+    },
+    {
+      "period": "2025-06",
+      "m": 23.18,
+      "src": "rel:test-2025-06"
+    },
+    {
+      "period": "2025-07",
+      "m": 23.17,
+      "src": "rel:test-2025-07"
+    },
+    {
+      "period": "2025-08",
+      "m": 23.16,
+      "src": "rel:test-2025-08"
+    },
+    {
+      "period": "2025-09",
+      "m": 23.16,
+      "src": "rel:test-2025-09"
+    },
+    {
+      "period": "2025-10",
+      "m": 23.15,
+      "src": "rel:test-2025-10"
+    },
+    {
+      "period": "2025-11",
+      "m": 23.14,
+      "src": "rel:test-2025-11"
+    },
+    {
+      "period": "2025-12",
+      "m": 23.13,
+      "src": "rel:test-2025-12"
+    }
+  ],
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-06-01T00:00:00Z"
+}

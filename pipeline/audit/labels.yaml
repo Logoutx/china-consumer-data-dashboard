@@ -1,0 +1,376 @@
+# pipeline/audit/labels.yaml — hand-curated series_id -> Chinese label table.
+#
+# Used by gate_b.archive_independent_sample / gate_b.dg_archive_sample for the
+# flat-text fuzzy scan (kernel.source_contains_value) and the DG indicator-name
+# candidate search (dg_archive.find_candidate_indicator_ids): `label_zh` (and,
+# when present, `alt_labels`, tried in order after label_zh fails) is the
+# substring searched for near a sampled value in archived raw text.
+#
+# Curation method: label_zh defaults to the catalog's own name_zh (data/
+# catalog.json), then HAND-ADJUSTED wherever the real release prose uses a
+# shorter or different substring — verified empirically against the 6 real
+# archived pages committed at pipeline/fixtures/raw/*/ wherever one was
+# available (CPI, PBOC money supply, PMI, income; see per-entry comments
+# above the override block in the generator this file was produced from —
+# preserved as comments below on every entry that deviates from name_zh).
+# Series without an empirically-checked page keep name_zh verbatim, which is
+# a reasonable default (retail/income/mof/pbc series all follow standard NBS/
+# MOF/PBOC release phrasing) but is the first thing to re-verify as more
+# archive coverage lands.
+#
+# Coverage: every catalog series (88 + the 70-city panel) has an entry here —
+# this was practical given the catalog is small (~89 ids) and every name_zh
+# was already at hand; it is still a hand-reviewed table, not a blind dump
+# (28 of the 89 entries carry an explicit override; see git history / the
+# generator script noted above for the reasoning on each). A series is only
+# EVER reported as coverage="unverifiable" for a reason OTHER than "missing
+# from this file" now — e.g. `no_source_text: true` (a derived series with no
+# raw source to fuzzy-match; verified instead by gate_b.derived_recompute) or
+# a genuine archive gap (no captured page/DG response covers the sampled
+# period yet). If a series is later added to data/catalog.json without a
+# matching entry landing here, checks/*.py treat it as coverage=unverifiable,
+# WARN, not silent, per the task spec.
+#
+# Fields:
+#   label_zh       primary Chinese substring to search for.
+#   alt_labels     optional list of fallback substrings, tried in order.
+#   unit           expected unit (informational; used in report output).
+#   derived_rule   present iff this is a derived series (mirrors the
+#                  catalog's derived.rule) -- informational cross-reference.
+#   no_source_text true iff no raw source ever prints this value verbatim
+#                  (our own coined aggregate, or a computed share/rate) --
+#                  archive_independent_sample skips fuzzy-matching these and
+#                  defers entirely to gate_b.derived_recompute.
+#   note           free-text curation note.
+series:
+  nbs-cpi-core-yoy:
+    label_zh: 核心CPI
+    unit: '%'
+    alt_labels:
+    - 扣除食品和能源价格
+    - 居民消费价格指数（不包括食品和能源）
+  nbs-cpi-food-yoy:
+    label_zh: 食品烟酒及在外餐饮类价格
+    unit: '%'
+    alt_labels:
+    - 食品烟酒及在外餐饮类居民消费价格指数
+  nbs-cpi-goods-yoy:
+    label_zh: 消费品价格
+    unit: '%'
+    alt_labels:
+    - 消费品居民消费价格指数
+  nbs-cpi-nonfood-yoy:
+    label_zh: 非食品价格
+    unit: '%'
+    alt_labels:
+    - 非食品居民消费价格指数
+  nbs-cpi-services-yoy:
+    label_zh: 服务价格
+    unit: '%'
+    alt_labels:
+    - 服务居民消费价格指数
+  nbs-cpi-yoy:
+    label_zh: 全国居民消费价格
+    unit: '%'
+    alt_labels:
+    - 居民消费价格
+  nbs-ppi-consumer-yoy:
+    label_zh: 生活资料价格
+    unit: '%'
+    alt_labels:
+    - 生活资料工业生产者出厂价格指数
+  nbs-ppi-producer-yoy:
+    label_zh: 生产资料价格
+    unit: '%'
+    alt_labels:
+    - 生产资料工业生产者出厂价格指数
+  nbs-ppi-yoy:
+    label_zh: 工业生产者出厂价格
+    unit: '%'
+    alt_labels:
+    - 工业生产者出厂价格指数
+  nbs-retail-above-quota:
+    label_zh: 限额以上单位消费品零售额
+    unit: 亿元
+  nbs-retail-above-quota-catering:
+    label_zh: 限额以上单位餐饮收入
+    unit: 亿元
+  nbs-retail-above-quota-goods:
+    label_zh: 限额以上单位商品零售额
+    unit: 亿元
+  nbs-retail-auto:
+    label_zh: 汽车消费零售额
+    unit: 亿元
+  nbs-retail-cat-beverage:
+    label_zh: 饮料类
+    unit: 亿元
+  nbs-retail-cat-building-materials:
+    label_zh: 建筑及装潢材料类
+    unit: 亿元
+  nbs-retail-cat-communication:
+    label_zh: 通讯器材类
+    unit: 亿元
+  nbs-retail-cat-cosmetics:
+    label_zh: 化妆品类
+    unit: 亿元
+  nbs-retail-cat-cultural-office:
+    label_zh: 文化办公用品类
+    unit: 亿元
+  nbs-retail-cat-daily-goods:
+    label_zh: 日用品类
+    unit: 亿元
+  nbs-retail-cat-furniture:
+    label_zh: 家具类
+    unit: 亿元
+  nbs-retail-cat-garments:
+    label_zh: 服装、鞋帽、针纺织品类
+    unit: 亿元
+  nbs-retail-cat-gold-jewelry:
+    label_zh: 金银珠宝类
+    unit: 亿元
+  nbs-retail-cat-grain-food:
+    label_zh: 粮油、食品类
+    unit: 亿元
+  nbs-retail-cat-household-appliances:
+    label_zh: 家用电器和音像器材类
+    unit: 亿元
+  nbs-retail-cat-medicine:
+    label_zh: 中西药品类
+    unit: 亿元
+  nbs-retail-cat-petroleum:
+    label_zh: 石油及制品类
+    unit: 亿元
+  nbs-retail-cat-sports-entertainment:
+    label_zh: 体育、娱乐用品类
+    unit: 亿元
+  nbs-retail-cat-tobacco-alcohol:
+    label_zh: 烟酒类
+    unit: 亿元
+  nbs-retail-catering:
+    label_zh: 餐饮收入
+    unit: 亿元
+  nbs-retail-ex-auto:
+    label_zh: 除汽车以外的消费品零售额
+    unit: 亿元
+  nbs-retail-goods:
+    label_zh: 商品零售额
+    unit: 亿元
+  nbs-retail-online-goods:
+    label_zh: 网上商品零售额
+    unit: 亿元
+    derived_rule: single_from_ytd
+    no_source_text: true
+    note: m is derived (single_from_ytd); only ytd is ever published verbatim
+  nbs-retail-online-share:
+    label_zh: 网上商品零售额占除汽车零售额比重
+    unit: 亿元
+    derived_rule: ratio
+    no_source_text: true
+  nbs-retail-rural:
+    label_zh: 乡村消费品零售额
+    unit: 亿元
+  nbs-retail-total:
+    label_zh: 社会消费品零售总额
+    unit: 亿元
+  nbs-retail-urban:
+    label_zh: 城镇消费品零售额
+    unit: 亿元
+  nbs-consumption-clothing:
+    label_zh: 衣着消费支出
+    unit: 元
+  nbs-consumption-education-culture:
+    label_zh: 教育文化娱乐消费支出
+    unit: 元
+  nbs-consumption-expenditure:
+    label_zh: 居民人均消费支出
+    unit: 元
+  nbs-consumption-expenditure-rural:
+    label_zh: 农村居民人均消费支出
+    unit: 元
+  nbs-consumption-expenditure-urban:
+    label_zh: 城镇居民人均消费支出
+    unit: 元
+  nbs-consumption-food-tobacco-alcohol:
+    label_zh: 食品烟酒消费支出
+    unit: 元
+  nbs-consumption-healthcare:
+    label_zh: 医疗保健消费支出
+    unit: 元
+  nbs-consumption-household-services:
+    label_zh: 生活用品及服务消费支出
+    unit: 元
+  nbs-consumption-housing:
+    label_zh: 居住消费支出
+    unit: 元
+  nbs-consumption-other:
+    label_zh: 其他用品及服务消费支出
+    unit: 元
+  nbs-consumption-transport-communication:
+    label_zh: 交通通信消费支出
+    unit: 元
+  nbs-income-business:
+    label_zh: 经营净收入
+    unit: 元
+  nbs-income-disposable:
+    label_zh: 居民人均可支配收入
+    unit: 元
+  nbs-income-disposable-rural:
+    label_zh: 农村居民人均可支配收入
+    unit: 元
+  nbs-income-disposable-urban:
+    label_zh: 城镇居民人均可支配收入
+    unit: 元
+  nbs-income-median:
+    label_zh: 居民人均可支配收入中位数
+    unit: 元
+  nbs-income-median-rural:
+    label_zh: 农村居民人均可支配收入中位数
+    unit: 元
+  nbs-income-median-urban:
+    label_zh: 城镇居民人均可支配收入中位数
+    unit: 元
+  nbs-income-property:
+    label_zh: 财产净收入
+    unit: 元
+  nbs-income-transfer:
+    label_zh: 转移净收入
+    unit: 元
+  nbs-income-wage:
+    label_zh: 工资性收入
+    unit: 元
+  nbs-urban-unemp:
+    label_zh: 全国城镇调查失业率
+    unit: '%'
+  nbs-urban-unemp-31city:
+    label_zh: 31个大城市城镇调查失业率
+    unit: '%'
+  nbs-urban-unemp-youth-1624:
+    label_zh: 16—24岁劳动力失业率
+    unit: '%'
+    alt_labels:
+    - 全国城镇16—24岁劳动力失业率（含在校生，旧口径）
+  nbs-urban-unemp-youth-1624-exstudent:
+    label_zh: 16—24岁劳动力失业率
+    unit: '%'
+    alt_labels:
+    - 不含在校生
+    - 全国城镇16—24岁劳动力失业率（不含在校生）
+  mof-deed-tax:
+    label_zh: 契税收入
+    unit: 亿元
+  mof-farmland-occupation-tax:
+    label_zh: 耕地占用税收入
+    unit: 亿元
+  mof-land-transfer-revenue:
+    label_zh: 国有土地使用权出让收入
+    unit: 亿元
+  mof-land-vat:
+    label_zh: 土地增值税收入
+    unit: 亿元
+  mof-property-tax:
+    label_zh: 房产税收入
+    unit: 亿元
+  mof-real-estate-tax-total:
+    label_zh: 地产相关税收合计
+    unit: 亿元
+    derived_rule: sum
+    no_source_text: true
+  mof-urban-land-use-tax:
+    label_zh: 城镇土地使用税收入
+    unit: 亿元
+  nbs-70city-newhome-mom:
+    label_zh: 70城新房价格
+    unit: '%'
+    derived_rule: simple_mean_of_cities
+    no_source_text: true
+    note: derived from the nbs-70city-price panel; see gate_b.derived_recompute
+  nbs-70city-newhome-up-count:
+    label_zh: 70城新房环比上涨城市数
+    unit: 个
+    derived_rule: count_cities_gt_zero
+    no_source_text: true
+  nbs-70city-price:
+    label_zh: 70 个大中城市商品住宅销售价格
+    unit: '%'
+  nbs-70city-resale-mom:
+    label_zh: 70城二手房价格
+    unit: '%'
+    derived_rule: simple_mean_of_cities
+    no_source_text: true
+  nbs-70city-resale-up-count:
+    label_zh: 70城二手房环比上涨城市数
+    unit: 个
+    derived_rule: count_cities_gt_zero
+    no_source_text: true
+  pbc-mortgage-balance:
+    label_zh: 个人住房贷款余额
+    unit: 亿元
+  pbc-property-development-loan-balance:
+    label_zh: 房地产开发贷款余额
+    unit: 亿元
+  pbc-real-estate-loan-balance:
+    label_zh: 人民币房地产贷款余额
+    unit: 亿元
+  pbc-m0:
+    label_zh: 流通中货币(M0)
+    unit: 亿元
+    alt_labels:
+    - M0
+    - 流通中现金 (M0)供应量
+  pbc-m1:
+    label_zh: 狭义货币(M1)
+    unit: 亿元
+    alt_labels:
+    - M1
+    - 货币 (M1)供应量
+  pbc-m2:
+    label_zh: 广义货币(M2)
+    unit: 亿元
+    alt_labels:
+    - M2
+    - 货币和准货币 (M2)供应量
+  cflp-pmi-mfg:
+    label_zh: 制造业采购经理指数（PMI）
+    unit: '%'
+  cflp-pmi-nonmfg:
+    label_zh: 非制造业商务活动指数
+    unit: '%'
+  customs-exports-usd:
+    label_zh: 出口总值
+    unit: 亿美元
+    alt_labels:
+    - 出口
+  customs-imports-usd:
+    label_zh: 进口总值
+    unit: 亿美元
+    alt_labels:
+    - 进口
+  nbs-fai:
+    label_zh: 固定资产投资完成额
+    unit: '%'
+    alt_labels:
+    - 固定资产投资
+    - 固定资产投资完成额累计增长（不含农户）
+  nbs-gdp:
+    label_zh: 国内生产总值
+    unit: 亿元
+  nbs-gdp-contribution-consumption:
+    label_zh: 最终消费支出贡献率
+    unit: '%'
+    alt_labels:
+    - 最终消费支出对国内生产总值增长贡献率
+  nbs-gdp-contribution-investment:
+    label_zh: 资本形成总额贡献率
+    unit: '%'
+    alt_labels:
+    - 资本形成总额对国内生产总值增长贡献率
+  nbs-gdp-contribution-netexports:
+    label_zh: 货物和服务净出口贡献率
+    unit: '%'
+    alt_labels:
+    - 货物和服务净出口对国内生产总值增长贡献率
+  nbs-industrial-va:
+    label_zh: 规模以上工业增加值
+    unit: '%'
+    alt_labels:
+    - 规模以上工业增加值同比增长

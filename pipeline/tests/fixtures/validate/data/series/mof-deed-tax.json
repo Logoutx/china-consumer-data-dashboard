@@ -1,0 +1,577 @@
+{
+  "schema": "series/v1",
+  "id": "mof-deed-tax",
+  "name_zh": "测试_mof-deed-tax",
+  "name_en": "mof-deed-tax",
+  "unit_zh": "亿元",
+  "unit_en": "100M CNY",
+  "value_type": "level",
+  "freq": "M",
+  "calibers": [
+    "ytd"
+  ],
+  "decimals": 1,
+  "source": {
+    "agency": "mof",
+    "dataset_zh": "测试数据集（合成，非真实序列，仅供 Gate A 测试使用）",
+    "dataset_en": "Synthetic test series for Gate A tests (not real data)",
+    "url": "https://example.invalid/mof-deed-tax"
+  },
+  "derived": null,
+  "coverage_note_zh": null,
+  "observations": [
+    {
+      "period": "2016-02",
+      "ytd": 110,
+      "src": "rel:test-2016-02"
+    },
+    {
+      "period": "2016-03",
+      "ytd": 115,
+      "src": "rel:test-2016-03"
+    },
+    {
+      "period": "2016-04",
+      "ytd": 120,
+      "src": "rel:test-2016-04"
+    },
+    {
+      "period": "2016-05",
+      "ytd": 125,
+      "src": "rel:test-2016-05"
+    },
+    {
+      "period": "2016-06",
+      "ytd": 130,
+      "src": "rel:test-2016-06"
+    },
+    {
+      "period": "2016-07",
+      "ytd": 135,
+      "src": "rel:test-2016-07"
+    },
+    {
+      "period": "2016-08",
+      "ytd": 140,
+      "src": "rel:test-2016-08"
+    },
+    {
+      "period": "2016-09",
+      "ytd": 145,
+      "src": "rel:test-2016-09"
+    },
+    {
+      "period": "2016-10",
+      "ytd": 150,
+      "src": "rel:test-2016-10"
+    },
+    {
+      "period": "2016-11",
+      "ytd": 155,
+      "src": "rel:test-2016-11"
+    },
+    {
+      "period": "2016-12",
+      "ytd": 160,
+      "src": "rel:test-2016-12"
+    },
+    {
+      "period": "2017-02",
+      "ytd": 118,
+      "src": "rel:test-2017-02"
+    },
+    {
+      "period": "2017-03",
+      "ytd": 123,
+      "src": "rel:test-2017-03"
+    },
+    {
+      "period": "2017-04",
+      "ytd": 128,
+      "src": "rel:test-2017-04"
+    },
+    {
+      "period": "2017-05",
+      "ytd": 133,
+      "src": "rel:test-2017-05"
+    },
+    {
+      "period": "2017-06",
+      "ytd": 138,
+      "src": "rel:test-2017-06"
+    },
+    {
+      "period": "2017-07",
+      "ytd": 143,
+      "src": "rel:test-2017-07"
+    },
+    {
+      "period": "2017-08",
+      "ytd": 148,
+      "src": "rel:test-2017-08"
+    },
+    {
+      "period": "2017-09",
+      "ytd": 153,
+      "src": "rel:test-2017-09"
+    },
+    {
+      "period": "2017-10",
+      "ytd": 158,
+      "src": "rel:test-2017-10"
+    },
+    {
+      "period": "2017-11",
+      "ytd": 163,
+      "src": "rel:test-2017-11"
+    },
+    {
+      "period": "2017-12",
+      "ytd": 168,
+      "src": "rel:test-2017-12"
+    },
+    {
+      "period": "2018-02",
+      "ytd": 126,
+      "src": "rel:test-2018-02"
+    },
+    {
+      "period": "2018-03",
+      "ytd": 131,
+      "src": "rel:test-2018-03"
+    },
+    {
+      "period": "2018-04",
+      "ytd": 136,
+      "src": "rel:test-2018-04"
+    },
+    {
+      "period": "2018-05",
+      "ytd": 141,
+      "src": "rel:test-2018-05"
+    },
+    {
+      "period": "2018-06",
+      "ytd": 146,
+      "src": "rel:test-2018-06"
+    },
+    {
+      "period": "2018-07",
+      "ytd": 151,
+      "src": "rel:test-2018-07"
+    },
+    {
+      "period": "2018-08",
+      "ytd": 156,
+      "src": "rel:test-2018-08"
+    },
+    {
+      "period": "2018-09",
+      "ytd": 161,
+      "src": "rel:test-2018-09"
+    },
+    {
+      "period": "2018-10",
+      "ytd": 166,
+      "src": "rel:test-2018-10"
+    },
+    {
+      "period": "2018-11",
+      "ytd": 171,
+      "src": "rel:test-2018-11"
+    },
+    {
+      "period": "2018-12",
+      "ytd": 176,
+      "src": "rel:test-2018-12"
+    },
+    {
+      "period": "2019-02",
+      "ytd": 134,
+      "src": "rel:test-2019-02"
+    },
+    {
+      "period": "2019-03",
+      "ytd": 139,
+      "src": "rel:test-2019-03"
+    },
+    {
+      "period": "2019-04",
+      "ytd": 144,
+      "src": "rel:test-2019-04"
+    },
+    {
+      "period": "2019-05",
+      "ytd": 149,
+      "src": "rel:test-2019-05"
+    },
+    {
+      "period": "2019-06",
+      "ytd": 154,
+      "src": "rel:test-2019-06"
+    },
+    {
+      "period": "2019-07",
+      "ytd": 159,
+      "src": "rel:test-2019-07"
+    },
+    {
+      "period": "2019-08",
+      "ytd": 164,
+      "src": "rel:test-2019-08"
+    },
+    {
+      "period": "2019-09",
+      "ytd": 169,
+      "src": "rel:test-2019-09"
+    },
+    {
+      "period": "2019-10",
+      "ytd": 174,
+      "src": "rel:test-2019-10"
+    },
+    {
+      "period": "2019-11",
+      "ytd": 179,
+      "src": "rel:test-2019-11"
+    },
+    {
+      "period": "2019-12",
+      "ytd": 184,
+      "src": "rel:test-2019-12"
+    },
+    {
+      "period": "2020-02",
+      "ytd": 142,
+      "src": "rel:test-2020-02"
+    },
+    {
+      "period": "2020-03",
+      "ytd": 147,
+      "src": "rel:test-2020-03"
+    },
+    {
+      "period": "2020-04",
+      "ytd": 152,
+      "src": "rel:test-2020-04"
+    },
+    {
+      "period": "2020-05",
+      "ytd": 157,
+      "src": "rel:test-2020-05"
+    },
+    {
+      "period": "2020-06",
+      "ytd": 162,
+      "src": "rel:test-2020-06"
+    },
+    {
+      "period": "2020-07",
+      "ytd": 167,
+      "src": "rel:test-2020-07"
+    },
+    {
+      "period": "2020-08",
+      "ytd": 172,
+      "src": "rel:test-2020-08"
+    },
+    {
+      "period": "2020-09",
+      "ytd": 177,
+      "src": "rel:test-2020-09"
+    },
+    {
+      "period": "2020-10",
+      "ytd": 182,
+      "src": "rel:test-2020-10"
+    },
+    {
+      "period": "2020-11",
+      "ytd": 187,
+      "src": "rel:test-2020-11"
+    },
+    {
+      "period": "2020-12",
+      "ytd": 192,
+      "src": "rel:test-2020-12"
+    },
+    {
+      "period": "2021-02",
+      "ytd": 150,
+      "src": "rel:test-2021-02"
+    },
+    {
+      "period": "2021-03",
+      "ytd": 155,
+      "src": "rel:test-2021-03"
+    },
+    {
+      "period": "2021-04",
+      "ytd": 160,
+      "src": "rel:test-2021-04"
+    },
+    {
+      "period": "2021-05",
+      "ytd": 165,
+      "src": "rel:test-2021-05"
+    },
+    {
+      "period": "2021-06",
+      "ytd": 170,
+      "src": "rel:test-2021-06"
+    },
+    {
+      "period": "2021-07",
+      "ytd": 175,
+      "src": "rel:test-2021-07"
+    },
+    {
+      "period": "2021-08",
+      "ytd": 180,
+      "src": "rel:test-2021-08"
+    },
+    {
+      "period": "2021-09",
+      "ytd": 185,
+      "src": "rel:test-2021-09"
+    },
+    {
+      "period": "2021-10",
+      "ytd": 190,
+      "src": "rel:test-2021-10"
+    },
+    {
+      "period": "2021-11",
+      "ytd": 195,
+      "src": "rel:test-2021-11"
+    },
+    {
+      "period": "2021-12",
+      "ytd": 200,
+      "src": "rel:test-2021-12"
+    },
+    {
+      "period": "2022-02",
+      "ytd": 158,
+      "src": "rel:test-2022-02"
+    },
+    {
+      "period": "2022-03",
+      "ytd": 163,
+      "src": "rel:test-2022-03"
+    },
+    {
+      "period": "2022-04",
+      "ytd": 168,
+      "src": "rel:test-2022-04"
+    },
+    {
+      "period": "2022-05",
+      "ytd": 173,
+      "src": "rel:test-2022-05"
+    },
+    {
+      "period": "2022-06",
+      "ytd": 178,
+      "src": "rel:test-2022-06"
+    },
+    {
+      "period": "2022-07",
+      "ytd": 183,
+      "src": "rel:test-2022-07"
+    },
+    {
+      "period": "2022-08",
+      "ytd": 188,
+      "src": "rel:test-2022-08"
+    },
+    {
+      "period": "2022-09",
+      "ytd": 193,
+      "src": "rel:test-2022-09"
+    },
+    {
+      "period": "2022-10",
+      "ytd": 198,
+      "src": "rel:test-2022-10"
+    },
+    {
+      "period": "2022-11",
+      "ytd": 203,
+      "src": "rel:test-2022-11"
+    },
+    {
+      "period": "2022-12",
+      "ytd": 208,
+      "src": "rel:test-2022-12"
+    },
+    {
+      "period": "2023-02",
+      "ytd": 166,
+      "src": "rel:test-2023-02"
+    },
+    {
+      "period": "2023-03",
+      "ytd": 171,
+      "src": "rel:test-2023-03"
+    },
+    {
+      "period": "2023-04",
+      "ytd": 176,
+      "src": "rel:test-2023-04"
+    },
+    {
+      "period": "2023-05",
+      "ytd": 181,
+      "src": "rel:test-2023-05"
+    },
+    {
+      "period": "2023-06",
+      "ytd": 186,
+      "src": "rel:test-2023-06"
+    },
+    {
+      "period": "2023-07",
+      "ytd": 191,
+      "src": "rel:test-2023-07"
+    },
+    {
+      "period": "2023-08",
+      "ytd": 196,
+      "src": "rel:test-2023-08"
+    },
+    {
+      "period": "2023-09",
+      "ytd": 201,
+      "src": "rel:test-2023-09"
+    },
+    {
+      "period": "2023-10",
+      "ytd": 206,
+      "src": "rel:test-2023-10"
+    },
+    {
+      "period": "2023-11",
+      "ytd": 211,
+      "src": "rel:test-2023-11"
+    },
+    {
+      "period": "2023-12",
+      "ytd": 216,
+      "src": "rel:test-2023-12"
+    },
+    {
+      "period": "2024-02",
+      "ytd": 174,
+      "src": "rel:test-2024-02"
+    },
+    {
+      "period": "2024-03",
+      "ytd": 179,
+      "src": "rel:test-2024-03"
+    },
+    {
+      "period": "2024-04",
+      "ytd": 184,
+      "src": "rel:test-2024-04"
+    },
+    {
+      "period": "2024-05",
+      "ytd": 189,
+      "src": "rel:test-2024-05"
+    },
+    {
+      "period": "2024-06",
+      "ytd": 194,
+      "src": "rel:test-2024-06"
+    },
+    {
+      "period": "2024-07",
+      "ytd": 199,
+      "src": "rel:test-2024-07"
+    },
+    {
+      "period": "2024-08",
+      "ytd": 204,
+      "src": "rel:test-2024-08"
+    },
+    {
+      "period": "2024-09",
+      "ytd": 209,
+      "src": "rel:test-2024-09"
+    },
+    {
+      "period": "2024-10",
+      "ytd": 214,
+      "src": "rel:test-2024-10"
+    },
+    {
+      "period": "2024-11",
+      "ytd": 219,
+      "src": "rel:test-2024-11"
+    },
+    {
+      "period": "2024-12",
+      "ytd": 224,
+      "src": "rel:test-2024-12"
+    },
+    {
+      "period": "2025-02",
+      "ytd": 182,
+      "src": "rel:test-2025-02"
+    },
+    {
+      "period": "2025-03",
+      "ytd": 187,
+      "src": "rel:test-2025-03"
+    },
+    {
+      "period": "2025-04",
+      "ytd": 192,
+      "src": "rel:test-2025-04"
+    },
+    {
+      "period": "2025-05",
+      "ytd": 197,
+      "src": "rel:test-2025-05"
+    },
+    {
+      "period": "2025-06",
+      "ytd": 202,
+      "src": "rel:test-2025-06"
+    },
+    {
+      "period": "2025-07",
+      "ytd": 207,
+      "src": "rel:test-2025-07"
+    },
+    {
+      "period": "2025-08",
+      "ytd": 212,
+      "src": "rel:test-2025-08"
+    },
+    {
+      "period": "2025-09",
+      "ytd": 217,
+      "src": "rel:test-2025-09"
+    },
+    {
+      "period": "2025-10",
+      "ytd": 222,
+      "src": "rel:test-2025-10"
+    },
+    {
+      "period": "2025-11",
+      "ytd": 227,
+      "src": "rel:test-2025-11"
+    },
+    {
+      "period": "2025-12",
+      "ytd": 232,
+      "src": "rel:test-2025-12"
+    }
+  ],
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-06-01T00:00:00Z"
+}

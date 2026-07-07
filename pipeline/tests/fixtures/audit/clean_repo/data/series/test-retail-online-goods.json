@@ -1,0 +1,62 @@
+{
+  "schema": "series/v1",
+  "unit_en": "亿元",
+  "decimals": 1,
+  "coverage_note_zh": null,
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-07-08T00:00:00Z",
+  "id": "test-retail-online-goods",
+  "name_zh": "测试_网上商品零售额",
+  "name_en": "TEST online retail goods",
+  "unit_zh": "亿元",
+  "value_type": "level",
+  "freq": "M",
+  "calibers": [
+    "single",
+    "ytd"
+  ],
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（retail-online-goods，非真实序列，仅供 gate_b 审计测试使用）",
+    "dataset_en": "Synthetic test series for gate_b audit tests (retail-online-goods, not real data)",
+    "url": "https://example.invalid/retail-online-goods"
+  },
+  "derived": {
+    "rule": "single_from_ytd",
+    "inputs": [
+      "test-retail-online-goods"
+    ],
+    "caliber": "single"
+  },
+  "observations": [
+    {
+      "period": "2026-02",
+      "span": 2,
+      "flags": [
+        "jan_feb"
+      ],
+      "m": 20812,
+      "ytd": 20812,
+      "src": "natdata:monthly"
+    },
+    {
+      "period": "2026-03",
+      "m": 10802.0,
+      "ytd": 31614,
+      "src": "rel:20260416"
+    },
+    {
+      "period": "2026-04",
+      "m": 9571.0,
+      "ytd": 41185,
+      "src": "rel:20260518"
+    },
+    {
+      "period": "2026-05",
+      "m": 11533.0,
+      "ytd": 52718,
+      "src": "rel:20260616"
+    }
+  ]
+}

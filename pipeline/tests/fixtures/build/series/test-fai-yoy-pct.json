@@ -1,0 +1,29 @@
+{
+  "schema": "series/v1",
+  "id": "test-fai-yoy-pct",
+  "name_zh": "测试_固定资产投资完成额累计增长",
+  "name_en": "TEST fixed-asset investment YTD YoY growth",
+  "name_short": "测试_固定资产投资",
+  "unit_zh": "%",
+  "unit_en": "%",
+  "value_type": "yoy_pct",
+  "freq": "M",
+  "calibers": ["ytd"],
+  "decimals": 1,
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（非真实序列，仅供 build.py 契约测试使用）",
+    "dataset_en": "Synthetic test series for build.py contract tests (not real data)",
+    "url": "https://example.invalid/test-fai-yoy-pct"
+  },
+  "derived": null,
+  "coverage_note_zh": "真实 nbs-fai 的精确复刻形状：只有 ytd_yoy，从不出现 ytd（DG 库不发布绝对值）。",
+  "observations": [
+    { "period": "2026-03", "ytd_yoy": 1.7, "src": "dg:test" },
+    { "period": "2026-04", "ytd_yoy": -1.6, "src": "dg:test" },
+    { "period": "2026-05", "ytd_yoy": -4.1, "src": "dg:test" }
+  ],
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-06-20T00:00:00Z"
+}

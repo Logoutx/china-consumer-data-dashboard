@@ -1,0 +1,64 @@
+{
+  "url": "https://data.stats.gov.cn/dg/website/publicrelease/web/external/getEsDataByIndicatorIdAndDa",
+  "request": {
+    "cid": "eeee5555eeee5555eeee5555eeee5555",
+    "id": "dddd4444dddd4444dddd4444dddd4444",
+    "da": "000000000000",
+    "dt": "",
+    "rootId": "eeee5555eeee5555eeee5555eeee5555",
+    "dts": [
+      "202603MM",
+      "202604MM",
+      "202605MM",
+      "202606MM"
+    ]
+  },
+  "response": {
+    "data": [
+      {
+        "dt": "202603MM",
+        "du": "x",
+        "unit": "x",
+        "code": "000000000000",
+        "dt_name": "202603MM",
+        "v": "1150.0",
+        "i": "dddd4444dddd4444dddd4444dddd4444",
+        "i_name": null,
+        "du_name": "x"
+      },
+      {
+        "dt": "202604MM",
+        "du": "x",
+        "unit": "x",
+        "code": "000000000000",
+        "dt_name": "202604MM",
+        "v": "1200.0",
+        "i": "dddd4444dddd4444dddd4444dddd4444",
+        "i_name": null,
+        "du_name": "x"
+      },
+      {
+        "dt": "202605MM",
+        "du": "x",
+        "unit": "x",
+        "code": "000000000000",
+        "dt_name": "202605MM",
+        "v": "1300.0",
+        "i": "dddd4444dddd4444dddd4444dddd4444",
+        "i_name": null,
+        "du_name": "x"
+      },
+      {
+        "dt": "202606MM",
+        "du": "x",
+        "unit": "x",
+        "code": "000000000000",
+        "dt_name": "202606MM",
+        "v": "1250.0",
+        "i": "dddd4444dddd4444dddd4444dddd4444",
+        "i_name": null,
+        "du_name": "x"
+      }
+    ]
+  }
+}

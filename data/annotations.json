@@ -1,0 +1,13 @@
+{
+  "nbs-retail-cat-grain-food": {
+    "_series": [
+      {
+        "text_zh": "本序列 2024-06 至 2026-04 期间缺失：这段历史来自一次性迁移（见 pipeline/migrate/REPORT.md），迁移源止步于 2024-05。国家统计局本身仍在持续发布“粮油、食品类”这一分类（已核对 2026 年 5 月社会消费品零售总额发布稿，该分类照常出现），缺口是本项目自身尚未回填的历史数据空洞，不代表统计局停止发布或该分类被取消。",
+        "text_en": "2024-06 through 2026-04 is missing from this series' history -- a gap in this project's own archive, not a discontinuation by NBS. History before the gap came from a one-time legacy migration (pipeline/migrate/REPORT.md) that stopped at 2024-05; NBS continues publishing this category (confirmed against the committed 2026-05 retail release, which still carries a 粮油、食品类 row).",
+        "kind": "caveat",
+        "author": "pipeline",
+        "added_on": "2026-07-08"
+      }
+    ]
+  }
+}

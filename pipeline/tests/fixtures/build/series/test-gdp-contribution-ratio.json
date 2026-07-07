@@ -1,0 +1,28 @@
+{
+  "schema": "series/v1",
+  "id": "test-gdp-contribution-ratio",
+  "name_zh": "测试_最终消费支出对国内生产总值增长贡献率",
+  "name_en": "TEST contribution to GDP growth: final consumption expenditure",
+  "name_short": "测试_消费贡献率",
+  "unit_zh": "%",
+  "unit_en": "pp",
+  "value_type": "ratio",
+  "freq": "Q",
+  "calibers": ["single", "ytd"],
+  "decimals": 1,
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（非真实序列，仅供 build.py 契约测试使用）",
+    "dataset_en": "Synthetic test series for build.py contract tests (not real data)",
+    "url": "https://example.invalid/test-gdp-contribution-ratio"
+  },
+  "derived": null,
+  "coverage_note_zh": "真实 nbs-gdp-contribution-* 的精确复刻形状：m/ytd 是贡献率份额（非同比），从不出现 m_yoy/ytd_yoy。",
+  "observations": [
+    { "period": "2025-Q4", "m": 52.9, "ytd": 52.0, "src": "dg:test" },
+    { "period": "2026-Q1", "m": 46.7, "ytd": 46.7, "src": "dg:test" }
+  ],
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-06-20T00:00:00Z"
+}

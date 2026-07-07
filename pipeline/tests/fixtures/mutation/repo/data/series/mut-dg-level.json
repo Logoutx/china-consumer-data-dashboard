@@ -1,0 +1,47 @@
+{
+  "schema": "series/v1",
+  "id": "mut-dg-level",
+  "name_zh": "测试_MUT_DG层级指标",
+  "name_en": "MUT DG level indicator",
+  "unit_zh": "亿元",
+  "unit_en": "100M CNY",
+  "value_type": "level",
+  "freq": "M",
+  "calibers": [
+    "single"
+  ],
+  "decimals": 1,
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（DG 接口，非真实序列，仅供 mutation-gate 测试使用）",
+    "dataset_en": "Synthetic DG-sourced test series for the mutation-gate harness (not real data)",
+    "url": "https://data.stats.gov.cn/dg/website/page.html"
+  },
+  "derived": null,
+  "coverage_note_zh": null,
+  "observations": [
+    {
+      "period": "2026-03",
+      "m": 1150.0,
+      "src": "dg:dddd4444dddd4444dddd4444dddd4444"
+    },
+    {
+      "period": "2026-04",
+      "m": 1200.0,
+      "src": "dg:dddd4444dddd4444dddd4444dddd4444"
+    },
+    {
+      "period": "2026-05",
+      "m": 1300.0,
+      "src": "dg:dddd4444dddd4444dddd4444dddd4444"
+    },
+    {
+      "period": "2026-06",
+      "m": 1250.0,
+      "src": "dg:dddd4444dddd4444dddd4444dddd4444"
+    }
+  ],
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-07-20T00:00:00Z"
+}

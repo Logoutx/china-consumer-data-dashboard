@@ -1,0 +1,62 @@
+{
+  "schema": "series/v1",
+  "id": "mut-retail-ex-auto",
+  "name_zh": "测试_MUT_除汽车以外的消费品零售额",
+  "name_en": "MUT retail ex-auto",
+  "unit_zh": "亿元",
+  "unit_en": "100M CNY",
+  "value_type": "level",
+  "freq": "M",
+  "calibers": [
+    "single",
+    "ytd"
+  ],
+  "decimals": 1,
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（合成，非真实序列，仅供 mutation-gate 测试使用）",
+    "dataset_en": "Synthetic test series for the mutation-gate harness (not real data)",
+    "url": "https://example.invalid/mut-retail-ex-auto"
+  },
+  "derived": null,
+  "coverage_note_zh": null,
+  "observations": [
+    {
+      "period": "2026-02",
+      "m": 20000.0,
+      "ytd": 20000.0,
+      "src": "rel:20260216",
+      "span": 2,
+      "flags": [
+        "jan_feb"
+      ]
+    },
+    {
+      "period": "2026-03",
+      "m": 37875.0,
+      "ytd": 57875.0,
+      "src": "rel:20260316"
+    },
+    {
+      "period": "2026-04",
+      "m": 34218.0,
+      "ytd": 92093.0,
+      "src": "rel:20260416"
+    },
+    {
+      "period": "2026-05",
+      "m": 37781.0,
+      "ytd": 129874.0,
+      "src": "rel:20260516"
+    },
+    {
+      "period": "2026-06",
+      "m": 38200.0,
+      "ytd": 168074.0,
+      "src": "rel:20260616"
+    }
+  ],
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-07-20T00:00:00Z"
+}

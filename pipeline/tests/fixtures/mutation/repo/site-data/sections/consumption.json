@@ -1,0 +1,595 @@
+{
+  "section": "consumption",
+  "generated_at": "2026-07-20T00:00:00Z",
+  "catalog_version": "1.0.0-mutation-test",
+  "series": [
+    {
+      "id": "mut-retail-total",
+      "name_zh": "测试_MUT_社会消费品零售总额",
+      "name_en": "MUT retail total",
+      "name_short": null,
+      "unit_zh": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "tier": 1,
+      "calibers": [
+        "single",
+        "ytd"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/mut-retail-total"
+      },
+      "decimals": 1,
+      "latest": {
+        "period": "2026-06",
+        "period_label_zh": "2026 年 6 月",
+        "m": 4643.8,
+        "m_yoy": -0.6,
+        "ytd": 27368.7,
+        "ytd_yoy": -0.6
+      },
+      "prev": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 5 月",
+        "m": 4594.4,
+        "m_yoy": -0.6,
+        "ytd": 22724.9,
+        "ytd_yoy": -0.6
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": "down",
+        "latest_yoy": -0.6,
+        "delta_pp_vs_prev": 0.0,
+        "streak": 16,
+        "period_label_zh": "2026 年 6 月"
+      },
+      "takeaway": "2026 年 6 月测试_MUT_社会消费品零售总额同比下降 0.6%，与上月持平，连续 16 个月同比下降",
+      "plot_kind": "level",
+      "yoy_series": [
+        {
+          "period": "2024-02",
+          "yoy": null
+        },
+        {
+          "period": "2024-03",
+          "yoy": null
+        },
+        {
+          "period": "2024-04",
+          "yoy": null
+        },
+        {
+          "period": "2024-05",
+          "yoy": null
+        },
+        {
+          "period": "2024-06",
+          "yoy": null
+        },
+        {
+          "period": "2024-07",
+          "yoy": null
+        },
+        {
+          "period": "2024-08",
+          "yoy": null
+        },
+        {
+          "period": "2024-09",
+          "yoy": null
+        },
+        {
+          "period": "2024-10",
+          "yoy": null
+        },
+        {
+          "period": "2024-11",
+          "yoy": null
+        },
+        {
+          "period": "2024-12",
+          "yoy": null
+        },
+        {
+          "period": "2025-02",
+          "yoy": -0.6
+        },
+        {
+          "period": "2025-03",
+          "yoy": -0.6
+        },
+        {
+          "period": "2025-04",
+          "yoy": -0.6
+        },
+        {
+          "period": "2025-05",
+          "yoy": -0.6
+        },
+        {
+          "period": "2025-06",
+          "yoy": -0.6
+        },
+        {
+          "period": "2025-07",
+          "yoy": -0.6
+        },
+        {
+          "period": "2025-08",
+          "yoy": -0.6
+        },
+        {
+          "period": "2025-09",
+          "yoy": -0.6
+        },
+        {
+          "period": "2025-10",
+          "yoy": -0.6
+        },
+        {
+          "period": "2025-11",
+          "yoy": -0.6
+        },
+        {
+          "period": "2025-12",
+          "yoy": -0.6
+        },
+        {
+          "period": "2026-02",
+          "yoy": -0.6
+        },
+        {
+          "period": "2026-03",
+          "yoy": -0.6
+        },
+        {
+          "period": "2026-04",
+          "yoy": -0.6
+        },
+        {
+          "period": "2026-05",
+          "yoy": -0.6
+        },
+        {
+          "period": "2026-06",
+          "yoy": -0.6
+        }
+      ],
+      "level_series": [
+        {
+          "period": "2024-02",
+          "m": 9200.0
+        },
+        {
+          "period": "2024-03",
+          "m": 4550.0
+        },
+        {
+          "period": "2024-04",
+          "m": 4600.0
+        },
+        {
+          "period": "2024-05",
+          "m": 4650.0
+        },
+        {
+          "period": "2024-06",
+          "m": 4700.0
+        },
+        {
+          "period": "2024-07",
+          "m": 4720.0
+        },
+        {
+          "period": "2024-08",
+          "m": 4740.0
+        },
+        {
+          "period": "2024-09",
+          "m": 4760.0
+        },
+        {
+          "period": "2024-10",
+          "m": 4780.0
+        },
+        {
+          "period": "2024-11",
+          "m": 4800.0
+        },
+        {
+          "period": "2024-12",
+          "m": 4850.0
+        },
+        {
+          "period": "2025-02",
+          "m": 9144.8
+        },
+        {
+          "period": "2025-03",
+          "m": 4522.7
+        },
+        {
+          "period": "2025-04",
+          "m": 4572.4
+        },
+        {
+          "period": "2025-05",
+          "m": 4622.1
+        },
+        {
+          "period": "2025-06",
+          "m": 4671.8
+        },
+        {
+          "period": "2025-07",
+          "m": 4691.7
+        },
+        {
+          "period": "2025-08",
+          "m": 4711.6
+        },
+        {
+          "period": "2025-09",
+          "m": 4731.4
+        },
+        {
+          "period": "2025-10",
+          "m": 4751.3
+        },
+        {
+          "period": "2025-11",
+          "m": 4771.2
+        },
+        {
+          "period": "2025-12",
+          "m": 4820.9
+        },
+        {
+          "period": "2026-02",
+          "m": 9089.9
+        },
+        {
+          "period": "2026-03",
+          "m": 4495.6
+        },
+        {
+          "period": "2026-04",
+          "m": 4545.0
+        },
+        {
+          "period": "2026-05",
+          "m": 4594.4
+        },
+        {
+          "period": "2026-06",
+          "m": 4643.8
+        }
+      ],
+      "spark": [
+        4650.0,
+        4700.0,
+        4720.0,
+        4740.0,
+        4760.0,
+        4780.0,
+        4800.0,
+        4850.0,
+        9144.8,
+        4522.7,
+        4572.4,
+        4622.1,
+        4671.8,
+        4691.7,
+        4711.6,
+        4731.4,
+        4751.3,
+        4771.2,
+        4820.9,
+        9089.9,
+        4495.6,
+        4545.0,
+        4594.4,
+        4643.8
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [],
+      "revisions_recent": [
+        {
+          "period": "2026-04",
+          "measure": "ytd",
+          "revised_on": "2026-06-16"
+        }
+      ]
+    },
+    {
+      "id": "mut-retail-ex-auto",
+      "name_zh": "测试_MUT_除汽车以外的消费品零售额",
+      "name_en": "MUT retail ex-auto",
+      "name_short": null,
+      "unit_zh": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "tier": 2,
+      "calibers": [
+        "single",
+        "ytd"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/mut-retail-ex-auto"
+      },
+      "decimals": 1,
+      "latest": {
+        "period": "2026-06",
+        "period_label_zh": "2026 年 6 月",
+        "m": 38200.0,
+        "ytd": 168074.0
+      },
+      "prev": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 5 月",
+        "m": 37781.0,
+        "ytd": 129874.0
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": null,
+        "latest_yoy": null,
+        "delta_pp_vs_prev": null,
+        "streak": 0,
+        "period_label_zh": "2026 年 6 月"
+      },
+      "takeaway": null,
+      "plot_kind": "level",
+      "yoy_series": [
+        {
+          "period": "2026-02",
+          "yoy": null
+        },
+        {
+          "period": "2026-03",
+          "yoy": null
+        },
+        {
+          "period": "2026-04",
+          "yoy": null
+        },
+        {
+          "period": "2026-05",
+          "yoy": null
+        },
+        {
+          "period": "2026-06",
+          "yoy": null
+        }
+      ],
+      "level_series": [
+        {
+          "period": "2026-02",
+          "m": 20000.0
+        },
+        {
+          "period": "2026-03",
+          "m": 37875.0
+        },
+        {
+          "period": "2026-04",
+          "m": 34218.0
+        },
+        {
+          "period": "2026-05",
+          "m": 37781.0
+        },
+        {
+          "period": "2026-06",
+          "m": 38200.0
+        }
+      ],
+      "spark": [
+        20000.0,
+        37875.0,
+        34218.0,
+        37781.0,
+        38200.0
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [],
+      "revisions_recent": []
+    },
+    {
+      "id": "mut-retail-online-goods",
+      "name_zh": "测试_MUT_网上商品零售额",
+      "name_en": "MUT online retail goods",
+      "name_short": null,
+      "unit_zh": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "tier": 2,
+      "calibers": [
+        "single",
+        "ytd"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/mut-retail-online-goods"
+      },
+      "decimals": 1,
+      "latest": {
+        "period": "2026-06",
+        "period_label_zh": "2026 年 6 月",
+        "m": 11800.0,
+        "ytd": 64518.0
+      },
+      "prev": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 5 月",
+        "m": 11533.0,
+        "ytd": 52718.0
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": null,
+        "latest_yoy": null,
+        "delta_pp_vs_prev": null,
+        "streak": 0,
+        "period_label_zh": "2026 年 6 月"
+      },
+      "takeaway": null,
+      "plot_kind": "level",
+      "yoy_series": [
+        {
+          "period": "2026-02",
+          "yoy": null
+        },
+        {
+          "period": "2026-03",
+          "yoy": null
+        },
+        {
+          "period": "2026-04",
+          "yoy": null
+        },
+        {
+          "period": "2026-05",
+          "yoy": null
+        },
+        {
+          "period": "2026-06",
+          "yoy": null
+        }
+      ],
+      "level_series": [
+        {
+          "period": "2026-02",
+          "m": 20812.0
+        },
+        {
+          "period": "2026-03",
+          "m": 10802.0
+        },
+        {
+          "period": "2026-04",
+          "m": 9571.0
+        },
+        {
+          "period": "2026-05",
+          "m": 11533.0
+        },
+        {
+          "period": "2026-06",
+          "m": 11800.0
+        }
+      ],
+      "spark": [
+        20812.0,
+        10802.0,
+        9571.0,
+        11533.0,
+        11800.0
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [],
+      "revisions_recent": []
+    },
+    {
+      "id": "mut-retail-online-share",
+      "name_zh": "测试_MUT_网上商品零售额占比",
+      "name_en": "MUT online retail share",
+      "name_short": null,
+      "unit_zh": "%",
+      "value_type": "ratio",
+      "freq": "M",
+      "tier": 2,
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/mut-retail-online-share"
+      },
+      "decimals": 4,
+      "latest": {
+        "period": "2026-06",
+        "period_label_zh": "2026 年 6 月",
+        "m": 30.8901
+      },
+      "prev": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 5 月",
+        "m": 30.5259
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": null,
+        "latest_yoy": null,
+        "delta_pp_vs_prev": null,
+        "streak": 0,
+        "period_label_zh": "2026 年 6 月"
+      },
+      "takeaway": "2026 年 6 月测试_MUT_网上商品零售额占比为 30.89%，比上月上升 0.36 个点",
+      "plot_kind": "level",
+      "yoy_series": [
+        {
+          "period": "2026-02",
+          "yoy": null
+        },
+        {
+          "period": "2026-03",
+          "yoy": null
+        },
+        {
+          "period": "2026-04",
+          "yoy": null
+        },
+        {
+          "period": "2026-05",
+          "yoy": null
+        },
+        {
+          "period": "2026-06",
+          "yoy": null
+        }
+      ],
+      "level_series": [
+        {
+          "period": "2026-02",
+          "m": 104.06
+        },
+        {
+          "period": "2026-03",
+          "m": 28.5201
+        },
+        {
+          "period": "2026-04",
+          "m": 27.9707
+        },
+        {
+          "period": "2026-05",
+          "m": 30.5259
+        },
+        {
+          "period": "2026-06",
+          "m": 30.8901
+        }
+      ],
+      "spark": [
+        104.06,
+        28.5201,
+        27.9707,
+        30.5259,
+        30.8901
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [
+        "derived"
+      ],
+      "revisions_recent": []
+    }
+  ]
+}

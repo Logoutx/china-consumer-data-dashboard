@@ -1,0 +1,282 @@
+{
+  "schema": "series/v1",
+  "id": "nbs-retail-catering",
+  "name_zh": "测试_nbs-retail-catering",
+  "name_en": "TEST retail catering",
+  "unit_zh": "亿元",
+  "unit_en": "100M CNY",
+  "value_type": "level",
+  "freq": "M",
+  "calibers": [
+    "single",
+    "ytd"
+  ],
+  "decimals": 1,
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（合成，非真实序列，仅供 Gate A 测试使用）",
+    "dataset_en": "Synthetic test series for Gate A tests (not real data)",
+    "url": "https://example.invalid/nbs-retail-catering"
+  },
+  "derived": null,
+  "coverage_note_zh": null,
+  "observations": [
+    {
+      "period": "2023-02",
+      "span": 2,
+      "flags": [
+        "jan_feb"
+      ],
+      "m": 812,
+      "ytd": 812,
+      "src": "rel:test-2023-02"
+    },
+    {
+      "period": "2023-03",
+      "m": 412,
+      "ytd": 1224,
+      "src": "rel:test-2023-03"
+    },
+    {
+      "period": "2023-04",
+      "m": 416,
+      "ytd": 1640,
+      "src": "rel:test-2023-04"
+    },
+    {
+      "period": "2023-05",
+      "m": 420,
+      "ytd": 2060,
+      "src": "rel:test-2023-05"
+    },
+    {
+      "period": "2023-06",
+      "m": 424,
+      "ytd": 2484,
+      "src": "rel:test-2023-06"
+    },
+    {
+      "period": "2023-07",
+      "m": 428,
+      "ytd": 2912,
+      "src": "rel:test-2023-07"
+    },
+    {
+      "period": "2023-08",
+      "m": 432,
+      "ytd": 3344,
+      "src": "rel:test-2023-08"
+    },
+    {
+      "period": "2023-09",
+      "m": 436,
+      "ytd": 3780,
+      "src": "rel:test-2023-09"
+    },
+    {
+      "period": "2023-10",
+      "m": 440,
+      "ytd": 4220,
+      "src": "rel:test-2023-10"
+    },
+    {
+      "period": "2023-11",
+      "m": 444,
+      "ytd": 4664,
+      "src": "rel:test-2023-11"
+    },
+    {
+      "period": "2023-12",
+      "m": 448,
+      "ytd": 5112,
+      "src": "rel:test-2023-12"
+    },
+    {
+      "period": "2024-02",
+      "span": 2,
+      "flags": [
+        "jan_feb"
+      ],
+      "m": 852,
+      "ytd": 852,
+      "m_yoy": 4.93,
+      "ytd_yoy": 4.93,
+      "src": "rel:test-2024-02"
+    },
+    {
+      "period": "2024-03",
+      "m": 432,
+      "m_yoy": 4.85,
+      "ytd": 1284,
+      "ytd_yoy": 4.9,
+      "src": "rel:test-2024-03"
+    },
+    {
+      "period": "2024-04",
+      "m": 436,
+      "m_yoy": 4.81,
+      "ytd": 1720,
+      "ytd_yoy": 4.88,
+      "src": "rel:test-2024-04"
+    },
+    {
+      "period": "2024-05",
+      "m": 440,
+      "m_yoy": 4.76,
+      "ytd": 2160,
+      "ytd_yoy": 4.85,
+      "src": "rel:test-2024-05"
+    },
+    {
+      "period": "2024-06",
+      "m": 444,
+      "m_yoy": 4.72,
+      "ytd": 2604,
+      "ytd_yoy": 4.83,
+      "src": "rel:test-2024-06"
+    },
+    {
+      "period": "2024-07",
+      "m": 448,
+      "m_yoy": 4.67,
+      "ytd": 3052,
+      "ytd_yoy": 4.81,
+      "src": "rel:test-2024-07"
+    },
+    {
+      "period": "2024-08",
+      "m": 452,
+      "m_yoy": 4.63,
+      "ytd": 3504,
+      "ytd_yoy": 4.78,
+      "src": "rel:test-2024-08"
+    },
+    {
+      "period": "2024-09",
+      "m": 456,
+      "m_yoy": 4.59,
+      "ytd": 3960,
+      "ytd_yoy": 4.76,
+      "src": "rel:test-2024-09"
+    },
+    {
+      "period": "2024-10",
+      "m": 460,
+      "m_yoy": 4.55,
+      "ytd": 4420,
+      "ytd_yoy": 4.74,
+      "src": "rel:test-2024-10"
+    },
+    {
+      "period": "2024-11",
+      "m": 464,
+      "m_yoy": 4.5,
+      "ytd": 4884,
+      "ytd_yoy": 4.72,
+      "src": "rel:test-2024-11"
+    },
+    {
+      "period": "2024-12",
+      "m": 468,
+      "m_yoy": 4.46,
+      "ytd": 5352,
+      "ytd_yoy": 4.69,
+      "src": "rel:test-2024-12"
+    },
+    {
+      "period": "2025-02",
+      "span": 2,
+      "flags": [
+        "jan_feb"
+      ],
+      "m": 892,
+      "ytd": 892,
+      "m_yoy": 4.69,
+      "ytd_yoy": 4.69,
+      "src": "rel:test-2025-02"
+    },
+    {
+      "period": "2025-03",
+      "m": 452,
+      "m_yoy": 4.63,
+      "ytd": 1344,
+      "ytd_yoy": 4.67,
+      "src": "rel:test-2025-03"
+    },
+    {
+      "period": "2025-04",
+      "m": 456,
+      "m_yoy": 4.59,
+      "ytd": 1800,
+      "ytd_yoy": 4.65,
+      "src": "rel:test-2025-04"
+    },
+    {
+      "period": "2025-05",
+      "m": 460,
+      "m_yoy": 4.55,
+      "ytd": 2260,
+      "ytd_yoy": 4.63,
+      "src": "rel:test-2025-05"
+    },
+    {
+      "period": "2025-06",
+      "m": 464,
+      "m_yoy": 4.5,
+      "ytd": 2724,
+      "ytd_yoy": 4.61,
+      "src": "rel:test-2025-06"
+    },
+    {
+      "period": "2025-07",
+      "m": 468,
+      "m_yoy": 4.46,
+      "ytd": 3192,
+      "ytd_yoy": 4.59,
+      "src": "rel:test-2025-07"
+    },
+    {
+      "period": "2025-08",
+      "m": 472,
+      "m_yoy": 4.42,
+      "ytd": 3664,
+      "ytd_yoy": 4.57,
+      "src": "rel:test-2025-08"
+    },
+    {
+      "period": "2025-09",
+      "m": 476,
+      "m_yoy": 4.39,
+      "ytd": 4140,
+      "ytd_yoy": 4.55,
+      "src": "rel:test-2025-09"
+    },
+    {
+      "period": "2025-10",
+      "m": 480,
+      "m_yoy": 4.35,
+      "ytd": 4620,
+      "ytd_yoy": 4.52,
+      "src": "rel:test-2025-10"
+    },
+    {
+      "period": "2025-11",
+      "m": 484,
+      "m_yoy": 4.31,
+      "ytd": 5104,
+      "ytd_yoy": 4.5,
+      "src": "rel:test-2025-11"
+    },
+    {
+      "period": "2025-12",
+      "m": 488,
+      "m_yoy": 4.27,
+      "ytd": 5592,
+      "ytd_yoy": 4.48,
+      "src": "rel:test-2025-12"
+    }
+  ],
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-06-01T00:00:00Z"
+}

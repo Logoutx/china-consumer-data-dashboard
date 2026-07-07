@@ -1,0 +1,147 @@
+{
+  "schema": "series/v1",
+  "id": "test-pbc-m1",
+  "name_zh": "测试_test-pbc-m1",
+  "name_en": "TEST PBoC M1",
+  "unit_zh": "亿元",
+  "unit_en": "100M CNY",
+  "value_type": "level",
+  "freq": "M",
+  "calibers": [
+    "single"
+  ],
+  "decimals": 2,
+  "source": {
+    "agency": "pbc",
+    "dataset_zh": "测试数据集（合成，非真实序列，仅供 Gate A 测试使用）",
+    "dataset_en": "Synthetic test series for Gate A tests (not real data)",
+    "url": "https://example.invalid/test-pbc-m1"
+  },
+  "derived": null,
+  "coverage_note_zh": null,
+  "observations": [
+    {
+      "period": "2024-01",
+      "m": 601000.0,
+      "src": "rel:test-2024-01"
+    },
+    {
+      "period": "2024-02",
+      "m": 602000.0,
+      "src": "rel:test-2024-02"
+    },
+    {
+      "period": "2024-03",
+      "m": 603000.0,
+      "src": "rel:test-2024-03"
+    },
+    {
+      "period": "2024-04",
+      "m": 604000.0,
+      "src": "rel:test-2024-04"
+    },
+    {
+      "period": "2024-05",
+      "m": 605000.0,
+      "src": "rel:test-2024-05"
+    },
+    {
+      "period": "2024-06",
+      "m": 606000.0,
+      "src": "rel:test-2024-06"
+    },
+    {
+      "period": "2024-07",
+      "m": 607000.0,
+      "src": "rel:test-2024-07"
+    },
+    {
+      "period": "2024-08",
+      "m": 608000.0,
+      "src": "rel:test-2024-08"
+    },
+    {
+      "period": "2024-09",
+      "m": 609000.0,
+      "src": "rel:test-2024-09"
+    },
+    {
+      "period": "2024-10",
+      "m": 610000.0,
+      "src": "rel:test-2024-10"
+    },
+    {
+      "period": "2024-11",
+      "m": 611000.0,
+      "src": "rel:test-2024-11"
+    },
+    {
+      "period": "2024-12",
+      "m": 612000.0,
+      "src": "rel:test-2024-12"
+    },
+    {
+      "period": "2025-01",
+      "m": 606000.0,
+      "src": "rel:test-2025-01"
+    },
+    {
+      "period": "2025-02",
+      "m": 607000.0,
+      "src": "rel:test-2025-02"
+    },
+    {
+      "period": "2025-03",
+      "m": 608000.0,
+      "src": "rel:test-2025-03"
+    },
+    {
+      "period": "2025-04",
+      "m": 609000.0,
+      "src": "rel:test-2025-04"
+    },
+    {
+      "period": "2025-05",
+      "m": 610000.0,
+      "src": "rel:test-2025-05"
+    },
+    {
+      "period": "2025-06",
+      "m": 611000.0,
+      "src": "rel:test-2025-06"
+    },
+    {
+      "period": "2025-07",
+      "m": 612000.0,
+      "src": "rel:test-2025-07"
+    },
+    {
+      "period": "2025-08",
+      "m": 613000.0,
+      "src": "rel:test-2025-08"
+    },
+    {
+      "period": "2025-09",
+      "m": 614000.0,
+      "src": "rel:test-2025-09"
+    },
+    {
+      "period": "2025-10",
+      "m": 615000.0,
+      "src": "rel:test-2025-10"
+    },
+    {
+      "period": "2025-11",
+      "m": 616000.0,
+      "src": "rel:test-2025-11"
+    },
+    {
+      "period": "2025-12",
+      "m": 617000.0,
+      "src": "rel:test-2025-12"
+    }
+  ],
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-06-01T00:00:00Z"
+}

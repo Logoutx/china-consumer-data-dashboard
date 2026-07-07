@@ -1,0 +1,243 @@
+{
+  "schema": "series/v1",
+  "id": "mut-retail-total",
+  "name_zh": "测试_MUT_社会消费品零售总额",
+  "name_en": "MUT retail total",
+  "unit_zh": "亿元",
+  "unit_en": "100M CNY",
+  "value_type": "level",
+  "freq": "M",
+  "calibers": [
+    "single",
+    "ytd"
+  ],
+  "decimals": 1,
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（合成，非真实序列，仅供 mutation-gate 测试使用）",
+    "dataset_en": "Synthetic test series for the mutation-gate harness (not real data)",
+    "url": "https://example.invalid/mut-retail-total"
+  },
+  "derived": null,
+  "coverage_note_zh": null,
+  "observations": [
+    {
+      "period": "2024-02",
+      "m": 9200.0,
+      "ytd": 9200.0,
+      "src": "rel:20240216",
+      "span": 2,
+      "flags": [
+        "jan_feb"
+      ]
+    },
+    {
+      "period": "2024-03",
+      "m": 4550.0,
+      "ytd": 13750.0,
+      "src": "rel:20240316"
+    },
+    {
+      "period": "2024-04",
+      "m": 4600.0,
+      "ytd": 18350.0,
+      "src": "rel:20240416"
+    },
+    {
+      "period": "2024-05",
+      "m": 4650.0,
+      "ytd": 23000.0,
+      "src": "rel:20240516"
+    },
+    {
+      "period": "2024-06",
+      "m": 4700.0,
+      "ytd": 27700.0,
+      "src": "rel:20240616"
+    },
+    {
+      "period": "2024-07",
+      "m": 4720.0,
+      "ytd": 32420.0,
+      "src": "rel:20240716"
+    },
+    {
+      "period": "2024-08",
+      "m": 4740.0,
+      "ytd": 37160.0,
+      "src": "rel:20240816"
+    },
+    {
+      "period": "2024-09",
+      "m": 4760.0,
+      "ytd": 41920.0,
+      "src": "rel:20240916"
+    },
+    {
+      "period": "2024-10",
+      "m": 4780.0,
+      "ytd": 46700.0,
+      "src": "rel:20241016"
+    },
+    {
+      "period": "2024-11",
+      "m": 4800.0,
+      "ytd": 51500.0,
+      "src": "rel:20241116"
+    },
+    {
+      "period": "2024-12",
+      "m": 4850.0,
+      "ytd": 56350.0,
+      "src": "rel:20241216"
+    },
+    {
+      "period": "2025-02",
+      "m": 9144.8,
+      "ytd": 9144.8,
+      "m_yoy": -0.6,
+      "ytd_yoy": -0.6,
+      "src": "rel:20250216",
+      "span": 2,
+      "flags": [
+        "jan_feb"
+      ]
+    },
+    {
+      "period": "2025-03",
+      "m": 4522.7,
+      "ytd": 13667.5,
+      "m_yoy": -0.6,
+      "ytd_yoy": -0.6,
+      "src": "rel:20250316"
+    },
+    {
+      "period": "2025-04",
+      "m": 4572.4,
+      "ytd": 18239.9,
+      "m_yoy": -0.6,
+      "ytd_yoy": -0.6,
+      "src": "rel:20250416"
+    },
+    {
+      "period": "2025-05",
+      "m": 4622.1,
+      "ytd": 22862.0,
+      "m_yoy": -0.6,
+      "ytd_yoy": -0.6,
+      "src": "rel:20250516"
+    },
+    {
+      "period": "2025-06",
+      "m": 4671.8,
+      "ytd": 27533.8,
+      "m_yoy": -0.6,
+      "ytd_yoy": -0.6,
+      "src": "rel:20250616"
+    },
+    {
+      "period": "2025-07",
+      "m": 4691.7,
+      "ytd": 32225.5,
+      "m_yoy": -0.6,
+      "ytd_yoy": -0.6,
+      "src": "rel:20250716"
+    },
+    {
+      "period": "2025-08",
+      "m": 4711.6,
+      "ytd": 36937.1,
+      "m_yoy": -0.6,
+      "ytd_yoy": -0.6,
+      "src": "rel:20250816"
+    },
+    {
+      "period": "2025-09",
+      "m": 4731.4,
+      "ytd": 41668.5,
+      "m_yoy": -0.6,
+      "ytd_yoy": -0.6,
+      "src": "rel:20250916"
+    },
+    {
+      "period": "2025-10",
+      "m": 4751.3,
+      "ytd": 46419.8,
+      "m_yoy": -0.6,
+      "ytd_yoy": -0.6,
+      "src": "rel:20251016"
+    },
+    {
+      "period": "2025-11",
+      "m": 4771.2,
+      "ytd": 51191.0,
+      "m_yoy": -0.6,
+      "ytd_yoy": -0.6,
+      "src": "rel:20251116"
+    },
+    {
+      "period": "2025-12",
+      "m": 4820.9,
+      "ytd": 56011.9,
+      "m_yoy": -0.6,
+      "ytd_yoy": -0.6,
+      "src": "rel:20251216"
+    },
+    {
+      "period": "2026-02",
+      "m": 9089.9,
+      "ytd": 9089.9,
+      "m_yoy": -0.6,
+      "ytd_yoy": -0.6,
+      "src": "rel:20260216",
+      "span": 2,
+      "flags": [
+        "jan_feb"
+      ]
+    },
+    {
+      "period": "2026-03",
+      "m": 4495.6,
+      "ytd": 13585.5,
+      "m_yoy": -0.6,
+      "ytd_yoy": -0.6,
+      "src": "rel:20260316"
+    },
+    {
+      "period": "2026-04",
+      "m": 4545.0,
+      "ytd": 18130.5,
+      "m_yoy": -0.6,
+      "ytd_yoy": -0.6,
+      "src": "rel:20260416"
+    },
+    {
+      "period": "2026-05",
+      "m": 4594.4,
+      "ytd": 22724.9,
+      "m_yoy": -0.6,
+      "ytd_yoy": -0.6,
+      "src": "rel:20260516"
+    },
+    {
+      "period": "2026-06",
+      "m": 4643.8,
+      "ytd": 27368.7,
+      "m_yoy": -0.6,
+      "ytd_yoy": -0.6,
+      "src": "rel:20260616"
+    }
+  ],
+  "revisions": [
+    {
+      "period": "2026-04",
+      "measure": "ytd",
+      "old": 18100.0,
+      "new": 18131.4,
+      "revised_on": "2026-06-16",
+      "source": "rel:20260616"
+    }
+  ],
+  "breaks": [],
+  "generated_at": "2026-07-20T00:00:00Z"
+}

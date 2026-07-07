@@ -1,0 +1,402 @@
+{
+  "schema": "catalog/v1",
+  "version": "audit-test-1",
+  "generated_at": "2026-07-08T00:00:00Z",
+  "sections": [
+    {
+      "id": "prices",
+      "name_zh": "物价",
+      "name_en": "Prices",
+      "order": 0
+    },
+    {
+      "id": "consumption",
+      "name_zh": "消费",
+      "name_en": "Consumption",
+      "order": 1
+    },
+    {
+      "id": "property",
+      "name_zh": "楼市",
+      "name_en": "Property",
+      "order": 2
+    },
+    {
+      "id": "macro",
+      "name_zh": "宏观大盘",
+      "name_en": "Macro",
+      "order": 3
+    }
+  ],
+  "series": [
+    {
+      "id": "test-cpi-break",
+      "name_zh": "测试_居民消费价格指数",
+      "name_en": "TEST CPI",
+      "section": "prices",
+      "tier": 1,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "index",
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（cpi-break，非真实序列，仅供 gate_b 审计测试使用）",
+        "dataset_en": "Synthetic test series for gate_b audit tests (cpi-break, not real data)",
+        "url": "https://example.invalid/cpi-break"
+      },
+      "start": "2025-11",
+      "latest": "2026-06",
+      "file": "data/series/test-cpi-break.json",
+      "breaks": [
+        {
+          "effective": "2026-01",
+          "kind": "rebase",
+          "no_yoy_across": true,
+          "yoy_valid_from": "2026-04",
+          "supersedes": null,
+          "superseded_by": null,
+          "note_zh": "测试断点：跨基期同比不可比，2026-04 起同比恢复发布。",
+          "note_en": "test break: YoY not comparable across the rebase seam; resumes 2026-04."
+        }
+      ]
+    },
+    {
+      "id": "test-retail-total",
+      "name_zh": "测试_社会消费品零售总额",
+      "name_en": "TEST retail total",
+      "section": "consumption",
+      "tier": 1,
+      "unit_zh": "亿元",
+      "unit_en": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "calibers": [
+        "single",
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（retail-total，非真实序列，仅供 gate_b 审计测试使用）",
+        "dataset_en": "Synthetic test series for gate_b audit tests (retail-total, not real data)",
+        "url": "https://example.invalid/retail-total"
+      },
+      "start": "2025-02",
+      "latest": "2026-05",
+      "file": "data/series/test-retail-total.json"
+    },
+    {
+      "id": "test-retail-ex-auto",
+      "name_zh": "测试_除汽车以外的消费品零售额",
+      "name_en": "TEST retail ex-auto",
+      "section": "consumption",
+      "tier": 2,
+      "unit_zh": "亿元",
+      "unit_en": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "calibers": [
+        "single",
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（retail-ex-auto，非真实序列，仅供 gate_b 审计测试使用）",
+        "dataset_en": "Synthetic test series for gate_b audit tests (retail-ex-auto, not real data)",
+        "url": "https://example.invalid/retail-ex-auto"
+      },
+      "start": "2026-02",
+      "latest": "2026-05",
+      "file": "data/series/test-retail-ex-auto.json"
+    },
+    {
+      "id": "test-retail-online-goods",
+      "name_zh": "测试_网上商品零售额",
+      "name_en": "TEST online retail goods",
+      "section": "consumption",
+      "tier": 2,
+      "unit_zh": "亿元",
+      "unit_en": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "calibers": [
+        "single",
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（retail-online-goods，非真实序列，仅供 gate_b 审计测试使用）",
+        "dataset_en": "Synthetic test series for gate_b audit tests (retail-online-goods, not real data)",
+        "url": "https://example.invalid/retail-online-goods"
+      },
+      "start": "2026-02",
+      "latest": "2026-05",
+      "file": "data/series/test-retail-online-goods.json",
+      "derived": {
+        "rule": "single_from_ytd",
+        "inputs": [
+          "test-retail-online-goods"
+        ],
+        "caliber": "single"
+      }
+    },
+    {
+      "id": "test-retail-online-share",
+      "name_zh": "测试_网上商品零售额占比",
+      "name_en": "TEST online retail share",
+      "section": "consumption",
+      "tier": 2,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "ratio",
+      "freq": "M",
+      "calibers": [
+        "single",
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（retail-online-share，非真实序列，仅供 gate_b 审计测试使用）",
+        "dataset_en": "Synthetic test series for gate_b audit tests (retail-online-share, not real data)",
+        "url": "https://example.invalid/retail-online-share"
+      },
+      "start": "2026-02",
+      "latest": "2026-05",
+      "file": "data/series/test-retail-online-share.json",
+      "derived": {
+        "rule": "ratio",
+        "inputs": [
+          "test-retail-online-goods",
+          "test-retail-ex-auto"
+        ],
+        "caliber": "single"
+      }
+    },
+    {
+      "id": "test-tax-a",
+      "name_zh": "测试_契税收入",
+      "name_en": "TEST deed tax",
+      "section": "property",
+      "tier": 3,
+      "unit_zh": "亿元",
+      "unit_en": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "calibers": [
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（tax-a，非真实序列，仅供 gate_b 审计测试使用）",
+        "dataset_en": "Synthetic test series for gate_b audit tests (tax-a, not real data)",
+        "url": "https://example.invalid/tax-a"
+      },
+      "start": "2026-02",
+      "latest": "2026-04",
+      "file": "data/series/test-tax-a.json"
+    },
+    {
+      "id": "test-tax-b",
+      "name_zh": "测试_土地增值税收入",
+      "name_en": "TEST land VAT",
+      "section": "property",
+      "tier": 3,
+      "unit_zh": "亿元",
+      "unit_en": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "calibers": [
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（tax-b，非真实序列，仅供 gate_b 审计测试使用）",
+        "dataset_en": "Synthetic test series for gate_b audit tests (tax-b, not real data)",
+        "url": "https://example.invalid/tax-b"
+      },
+      "start": "2026-02",
+      "latest": "2026-04",
+      "file": "data/series/test-tax-b.json"
+    },
+    {
+      "id": "test-tax-total",
+      "name_zh": "测试_地产相关税收合计",
+      "name_en": "TEST real estate tax total",
+      "section": "property",
+      "tier": 2,
+      "unit_zh": "亿元",
+      "unit_en": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "calibers": [
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（tax-total，非真实序列，仅供 gate_b 审计测试使用）",
+        "dataset_en": "Synthetic test series for gate_b audit tests (tax-total, not real data)",
+        "url": "https://example.invalid/tax-total"
+      },
+      "start": "2026-02",
+      "latest": "2026-04",
+      "file": "data/series/test-tax-total.json",
+      "derived": {
+        "rule": "sum",
+        "inputs": [
+          "test-tax-a",
+          "test-tax-b"
+        ],
+        "caliber": "ytd"
+      }
+    },
+    {
+      "id": "test-70city-newhome-mom",
+      "name_zh": "测试_70城新房价格",
+      "name_en": "TEST 70-city new home price",
+      "section": "property",
+      "tier": 1,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "mom_pct",
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（70city-newhome-mom，非真实序列，仅供 gate_b 审计测试使用）",
+        "dataset_en": "Synthetic test series for gate_b audit tests (70city-newhome-mom, not real data)",
+        "url": "https://example.invalid/70city-newhome-mom"
+      },
+      "start": "2026-04",
+      "latest": "2026-05",
+      "file": "data/series/test-70city-newhome-mom.json",
+      "derived": {
+        "rule": "simple_mean_of_cities",
+        "inputs": [
+          "test-70city-panel"
+        ],
+        "caliber": "single"
+      }
+    },
+    {
+      "id": "test-70city-newhome-up-count",
+      "name_zh": "测试_70城新房上涨城市数",
+      "name_en": "TEST 70-city new home up-count",
+      "section": "property",
+      "tier": 2,
+      "unit_zh": "个",
+      "unit_en": "个",
+      "value_type": "count",
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（70city-newhome-up-count，非真实序列，仅供 gate_b 审计测试使用）",
+        "dataset_en": "Synthetic test series for gate_b audit tests (70city-newhome-up-count, not real data)",
+        "url": "https://example.invalid/70city-newhome-up-count"
+      },
+      "start": "2026-04",
+      "latest": "2026-05",
+      "file": "data/series/test-70city-newhome-up-count.json",
+      "derived": {
+        "rule": "count_cities_gt_zero",
+        "inputs": [
+          "test-70city-panel"
+        ],
+        "caliber": "single"
+      }
+    },
+    {
+      "id": "test-dg-level",
+      "name_zh": "测试_DG层级指标",
+      "name_en": "TEST DG level indicator",
+      "section": "macro",
+      "tier": 1,
+      "unit_zh": "亿元",
+      "unit_en": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（dg-level，DG 接口，非真实序列）",
+        "dataset_en": "Synthetic DG-sourced test series (dg-level, not real data)",
+        "url": "https://data.stats.gov.cn/dg/website/page.html"
+      },
+      "start": "2026-04",
+      "latest": "2026-06",
+      "file": "data/series/test-dg-level.json"
+    },
+    {
+      "id": "test-pmi",
+      "name_zh": "测试_采购经理指数",
+      "name_en": "TEST PMI",
+      "section": "macro",
+      "tier": 1,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "index",
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "cflp",
+        "dataset_zh": "测试数据集（pmi，DG 接口，非真实序列）",
+        "dataset_en": "Synthetic DG-sourced test series (pmi, not real data)",
+        "url": "https://data.stats.gov.cn/dg/website/page.html"
+      },
+      "start": "2026-05",
+      "latest": "2026-06",
+      "file": "data/series/test-pmi.json"
+    },
+    {
+      "id": "test-70city-panel",
+      "name_zh": "测试_70 个大中城市房价",
+      "name_en": "TEST 70-city price",
+      "section": "property",
+      "tier": 1,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "mom_pct",
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（70city-panel，非真实序列，仅供 gate_b 审计测试使用）",
+        "dataset_en": "Synthetic test series for gate_b audit tests (70city-panel, not real data)",
+        "url": "https://example.invalid/70city-panel"
+      },
+      "start": "2026-04",
+      "latest": "2026-05",
+      "panel": {
+        "dimensions": {
+          "city": [
+            "北京",
+            "上海",
+            "广州"
+          ],
+          "metric": [
+            "new_home",
+            "resale_home"
+          ]
+        },
+        "measures": [
+          "m",
+          "m_yoy"
+        ]
+      },
+      "file": "data/panels/test-70city-panel.json"
+    }
+  ]
+}

@@ -1,0 +1,455 @@
+{
+  "generated_at": "2026-07-20T00:00:00Z",
+  "catalog_version": "1.0.0-mutation-test",
+  "sections": [
+    {
+      "id": "prices",
+      "name_zh": "物价",
+      "name_en": "Prices",
+      "order": 0
+    },
+    {
+      "id": "consumption",
+      "name_zh": "消费",
+      "name_en": "Consumption",
+      "order": 1
+    },
+    {
+      "id": "macro",
+      "name_zh": "宏观大盘",
+      "name_en": "Macro",
+      "order": 2
+    },
+    {
+      "id": "property",
+      "name_zh": "楼市",
+      "name_en": "Property",
+      "order": 3
+    }
+  ],
+  "tiles": [
+    {
+      "id": "mut-retail-total",
+      "name_zh": "测试_MUT_社会消费品零售总额",
+      "name_en": "MUT retail total",
+      "name_short": null,
+      "unit_zh": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "tier": 1,
+      "calibers": [
+        "single",
+        "ytd"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/mut-retail-total"
+      },
+      "decimals": 1,
+      "latest": {
+        "period": "2026-06",
+        "period_label_zh": "2026 年 6 月",
+        "m": 4643.8,
+        "m_yoy": -0.6,
+        "ytd": 27368.7,
+        "ytd_yoy": -0.6
+      },
+      "prev": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 5 月",
+        "m": 4594.4,
+        "m_yoy": -0.6,
+        "ytd": 22724.9,
+        "ytd_yoy": -0.6
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": "down",
+        "latest_yoy": -0.6,
+        "delta_pp_vs_prev": 0.0,
+        "streak": 16,
+        "period_label_zh": "2026 年 6 月"
+      },
+      "takeaway": "2026 年 6 月测试_MUT_社会消费品零售总额同比下降 0.6%，与上月持平，连续 16 个月同比下降",
+      "plot_kind": "level",
+      "spark": [
+        4650.0,
+        4700.0,
+        4720.0,
+        4740.0,
+        4760.0,
+        4780.0,
+        4800.0,
+        4850.0,
+        9144.8,
+        4522.7,
+        4572.4,
+        4622.1,
+        4671.8,
+        4691.7,
+        4711.6,
+        4731.4,
+        4751.3,
+        4771.2,
+        4820.9,
+        9089.9,
+        4495.6,
+        4545.0,
+        4594.4,
+        4643.8
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [],
+      "revisions_recent": [
+        {
+          "period": "2026-04",
+          "measure": "ytd",
+          "revised_on": "2026-06-16"
+        }
+      ]
+    },
+    {
+      "id": "mut-cpi-break",
+      "name_zh": "测试_MUT_居民消费价格指数",
+      "name_en": "MUT CPI (rebase break)",
+      "name_short": null,
+      "unit_zh": "%",
+      "value_type": "index",
+      "freq": "M",
+      "tier": 1,
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/mut-cpi-break"
+      },
+      "decimals": 1,
+      "latest": {
+        "period": "2026-07",
+        "period_label_zh": "2026 年 7 月",
+        "m": 101.7,
+        "m_yoy": 1.6
+      },
+      "prev": {
+        "period": "2026-06",
+        "period_label_zh": "2026 年 6 月",
+        "m": 101.6
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": "up",
+        "latest_yoy": 1.6,
+        "delta_pp_vs_prev": null,
+        "streak": 0,
+        "period_label_zh": "2026 年 7 月"
+      },
+      "takeaway": "口径调整后首期数据：测试_MUT_居民消费价格指数上涨 1.6%（与旧口径不可比）",
+      "plot_kind": "level",
+      "spark": [
+        101.8,
+        101.9,
+        100.1,
+        100.3,
+        100.5,
+        100.7,
+        100.9,
+        101.0,
+        101.1,
+        101.2,
+        101.3,
+        101.4,
+        101.5,
+        101.6,
+        101.7
+      ],
+      "breaks": [
+        {
+          "effective": "2025-07",
+          "kind": "rebase",
+          "no_yoy_across": true,
+          "yoy_valid_from": "2026-07",
+          "supersedes": null,
+          "superseded_by": null,
+          "note_zh": "测试断点：跨基期同比不可比，2026-07 起同比恢复发布。",
+          "note_en": "test break: YoY not comparable across the rebase seam; resumes 2026-07."
+        }
+      ],
+      "annotations": [],
+      "flags_latest": [
+        "break_recent"
+      ],
+      "revisions_recent": []
+    },
+    {
+      "id": "mut-fai",
+      "name_zh": "测试_MUT_固定资产投资完成额",
+      "name_en": "MUT FAI ytd yoy",
+      "name_short": null,
+      "unit_zh": "%",
+      "value_type": "yoy_pct",
+      "freq": "M",
+      "tier": 1,
+      "calibers": [
+        "ytd"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/mut-fai"
+      },
+      "decimals": 1,
+      "latest": {
+        "period": "2026-06",
+        "period_label_zh": "2026 年 1-6 月",
+        "ytd_yoy": 4.8
+      },
+      "prev": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 1-5 月",
+        "ytd_yoy": 4.8
+      },
+      "headline": {
+        "caliber": "ytd",
+        "direction": "up",
+        "latest_yoy": 4.8,
+        "delta_pp_vs_prev": 0.0,
+        "streak": 0,
+        "period_label_zh": "2026 年 1-6 月"
+      },
+      "takeaway": "1-6 月测试_MUT_固定资产投资完成额累计同比增长 4.8%，与 1-5 月持平",
+      "plot_kind": "yoy",
+      "spark": [
+        7.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        6.8,
+        4.8,
+        4.8,
+        4.8,
+        4.8
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [],
+      "revisions_recent": []
+    },
+    {
+      "id": "mut-income-quarterly",
+      "name_zh": "测试_MUT_居民人均可支配收入",
+      "name_en": "MUT quarterly income (real_yoy)",
+      "name_short": null,
+      "unit_zh": "元",
+      "value_type": "level",
+      "freq": "Q",
+      "tier": 1,
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/mut-income-quarterly"
+      },
+      "decimals": 1,
+      "latest": {
+        "period": "2026-Q2",
+        "period_label_zh": "2026 年二季度",
+        "m": 34332.5,
+        "m_yoy": 4.9,
+        "real_yoy": 3.7
+      },
+      "prev": {
+        "period": "2026-Q1",
+        "period_label_zh": "2026 年一季度",
+        "m": 33562.1,
+        "m_yoy": 4.7,
+        "real_yoy": 3.2
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": "up",
+        "latest_yoy": 4.9,
+        "delta_pp_vs_prev": 0.2,
+        "streak": 0,
+        "period_label_zh": "2026 年二季度"
+      },
+      "takeaway": "2026 年二季度测试_MUT_居民人均可支配收入同比名义增长 4.9%，实际增长 3.7%",
+      "plot_kind": "level",
+      "spark": [
+        30500.0,
+        31200.0,
+        32100.0,
+        33500.0,
+        32055.5,
+        32728.8,
+        33769.2,
+        35108.0,
+        33562.1,
+        34332.5
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [],
+      "revisions_recent": []
+    },
+    {
+      "id": "mut-tsf-flow",
+      "name_zh": "测试_MUT_社会融资规模增量",
+      "name_en": "MUT TSF flow",
+      "name_short": null,
+      "unit_zh": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "tier": 1,
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/mut-tsf-flow"
+      },
+      "decimals": 1,
+      "latest": {
+        "period": "2026-06",
+        "period_label_zh": "2026 年 6 月",
+        "m": 23200.0
+      },
+      "prev": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 5 月",
+        "m": 23000.0
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": null,
+        "latest_yoy": null,
+        "delta_pp_vs_prev": null,
+        "streak": 0,
+        "period_label_zh": "2026 年 6 月"
+      },
+      "takeaway": null,
+      "plot_kind": "level",
+      "spark": [
+        22000.0,
+        22300.0,
+        22550.0,
+        22800.0,
+        23000.0,
+        23200.0
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [],
+      "revisions_recent": []
+    },
+    {
+      "id": "mut-dg-level",
+      "name_zh": "测试_MUT_DG层级指标",
+      "name_en": "MUT DG level indicator",
+      "name_short": null,
+      "unit_zh": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "tier": 1,
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://data.stats.gov.cn/dg/website/page.html"
+      },
+      "decimals": 1,
+      "latest": {
+        "period": "2026-06",
+        "period_label_zh": "2026 年 6 月",
+        "m": 1250.0
+      },
+      "prev": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 5 月",
+        "m": 1300.0
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": null,
+        "latest_yoy": null,
+        "delta_pp_vs_prev": null,
+        "streak": 0,
+        "period_label_zh": "2026 年 6 月"
+      },
+      "takeaway": null,
+      "plot_kind": "level",
+      "spark": [
+        1150.0,
+        1200.0,
+        1300.0,
+        1250.0
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [],
+      "revisions_recent": []
+    }
+  ],
+  "freshness": [
+    {
+      "id": "mut-retail-total",
+      "latest": "2026-06",
+      "revisions_recent": [
+        {
+          "period": "2026-04",
+          "measure": "ytd",
+          "revised_on": "2026-06-16"
+        }
+      ]
+    },
+    {
+      "id": "mut-retail-ex-auto",
+      "latest": "2026-06",
+      "revisions_recent": []
+    },
+    {
+      "id": "mut-retail-online-goods",
+      "latest": "2026-06",
+      "revisions_recent": []
+    },
+    {
+      "id": "mut-retail-online-share",
+      "latest": "2026-06",
+      "revisions_recent": []
+    },
+    {
+      "id": "mut-cpi-break",
+      "latest": "2026-07",
+      "revisions_recent": []
+    },
+    {
+      "id": "mut-fai",
+      "latest": "2026-06",
+      "revisions_recent": []
+    },
+    {
+      "id": "mut-income-quarterly",
+      "latest": "2026-Q2",
+      "revisions_recent": []
+    },
+    {
+      "id": "mut-tsf-flow",
+      "latest": "2026-06",
+      "revisions_recent": []
+    },
+    {
+      "id": "mut-dg-level",
+      "latest": "2026-06",
+      "revisions_recent": []
+    }
+  ]
+}

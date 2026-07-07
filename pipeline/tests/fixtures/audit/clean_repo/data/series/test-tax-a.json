@@ -1,0 +1,45 @@
+{
+  "schema": "series/v1",
+  "unit_en": "亿元",
+  "decimals": 1,
+  "coverage_note_zh": null,
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-07-08T00:00:00Z",
+  "id": "test-tax-a",
+  "name_zh": "测试_契税收入",
+  "name_en": "TEST deed tax",
+  "unit_zh": "亿元",
+  "value_type": "level",
+  "freq": "M",
+  "calibers": [
+    "ytd"
+  ],
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（tax-a，非真实序列，仅供 gate_b 审计测试使用）",
+    "dataset_en": "Synthetic test series for gate_b audit tests (tax-a, not real data)",
+    "url": "https://example.invalid/tax-a"
+  },
+  "derived": null,
+  "observations": [
+    {
+      "period": "2026-02",
+      "ytd": 650.0,
+      "ytd_yoy": -11.1,
+      "src": "legacy:2026-02"
+    },
+    {
+      "period": "2026-03",
+      "ytd": 1067.0,
+      "ytd_yoy": -16.2,
+      "src": "legacy:2026-03"
+    },
+    {
+      "period": "2026-04",
+      "ytd": 1370.0,
+      "ytd_yoy": -15.3,
+      "src": "legacy:2026-04"
+    }
+  ]
+}

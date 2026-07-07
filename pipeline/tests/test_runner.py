@@ -13,9 +13,12 @@ from pipeline import runner as runner_module
 from pipeline.discover import Candidate
 
 
-def test_unknown_source_returns_exit_code_2(capsys):
+def test_unknown_source_returns_exit_code_3(capsys):
+    """Exit codes standardized 2026-07-08 (docs/OPERATIONS.md): 0 ok/no-op,
+    2 Gate A block, 3 usage/unknown source -- previously both this case and a
+    Gate A block returned 2, which collided once Gate A was wired in."""
     exit_code = runner_module.run("not_a_real_source", dry_run=True)
-    assert exit_code == 2
+    assert exit_code == 3
 
 
 def test_no_candidates_exits_zero_cleanly(monkeypatch, capsys):
@@ -53,3 +56,42 @@ def test_happy_path_dry_run_wires_fetch_parse_normalize(monkeypatch, tmp_path, c
     out = capsys.readouterr().out
     assert "period: 2026-05" in out
     assert "mapped series file(s) not found on disk" in out  # tmp_path/series is empty, as expected
+
+
+# -- --fixture: offline field_map proof, no discover/fetch, no network -----------
+
+
+def test_fixture_flag_bypasses_discover_and_fetch_entirely(monkeypatch, tmp_path, capsys):
+    """--fixture must never call discover_nbs/fetch_and_archive at all -- both
+    are monkeypatched to raise, so this test fails loudly if either is
+    reached, proving the fixture path is a genuinely separate code path from
+    the live discover -> fetch flow, not just a stubbed-out FakeFetchResult."""
+
+    def _boom(*args, **kwargs):
+        raise AssertionError("must not be called when --fixture is set")
+
+    monkeypatch.setattr(runner_module, "discover_nbs", _boom)
+    monkeypatch.setattr(runner_module, "fetch_and_archive", _boom)
+    monkeypatch.setattr(runner_module, "SERIES_DIR", tmp_path / "series")
+
+    fixture_path = Path(__file__).resolve().parents[1] / "fixtures" / "raw" / "nbs_cpi" / "2026-05_cpi.html"
+    exit_code = runner_module.run("nbs_cpi", dry_run=True, fixture=fixture_path)
+
+    assert exit_code == 0
+    out = capsys.readouterr().out
+    assert f"using fixture: {fixture_path}" in out
+    assert "period: 2026-05" in out
+
+
+def test_fixture_flag_is_ignored_with_a_warning_for_dg_refresh(monkeypatch, tmp_path, capsys):
+    """dg_refresh has its own, separate offline-testing story (a --lookback/
+    --today override on pipeline.dg_refresh.run, not a raw HTML fixture) --
+    passing --fixture alongside it must not crash, just warn and proceed."""
+    monkeypatch.setattr(runner_module.dg_refresh, "run", lambda *, dry_run, no_gate: 0)
+
+    fixture_path = Path(__file__).resolve().parents[1] / "fixtures" / "raw" / "nbs_cpi" / "2026-05_cpi.html"
+    exit_code = runner_module.run("dg_refresh", dry_run=True, fixture=fixture_path)
+
+    assert exit_code == 0
+    err = capsys.readouterr().err
+    assert "--fixture has no effect for dg_refresh" in err

@@ -1,0 +1,105 @@
+{
+  "schema": "panel/v1",
+  "id": "mut-70city-panel",
+  "name_zh": "测试_MUT_70 个大中城市房价",
+  "name_en": "MUT 70-city price",
+  "value_type": "mom_pct",
+  "freq": "M",
+  "decimals": 1,
+  "dimensions": {
+    "city": [
+      "北京",
+      "上海",
+      "广州"
+    ],
+    "metric": [
+      "new_home",
+      "resale_home"
+    ]
+  },
+  "measures": [
+    "m",
+    "m_yoy"
+  ],
+  "periods": [
+    "2026-05",
+    "2026-06"
+  ],
+  "cells": {
+    "北京": {
+      "new_home": {
+        "m": [
+          -0.2,
+          -0.3
+        ],
+        "m_yoy": [
+          -2.1,
+          -2.5
+        ]
+      },
+      "resale_home": {
+        "m": [
+          -0.5,
+          -0.6
+        ],
+        "m_yoy": [
+          -3.0,
+          -3.2
+        ]
+      }
+    },
+    "上海": {
+      "new_home": {
+        "m": [
+          0.1,
+          0.2
+        ],
+        "m_yoy": [
+          1.0,
+          1.2
+        ]
+      },
+      "resale_home": {
+        "m": [
+          -0.1,
+          null
+        ],
+        "m_yoy": [
+          -0.5,
+          null
+        ]
+      }
+    },
+    "广州": {
+      "new_home": {
+        "m": [
+          0.3,
+          -0.1
+        ],
+        "m_yoy": [
+          2.0,
+          -0.4
+        ]
+      },
+      "resale_home": {
+        "m": [
+          0.2,
+          0.1
+        ],
+        "m_yoy": [
+          1.5,
+          0.6
+        ]
+      }
+    }
+  },
+  "revisions": [],
+  "breaks": [],
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（合成，非真实序列，仅供 mutation-gate 测试使用）",
+    "dataset_en": "Synthetic test series for the mutation-gate harness (not real data)",
+    "url": "https://example.invalid/mut-70city-panel"
+  },
+  "generated_at": "2026-07-20T00:00:00Z"
+}

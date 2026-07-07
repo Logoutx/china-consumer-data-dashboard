@@ -1,0 +1,20 @@
+{
+  "url": "https://data.stats.gov.cn/dg/website/publicrelease/web/external/new/queryIndicatorsByCid?cid=eeee5555eeee5555eeee5555eeee5555",
+  "request": null,
+  "response": {
+    "data": {
+      "total": 1,
+      "list": [
+        {
+          "_id": "dddd4444dddd4444dddd4444dddd4444",
+          "_name": "测试_MUT_DG层级指标",
+          "i_showname": "测试_MUT_DG层级指标 (亿元) ",
+          "dp_name": "本期",
+          "du_name": "亿元",
+          "catalogid": "eeee5555eeee5555eeee5555eeee5555",
+          "ek_name": "测试_MUT_DG层级指标"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "schema": "series/v1",
+  "unit_en": "%",
+  "decimals": 1,
+  "coverage_note_zh": null,
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-07-08T00:00:00Z",
+  "id": "test-70city-newhome-mom",
+  "name_zh": "测试_70城新房价格",
+  "name_en": "TEST 70-city new home price",
+  "unit_zh": "%",
+  "value_type": "mom_pct",
+  "freq": "M",
+  "calibers": [
+    "single"
+  ],
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（70city-newhome-mom，非真实序列，仅供 gate_b 审计测试使用）",
+    "dataset_en": "Synthetic test series for gate_b audit tests (70city-newhome-mom, not real data)",
+    "url": "https://example.invalid/70city-newhome-mom"
+  },
+  "derived": {
+    "rule": "simple_mean_of_cities",
+    "inputs": [
+      "test-70city-panel"
+    ],
+    "caliber": "single"
+  },
+  "observations": [
+    {
+      "period": "2026-04",
+      "m": 0.0667,
+      "src": "derived:mean:2026-04"
+    },
+    {
+      "period": "2026-05",
+      "m": -0.0667,
+      "src": "derived:mean:2026-05"
+    }
+  ]
+}

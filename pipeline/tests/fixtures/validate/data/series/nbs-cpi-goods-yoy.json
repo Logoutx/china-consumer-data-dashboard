@@ -1,0 +1,243 @@
+{
+  "schema": "series/v1",
+  "id": "nbs-cpi-goods-yoy",
+  "name_zh": "测试_nbs-cpi-goods-yoy",
+  "name_en": "nbs-cpi-goods-yoy",
+  "unit_zh": "%",
+  "unit_en": "%",
+  "value_type": "index",
+  "freq": "M",
+  "calibers": [
+    "single"
+  ],
+  "decimals": 1,
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（合成，非真实序列，仅供 Gate A 测试使用）",
+    "dataset_en": "Synthetic test series for Gate A tests (not real data)",
+    "url": "https://example.invalid/nbs-cpi-goods-yoy"
+  },
+  "derived": null,
+  "coverage_note_zh": null,
+  "observations": [
+    {
+      "period": "2023-01",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2023-01"
+    },
+    {
+      "period": "2023-02",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2023-02"
+    },
+    {
+      "period": "2023-03",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2023-03"
+    },
+    {
+      "period": "2023-04",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2023-04"
+    },
+    {
+      "period": "2023-05",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2023-05"
+    },
+    {
+      "period": "2023-06",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2023-06"
+    },
+    {
+      "period": "2023-07",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2023-07"
+    },
+    {
+      "period": "2023-08",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2023-08"
+    },
+    {
+      "period": "2023-09",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2023-09"
+    },
+    {
+      "period": "2023-10",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2023-10"
+    },
+    {
+      "period": "2023-11",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2023-11"
+    },
+    {
+      "period": "2023-12",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2023-12"
+    },
+    {
+      "period": "2024-01",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2024-01"
+    },
+    {
+      "period": "2024-02",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2024-02"
+    },
+    {
+      "period": "2024-03",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2024-03"
+    },
+    {
+      "period": "2024-04",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2024-04"
+    },
+    {
+      "period": "2024-05",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2024-05"
+    },
+    {
+      "period": "2024-06",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2024-06"
+    },
+    {
+      "period": "2024-07",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2024-07"
+    },
+    {
+      "period": "2024-08",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2024-08"
+    },
+    {
+      "period": "2024-09",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2024-09"
+    },
+    {
+      "period": "2024-10",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2024-10"
+    },
+    {
+      "period": "2024-11",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2024-11"
+    },
+    {
+      "period": "2024-12",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2024-12"
+    },
+    {
+      "period": "2025-01",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2025-01"
+    },
+    {
+      "period": "2025-02",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2025-02"
+    },
+    {
+      "period": "2025-03",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2025-03"
+    },
+    {
+      "period": "2025-04",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2025-04"
+    },
+    {
+      "period": "2025-05",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2025-05"
+    },
+    {
+      "period": "2025-06",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2025-06"
+    },
+    {
+      "period": "2025-07",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2025-07"
+    },
+    {
+      "period": "2025-08",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2025-08"
+    },
+    {
+      "period": "2025-09",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2025-09"
+    },
+    {
+      "period": "2025-10",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2025-10"
+    },
+    {
+      "period": "2025-11",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2025-11"
+    },
+    {
+      "period": "2025-12",
+      "m": 102.2,
+      "m_yoy": 2.2,
+      "src": "rel:test-2025-12"
+    }
+  ],
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-06-01T00:00:00Z"
+}

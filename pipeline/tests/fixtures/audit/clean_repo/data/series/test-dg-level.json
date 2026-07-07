@@ -1,0 +1,41 @@
+{
+  "schema": "series/v1",
+  "unit_en": "亿元",
+  "decimals": 1,
+  "coverage_note_zh": null,
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-07-08T00:00:00Z",
+  "id": "test-dg-level",
+  "name_zh": "测试_DG层级指标",
+  "name_en": "TEST DG level indicator",
+  "unit_zh": "亿元",
+  "value_type": "level",
+  "freq": "M",
+  "calibers": [
+    "single"
+  ],
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（dg-level，DG 接口，非真实序列）",
+    "dataset_en": "Synthetic DG-sourced test series (dg-level, not real data)",
+    "url": "https://data.stats.gov.cn/dg/website/page.html"
+  },
+  "derived": null,
+  "observations": [
+    {
+      "period": "2026-04",
+      "m": 1200.0
+    },
+    {
+      "period": "2026-05",
+      "m": 1300.0,
+      "src": "dg:aaaa1111aaaa1111aaaa1111aaaa1111"
+    },
+    {
+      "period": "2026-06",
+      "m": 1250.0,
+      "src": "dg:aaaa1111aaaa1111aaaa1111aaaa1111"
+    }
+  ]
+}

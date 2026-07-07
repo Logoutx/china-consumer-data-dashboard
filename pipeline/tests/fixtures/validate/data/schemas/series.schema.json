@@ -1,0 +1,168 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://china-consumer-dashboard/schemas/series.schema.json",
+  "title": "Series file",
+  "description": "One time-series: identity header, current observations, an append-only revision log, and break metadata. See docs/DATA-CONTRACT.md sections 3-4. Panels use panel.schema.json instead.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "id",
+    "name_zh",
+    "name_en",
+    "unit_zh",
+    "unit_en",
+    "value_type",
+    "freq",
+    "calibers",
+    "observations",
+    "source",
+    "generated_at"
+  ],
+  "properties": {
+    "schema": { "const": "series/v1" },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z]+(-[a-z0-9]+)+$",
+      "description": "agency-slug[-qualifier], lowercase kebab, ASCII. Equals the filename stem. Immutable once published."
+    },
+    "name_zh": { "type": "string", "minLength": 1, "description": "Chinese display name; DATA-CONTRACT section 12 typesetting." },
+    "name_en": { "type": "string", "minLength": 1 },
+    "unit_zh": { "type": "string" },
+    "unit_en": { "type": "string" },
+    "value_type": {
+      "enum": ["level", "index", "mom_pct", "yoy_pct", "rate_pct", "count", "ratio"],
+      "description": "What m/ytd MEAN; drives rendering. See DATA-CONTRACT section 3.3."
+    },
+    "freq": { "enum": ["M", "Q", "A"], "description": "Default frequency; a per-observation freq may override on a switch." },
+    "calibers": {
+      "type": "array",
+      "items": { "enum": ["single", "ytd", "mom"] },
+      "uniqueItems": true,
+      "minItems": 1,
+      "description": "Which measure lanes this series populates."
+    },
+    "decimals": { "type": "integer", "minimum": 0, "maximum": 6 },
+    "source": { "$ref": "#/definitions/source" },
+    "derived": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["rule", "inputs"],
+          "properties": {
+            "rule": { "type": "string", "description": "e.g. single_from_ytd, ratio, simple_mean_of_cities, count_cities_gt_zero, sum." },
+            "inputs": { "type": "array", "items": { "type": "string" }, "minItems": 1, "description": "series/panel ids this value is computed from." },
+            "caliber": { "enum": ["single", "ytd", "mom"] }
+          }
+        }
+      ],
+      "description": "null for primary series; object for build-time derived values (DATA-CONTRACT section 6)."
+    },
+    "coverage_note_zh": { "type": ["string", "null"] },
+    "observations": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/observation" },
+      "description": "Current best values, ascending by period, one per period."
+    },
+    "revisions": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/revision" },
+      "default": [],
+      "description": "Append-only change log; ascending by (period, measure)."
+    },
+    "breaks": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/break" },
+      "default": [],
+      "description": "Ascending by effective period."
+    },
+    "end": {
+      "type": ["string", "null"],
+      "pattern": "^\\d{4}(-(0[1-9]|1[0-2])|-Q[1-4])?$",
+      "description": "Set when the series is frozen (e.g. superseded by a new id after a break)."
+    },
+    "generated_at": { "type": "string", "format": "date-time" }
+  },
+  "definitions": {
+    "period": {
+      "type": "string",
+      "pattern": "^\\d{4}(-(0[1-9]|1[0-2])|-Q[1-4])?$",
+      "description": "YYYY-MM (monthly), YYYY-Qn (quarterly), or YYYY (annual). Jan-Feb combined uses the end month YYYY-02 with span:2."
+    },
+    "measure_name": {
+      "enum": ["m", "m_yoy", "ytd", "ytd_yoy", "mom", "real_yoy"]
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["period"],
+      "properties": {
+        "period": { "$ref": "#/definitions/period" },
+        "freq": { "enum": ["M", "Q", "A"], "description": "Present only when it differs from the series default." },
+        "span": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "# of base periods the single-period value aggregates. Jan-Feb combined = 2. Absent => 1."
+        },
+        "flags": {
+          "type": "array",
+          "items": { "enum": ["jan_feb", "provisional", "estimated", "old_caliber", "break_first"] },
+          "uniqueItems": true
+        },
+        "m": { "type": ["number", "null"], "description": "Single-period (当月/单季/单期) headline in the unit value_type declares. For mom_pct this is the 环比 %." },
+        "m_yoy": { "type": ["number", "null"], "description": "Published YoY (同比) alongside m. VERBATIM — never computed from levels." },
+        "ytd": { "type": ["number", "null"], "description": "Cumulative-to-date (累计) value, same unit as m." },
+        "ytd_yoy": { "type": ["number", "null"], "description": "Published YoY on the cumulative caliber. VERBATIM." },
+        "mom": { "type": ["number", "null"], "description": "Published 环比 % as an EXTRA measure beyond m (e.g. CPI). Unused when m is already a MoM %." },
+        "real_yoy": { "type": ["number", "null"], "description": "Published real (inflation-adjusted) YoY. VERBATIM." },
+        "src": { "type": "string", "description": "Provenance pointer: archive release-id this value came from." }
+      }
+    },
+    "revision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["period", "measure", "old", "new", "revised_on", "source"],
+      "properties": {
+        "period": { "$ref": "#/definitions/period" },
+        "measure": { "$ref": "#/definitions/measure_name" },
+        "old": { "type": ["number", "null"] },
+        "new": { "type": ["number", "null"] },
+        "revised_on": {
+          "type": ["string", "null"],
+          "description": "Date the revising release published (YYYY-MM-DD). null for legacy-seeded entries of unknown date."
+        },
+        "source": { "type": "string", "description": "Release-id, or 'legacy-migration'." },
+        "note": { "type": "string" }
+      }
+    },
+    "break": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["effective", "kind", "no_yoy_across"],
+      "properties": {
+        "effective": { "$ref": "#/definitions/period" },
+        "kind": { "enum": ["rebase", "redefinition", "methodology", "indicator_replacement", "suspended", "resumed"] },
+        "no_yoy_across": { "type": "boolean", "description": "Hard instruction: no YoY may span this seam. Build inserts null at the seam." },
+        "yoy_valid_from": { "$ref": "#/definitions/period" },
+        "supersedes": { "type": ["string", "null"], "description": "Old series id this one replaces (new-id breaks)." },
+        "superseded_by": { "type": ["string", "null"], "description": "New series id that replaces this one." },
+        "note_zh": { "type": "string" },
+        "note_en": { "type": "string" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["agency"],
+      "properties": {
+        "agency": { "enum": ["nbs", "pbc", "mof", "mohurd", "customs", "caam", "safe", "cflp"] },
+        "dataset_zh": { "type": "string" },
+        "dataset_en": { "type": "string" },
+        "url": { "type": "string", "format": "uri" }
+      }
+    }
+  }
+}

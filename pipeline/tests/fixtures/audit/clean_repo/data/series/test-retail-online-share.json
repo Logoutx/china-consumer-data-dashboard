@@ -1,0 +1,63 @@
+{
+  "schema": "series/v1",
+  "unit_en": "%",
+  "decimals": 1,
+  "coverage_note_zh": null,
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-07-08T00:00:00Z",
+  "id": "test-retail-online-share",
+  "name_zh": "测试_网上商品零售额占比",
+  "name_en": "TEST online retail share",
+  "unit_zh": "%",
+  "value_type": "ratio",
+  "freq": "M",
+  "calibers": [
+    "single",
+    "ytd"
+  ],
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（retail-online-share，非真实序列，仅供 gate_b 审计测试使用）",
+    "dataset_en": "Synthetic test series for gate_b audit tests (retail-online-share, not real data)",
+    "url": "https://example.invalid/retail-online-share"
+  },
+  "derived": {
+    "rule": "ratio",
+    "inputs": [
+      "test-retail-online-goods",
+      "test-retail-ex-auto"
+    ],
+    "caliber": "single"
+  },
+  "observations": [
+    {
+      "period": "2026-02",
+      "m": 104.06,
+      "ytd": 104.06,
+      "src": "derived:ratio:2026-02",
+      "span": 2,
+      "flags": [
+        "jan_feb"
+      ]
+    },
+    {
+      "period": "2026-03",
+      "m": 28.5201,
+      "ytd": 54.6246,
+      "src": "derived:ratio:2026-03"
+    },
+    {
+      "period": "2026-04",
+      "m": 27.9707,
+      "ytd": 44.7211,
+      "src": "derived:ratio:2026-04"
+    },
+    {
+      "period": "2026-05",
+      "m": 30.5259,
+      "ytd": 40.5917,
+      "src": "derived:ratio:2026-05"
+    }
+  ]
+}

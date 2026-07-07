@@ -1,0 +1,62 @@
+{
+  "schema": "series/v1",
+  "id": "mut-retail-online-goods",
+  "name_zh": "测试_MUT_网上商品零售额",
+  "name_en": "MUT online retail goods",
+  "unit_zh": "亿元",
+  "unit_en": "100M CNY",
+  "value_type": "level",
+  "freq": "M",
+  "calibers": [
+    "single",
+    "ytd"
+  ],
+  "decimals": 1,
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（合成，非真实序列，仅供 mutation-gate 测试使用）",
+    "dataset_en": "Synthetic test series for the mutation-gate harness (not real data)",
+    "url": "https://example.invalid/mut-retail-online-goods"
+  },
+  "derived": null,
+  "coverage_note_zh": null,
+  "observations": [
+    {
+      "period": "2026-02",
+      "m": 20812.0,
+      "ytd": 20812.0,
+      "src": "rel:20260216",
+      "span": 2,
+      "flags": [
+        "jan_feb"
+      ]
+    },
+    {
+      "period": "2026-03",
+      "m": 10802.0,
+      "ytd": 31614.0,
+      "src": "rel:20260316"
+    },
+    {
+      "period": "2026-04",
+      "m": 9571.0,
+      "ytd": 41185.0,
+      "src": "rel:20260416"
+    },
+    {
+      "period": "2026-05",
+      "m": 11533.0,
+      "ytd": 52718.0,
+      "src": "rel:20260516"
+    },
+    {
+      "period": "2026-06",
+      "m": 11800.0,
+      "ytd": 64518.0,
+      "src": "rel:20260616"
+    }
+  ],
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-07-20T00:00:00Z"
+}

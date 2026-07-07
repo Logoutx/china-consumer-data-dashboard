@@ -1,0 +1,56 @@
+{
+  "schema": "series/v1",
+  "unit_en": "亿元",
+  "decimals": 1,
+  "coverage_note_zh": null,
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-07-08T00:00:00Z",
+  "id": "test-retail-ex-auto",
+  "name_zh": "测试_除汽车以外的消费品零售额",
+  "name_en": "TEST retail ex-auto",
+  "unit_zh": "亿元",
+  "value_type": "level",
+  "freq": "M",
+  "calibers": [
+    "single",
+    "ytd"
+  ],
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（retail-ex-auto，非真实序列，仅供 gate_b 审计测试使用）",
+    "dataset_en": "Synthetic test series for gate_b audit tests (retail-ex-auto, not real data)",
+    "url": "https://example.invalid/retail-ex-auto"
+  },
+  "derived": null,
+  "observations": [
+    {
+      "period": "2026-02",
+      "span": 2,
+      "flags": [
+        "jan_feb"
+      ],
+      "m": 20000,
+      "ytd": 20000,
+      "src": "rel:20260318"
+    },
+    {
+      "period": "2026-03",
+      "m": 37875,
+      "ytd": 57875,
+      "src": "rel:20260416"
+    },
+    {
+      "period": "2026-04",
+      "m": 34218,
+      "ytd": 92093,
+      "src": "rel:20260518"
+    },
+    {
+      "period": "2026-05",
+      "m": 37781,
+      "ytd": 129874,
+      "src": "rel:20260616"
+    }
+  ]
+}

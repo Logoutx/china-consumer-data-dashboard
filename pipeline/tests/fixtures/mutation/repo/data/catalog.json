@@ -1,0 +1,320 @@
+{
+  "schema": "catalog/v1",
+  "version": "1.0.0-mutation-test",
+  "generated_at": "2026-07-20T00:00:00Z",
+  "sections": [
+    {
+      "id": "prices",
+      "name_zh": "物价",
+      "name_en": "Prices",
+      "order": 0
+    },
+    {
+      "id": "consumption",
+      "name_zh": "消费",
+      "name_en": "Consumption",
+      "order": 1
+    },
+    {
+      "id": "macro",
+      "name_zh": "宏观大盘",
+      "name_en": "Macro",
+      "order": 2
+    },
+    {
+      "id": "property",
+      "name_zh": "楼市",
+      "name_en": "Property",
+      "order": 3
+    }
+  ],
+  "series": [
+    {
+      "id": "mut-retail-total",
+      "name_zh": "测试_MUT_社会消费品零售总额",
+      "name_en": "MUT retail total",
+      "section": "consumption",
+      "tier": 1,
+      "unit_zh": "亿元",
+      "unit_en": "100M CNY",
+      "value_type": "level",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single",
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（合成，非真实序列，仅供 mutation-gate 测试使用）",
+        "dataset_en": "Synthetic test series for the mutation-gate harness (not real data)",
+        "url": "https://example.invalid/mut-retail-total"
+      },
+      "derived": null,
+      "start": "2024-02",
+      "latest": "2026-06",
+      "file": "data/series/mut-retail-total.json"
+    },
+    {
+      "id": "mut-retail-ex-auto",
+      "name_zh": "测试_MUT_除汽车以外的消费品零售额",
+      "name_en": "MUT retail ex-auto",
+      "section": "consumption",
+      "tier": 2,
+      "unit_zh": "亿元",
+      "unit_en": "100M CNY",
+      "value_type": "level",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single",
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（合成，非真实序列，仅供 mutation-gate 测试使用）",
+        "dataset_en": "Synthetic test series for the mutation-gate harness (not real data)",
+        "url": "https://example.invalid/mut-retail-ex-auto"
+      },
+      "derived": null,
+      "start": "2026-02",
+      "latest": "2026-06",
+      "file": "data/series/mut-retail-ex-auto.json"
+    },
+    {
+      "id": "mut-retail-online-goods",
+      "name_zh": "测试_MUT_网上商品零售额",
+      "name_en": "MUT online retail goods",
+      "section": "consumption",
+      "tier": 2,
+      "unit_zh": "亿元",
+      "unit_en": "100M CNY",
+      "value_type": "level",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single",
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（合成，非真实序列，仅供 mutation-gate 测试使用）",
+        "dataset_en": "Synthetic test series for the mutation-gate harness (not real data)",
+        "url": "https://example.invalid/mut-retail-online-goods"
+      },
+      "derived": null,
+      "start": "2026-02",
+      "latest": "2026-06",
+      "file": "data/series/mut-retail-online-goods.json"
+    },
+    {
+      "id": "mut-retail-online-share",
+      "name_zh": "测试_MUT_网上商品零售额占比",
+      "name_en": "MUT online retail share",
+      "section": "consumption",
+      "tier": 2,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "ratio",
+      "decimals": 4,
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（合成，非真实序列，仅供 mutation-gate 测试使用）",
+        "dataset_en": "Synthetic test series for the mutation-gate harness (not real data)",
+        "url": "https://example.invalid/mut-retail-online-share"
+      },
+      "derived": {
+        "rule": "ratio",
+        "inputs": [
+          "mut-retail-online-goods",
+          "mut-retail-ex-auto"
+        ],
+        "caliber": "single"
+      },
+      "start": "2026-02",
+      "latest": "2026-06",
+      "file": "data/series/mut-retail-online-share.json"
+    },
+    {
+      "id": "mut-cpi-break",
+      "name_zh": "测试_MUT_居民消费价格指数",
+      "name_en": "MUT CPI (rebase break)",
+      "section": "prices",
+      "tier": 1,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "index",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（合成，非真实序列，仅供 mutation-gate 测试使用）",
+        "dataset_en": "Synthetic test series for the mutation-gate harness (not real data)",
+        "url": "https://example.invalid/mut-cpi-break"
+      },
+      "derived": null,
+      "start": "2025-05",
+      "latest": "2026-07",
+      "file": "data/series/mut-cpi-break.json",
+      "breaks": [
+        {
+          "effective": "2025-07",
+          "kind": "rebase",
+          "no_yoy_across": true,
+          "yoy_valid_from": "2026-07",
+          "supersedes": null,
+          "superseded_by": null,
+          "note_zh": "测试断点：跨基期同比不可比，2026-07 起同比恢复发布。",
+          "note_en": "test break: YoY not comparable across the rebase seam; resumes 2026-07."
+        }
+      ]
+    },
+    {
+      "id": "mut-fai",
+      "name_zh": "测试_MUT_固定资产投资完成额",
+      "name_en": "MUT FAI ytd yoy",
+      "section": "macro",
+      "tier": 1,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "yoy_pct",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "ytd"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（合成，非真实序列，仅供 mutation-gate 测试使用）",
+        "dataset_en": "Synthetic test series for the mutation-gate harness (not real data)",
+        "url": "https://example.invalid/mut-fai"
+      },
+      "derived": null,
+      "start": "2025-02",
+      "latest": "2026-06",
+      "file": "data/series/mut-fai.json"
+    },
+    {
+      "id": "mut-income-quarterly",
+      "name_zh": "测试_MUT_居民人均可支配收入",
+      "name_en": "MUT quarterly income (real_yoy)",
+      "section": "macro",
+      "tier": 1,
+      "unit_zh": "元",
+      "unit_en": "CNY",
+      "value_type": "level",
+      "decimals": 1,
+      "freq": "Q",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（合成，非真实序列，仅供 mutation-gate 测试使用）",
+        "dataset_en": "Synthetic test series for the mutation-gate harness (not real data)",
+        "url": "https://example.invalid/mut-income-quarterly"
+      },
+      "derived": null,
+      "start": "2024-Q1",
+      "latest": "2026-Q2",
+      "file": "data/series/mut-income-quarterly.json"
+    },
+    {
+      "id": "mut-tsf-flow",
+      "name_zh": "测试_MUT_社会融资规模增量",
+      "name_en": "MUT TSF flow",
+      "section": "macro",
+      "tier": 1,
+      "unit_zh": "亿元",
+      "unit_en": "100M CNY",
+      "value_type": "level",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "pbc",
+        "dataset_zh": "测试数据集（合成，非真实序列，仅供 mutation-gate 测试使用）",
+        "dataset_en": "Synthetic test series for the mutation-gate harness (not real data)",
+        "url": "https://example.invalid/mut-tsf-flow"
+      },
+      "derived": null,
+      "start": "2026-01",
+      "latest": "2026-06",
+      "file": "data/series/mut-tsf-flow.json"
+    },
+    {
+      "id": "mut-dg-level",
+      "name_zh": "测试_MUT_DG层级指标",
+      "name_en": "MUT DG level indicator",
+      "section": "macro",
+      "tier": 1,
+      "unit_zh": "亿元",
+      "unit_en": "100M CNY",
+      "value_type": "level",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（DG 接口，非真实序列，仅供 mutation-gate 测试使用）",
+        "dataset_en": "Synthetic DG-sourced test series for the mutation-gate harness (not real data)",
+        "url": "https://data.stats.gov.cn/dg/website/page.html"
+      },
+      "derived": null,
+      "start": "2026-03",
+      "latest": "2026-06",
+      "file": "data/series/mut-dg-level.json"
+    },
+    {
+      "id": "mut-70city-panel",
+      "name_zh": "测试_MUT_70 个大中城市房价",
+      "name_en": "MUT 70-city price",
+      "section": "property",
+      "tier": 1,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "mom_pct",
+      "freq": "M",
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（合成，非真实序列，仅供 mutation-gate 测试使用）",
+        "dataset_en": "Synthetic test series for the mutation-gate harness (not real data)",
+        "url": "https://example.invalid/mut-70city-panel"
+      },
+      "start": "2026-05",
+      "latest": "2026-06",
+      "panel": {
+        "dimensions": {
+          "city": [
+            "北京",
+            "上海",
+            "广州"
+          ],
+          "metric": [
+            "new_home",
+            "resale_home"
+          ]
+        },
+        "measures": [
+          "m",
+          "m_yoy"
+        ]
+      },
+      "file": "data/panels/mut-70city-panel.json"
+    }
+  ]
+}

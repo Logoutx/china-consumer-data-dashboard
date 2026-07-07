@@ -1,0 +1,48 @@
+{
+  "schema": "series/v1",
+  "id": "test-old-series",
+  "name_zh": "测试_test-old-series",
+  "name_en": "TEST old series (frozen)",
+  "unit_zh": "%",
+  "unit_en": "%",
+  "value_type": "rate_pct",
+  "freq": "M",
+  "calibers": [
+    "single"
+  ],
+  "decimals": 1,
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（合成，非真实序列，仅供 Gate A 测试使用）",
+    "dataset_en": "Synthetic test series for Gate A tests (not real data)",
+    "url": "https://example.invalid/test-old-series"
+  },
+  "derived": null,
+  "coverage_note_zh": null,
+  "observations": [
+    {
+      "period": "2023-01",
+      "m": 5.0,
+      "src": "rel:test-old-01"
+    },
+    {
+      "period": "2023-07",
+      "m": 5.2,
+      "src": "rel:test-old-07"
+    }
+  ],
+  "revisions": [],
+  "end": "2023-07",
+  "breaks": [
+    {
+      "effective": "2023-08",
+      "kind": "suspended",
+      "no_yoy_across": true,
+      "supersedes": null,
+      "superseded_by": "test-new-series",
+      "note_zh": "测试：new-id 断点。",
+      "note_en": "test new-id break"
+    }
+  ],
+  "generated_at": "2026-06-01T00:00:00Z"
+}

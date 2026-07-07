@@ -1,0 +1,45 @@
+{
+  "schema": "series/v1",
+  "id": "test-new-series",
+  "name_zh": "测试_test-new-series",
+  "name_en": "TEST new series",
+  "unit_zh": "%",
+  "unit_en": "%",
+  "value_type": "rate_pct",
+  "freq": "M",
+  "calibers": [
+    "single"
+  ],
+  "decimals": 1,
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（合成，非真实序列，仅供 Gate A 测试使用）",
+    "dataset_en": "Synthetic test series for Gate A tests (not real data)",
+    "url": "https://example.invalid/test-new-series"
+  },
+  "derived": null,
+  "coverage_note_zh": null,
+  "observations": [
+    {
+      "period": "2023-12",
+      "flags": [
+        "break_first"
+      ],
+      "m": 12.0,
+      "src": "rel:test-new-12"
+    }
+  ],
+  "revisions": [],
+  "breaks": [
+    {
+      "effective": "2023-12",
+      "kind": "indicator_replacement",
+      "no_yoy_across": true,
+      "supersedes": "test-old-series",
+      "superseded_by": null,
+      "note_zh": "测试：new-id 断点。",
+      "note_en": "test new-id break"
+    }
+  ],
+  "generated_at": "2026-06-01T00:00:00Z"
+}

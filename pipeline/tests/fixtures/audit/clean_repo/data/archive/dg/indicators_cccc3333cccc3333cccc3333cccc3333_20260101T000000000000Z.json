@@ -1,0 +1,29 @@
+{
+  "url": "https://data.stats.gov.cn/dg/website/publicrelease/web/external/new/queryIndicatorsByCid?cid=cccc3333cccc3333cccc3333cccc3333",
+  "request": null,
+  "response": {
+    "data": {
+      "total": 2,
+      "list": [
+        {
+          "_id": "aaaa1111aaaa1111aaaa1111aaaa1111",
+          "_name": "测试_DG层级指标",
+          "i_showname": "测试_DG层级指标 (亿元) ",
+          "dp_name": "本期",
+          "du_name": "亿元",
+          "catalogid": "cccc3333cccc3333cccc3333cccc3333",
+          "ek_name": "测试_DG层级指标"
+        },
+        {
+          "_id": "bbbb2222bbbb2222bbbb2222bbbb2222",
+          "_name": "测试_采购经理指数",
+          "i_showname": "测试_采购经理指数（PMI）",
+          "dp_name": "本期",
+          "du_name": "%",
+          "catalogid": "cccc3333cccc3333cccc3333cccc3333",
+          "ek_name": "测试_采购经理指数"
+        }
+      ]
+    }
+  }
+}

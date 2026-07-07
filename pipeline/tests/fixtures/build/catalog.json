@@ -97,6 +97,72 @@
       "file": "series/test-income-mixed-annual.json"
     },
     {
+      "id": "test-fai-yoy-pct",
+      "name_zh": "测试_固定资产投资完成额累计增长",
+      "name_en": "TEST fixed-asset investment YTD YoY growth",
+      "name_short": "测试_固定资产投资",
+      "section": "macro",
+      "tier": 2,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "yoy_pct",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": ["ytd"],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（非真实序列，仅供 build.py 契约测试使用）",
+        "dataset_en": "Synthetic test series for build.py contract tests (not real data)",
+        "url": "https://example.invalid/test-fai-yoy-pct"
+      },
+      "derived": null,
+      "file": "series/test-fai-yoy-pct.json"
+    },
+    {
+      "id": "test-iva-yoy-pct",
+      "name_zh": "测试_规模以上工业增加值同比增长",
+      "name_en": "TEST industrial value added YoY growth",
+      "name_short": "测试_工业增加值",
+      "section": "macro",
+      "tier": 1,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "yoy_pct",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": ["single", "ytd"],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（非真实序列，仅供 build.py 契约测试使用）",
+        "dataset_en": "Synthetic test series for build.py contract tests (not real data)",
+        "url": "https://example.invalid/test-iva-yoy-pct"
+      },
+      "derived": null,
+      "file": "series/test-iva-yoy-pct.json"
+    },
+    {
+      "id": "test-gdp-contribution-ratio",
+      "name_zh": "测试_最终消费支出对国内生产总值增长贡献率",
+      "name_en": "TEST contribution to GDP growth: final consumption expenditure",
+      "name_short": "测试_消费贡献率",
+      "section": "macro",
+      "tier": 2,
+      "unit_zh": "%",
+      "unit_en": "pp",
+      "value_type": "ratio",
+      "decimals": 1,
+      "freq": "Q",
+      "calibers": ["single", "ytd"],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（非真实序列，仅供 build.py 契约测试使用）",
+        "dataset_en": "Synthetic test series for build.py contract tests (not real data)",
+        "url": "https://example.invalid/test-gdp-contribution-ratio"
+      },
+      "derived": null,
+      "file": "series/test-gdp-contribution-ratio.json"
+    },
+    {
       "id": "test-70city-panel",
       "name_zh": "测试_70 个大中城市房价",
       "name_en": "TEST 70-city price",

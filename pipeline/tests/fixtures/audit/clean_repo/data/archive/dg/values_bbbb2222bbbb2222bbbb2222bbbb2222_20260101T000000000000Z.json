@@ -1,0 +1,40 @@
+{
+  "url": "https://data.stats.gov.cn/dg/website/publicrelease/web/external/getEsDataByIndicatorIdAndDa",
+  "request": {
+    "cid": "cccc3333cccc3333cccc3333cccc3333",
+    "id": "bbbb2222bbbb2222bbbb2222bbbb2222",
+    "da": "000000000000",
+    "dt": "",
+    "rootId": "cccc3333cccc3333cccc3333cccc3333",
+    "dts": [
+      "202605MM",
+      "202606MM"
+    ]
+  },
+  "response": {
+    "data": [
+      {
+        "dt": "202605MM",
+        "du": "x",
+        "unit": "x",
+        "code": "000000000000",
+        "dt_name": "202605MM",
+        "v": "50.3",
+        "i": "bbbb2222bbbb2222bbbb2222bbbb2222",
+        "i_name": null,
+        "du_name": "x"
+      },
+      {
+        "dt": "202606MM",
+        "du": "x",
+        "unit": "x",
+        "code": "000000000000",
+        "dt_name": "202606MM",
+        "v": "49.8",
+        "i": "bbbb2222bbbb2222bbbb2222bbbb2222",
+        "i_name": null,
+        "du_name": "x"
+      }
+    ]
+  }
+}

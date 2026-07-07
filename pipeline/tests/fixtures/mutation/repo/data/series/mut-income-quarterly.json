@@ -1,0 +1,89 @@
+{
+  "schema": "series/v1",
+  "id": "mut-income-quarterly",
+  "name_zh": "测试_MUT_居民人均可支配收入",
+  "name_en": "MUT quarterly income (real_yoy)",
+  "unit_zh": "元",
+  "unit_en": "CNY",
+  "value_type": "level",
+  "freq": "Q",
+  "calibers": [
+    "single"
+  ],
+  "decimals": 1,
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（合成，非真实序列，仅供 mutation-gate 测试使用）",
+    "dataset_en": "Synthetic test series for the mutation-gate harness (not real data)",
+    "url": "https://example.invalid/mut-income-quarterly"
+  },
+  "derived": null,
+  "coverage_note_zh": null,
+  "observations": [
+    {
+      "period": "2024-Q1",
+      "m": 30500.0,
+      "src": "rel:2024-Q1"
+    },
+    {
+      "period": "2024-Q2",
+      "m": 31200.0,
+      "src": "rel:2024-Q2"
+    },
+    {
+      "period": "2024-Q3",
+      "m": 32100.0,
+      "src": "rel:2024-Q3"
+    },
+    {
+      "period": "2024-Q4",
+      "m": 33500.0,
+      "src": "rel:2024-Q4"
+    },
+    {
+      "period": "2025-Q1",
+      "m": 32055.5,
+      "m_yoy": 5.1,
+      "real_yoy": 3.5,
+      "src": "rel:2025-Q1"
+    },
+    {
+      "period": "2025-Q2",
+      "m": 32728.8,
+      "m_yoy": 4.9,
+      "real_yoy": 3.5,
+      "src": "rel:2025-Q2"
+    },
+    {
+      "period": "2025-Q3",
+      "m": 33769.2,
+      "m_yoy": 5.2,
+      "real_yoy": 3.5,
+      "src": "rel:2025-Q3"
+    },
+    {
+      "period": "2025-Q4",
+      "m": 35108.0,
+      "m_yoy": 4.8,
+      "real_yoy": 3.5,
+      "src": "rel:2025-Q4"
+    },
+    {
+      "period": "2026-Q1",
+      "m": 33562.1,
+      "m_yoy": 4.7,
+      "real_yoy": 3.2,
+      "src": "rel:2026-Q1"
+    },
+    {
+      "period": "2026-Q2",
+      "m": 34332.5,
+      "m_yoy": 4.9,
+      "real_yoy": 3.7,
+      "src": "rel:2026-Q2"
+    }
+  ],
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-07-20T00:00:00Z"
+}
