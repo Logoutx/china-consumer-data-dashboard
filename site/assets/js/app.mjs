@@ -24,6 +24,7 @@ async function main() {
   try {
     index = await fetchIndex();
   } catch (err) {
+    console.error('[app] index.json fetch failed:', err);
     sectionsHost.appendChild(h('p', { class: 'section-empty-note' }, '数据索引加载失败，请刷新重试。'));
     return;
   }
@@ -35,6 +36,8 @@ async function main() {
 
   buildNav(sections);
 
+  const records = []; // {id, container, load} per section, for the hash-deep-link handling below
+
   sections.forEach((meta, i) => {
     const container = h('section', { class: 'data-section', id: meta.id, 'aria-labelledby': `${meta.id}-title` });
     container.appendChild(h('p', { class: 'section-loading-note' }, '加载中…'));
@@ -45,17 +48,60 @@ async function main() {
       try {
         bundle = await fetchSection(meta.id);
       } catch (err) {
+        // Design-review item 1: was silently swallowed (no console.error) —
+        // the exact complaint from review ("cost me a debugging round").
+        console.error(`[app] fetch failed for section "${meta.id}":`, err);
         renderSectionError(container, meta);
         return;
       }
-      renderSection(container, { meta, bundle });
+      try {
+        // CONFIRMED gap found during the employment-crash investigation:
+        // renderSection() used to be called outside any try/catch here, so
+        // any exception it threw (now or from any future data shape) became
+        // an unhandled promise rejection — no console.error, and the section
+        // was left half-built with no error message at all. Root-cause note:
+        // could not reproduce a synchronous throw against the CURRENT
+        // employment.json bundle across every range option, both mobile and
+        // desktop widths, and repeated re-renders (see lib/safe.mjs's module
+        // comment) — this catch, plus the per-series isolation added to
+        // section.mjs/small-multiples.mjs/pulse-row.mjs/city-grid.mjs, is the
+        // hardening fix regardless of the original trigger.
+        renderSection(container, { meta, bundle });
+      } catch (err) {
+        console.error(`[app] renderSection failed for section "${meta.id}":`, err);
+        renderSectionError(container, meta);
+      }
     };
+
+    records.push({ id: meta.id, container, load });
 
     // Network discipline: only the FIRST section bundle loads eagerly with
     // index.json; every other section fetches lazily when scrolled near.
+    // (onIntersectOnce also has its own synchronous "already in view" check
+    // now — see dom.mjs — as a second, independent safeguard for the same
+    // failure mode this hash handling targets.)
     if (i === 0) load();
     else onIntersectOnce(container, load);
   });
+
+  // Regression fix: a direct load at /site/#employment (or any #<section-id>
+  // URL) targets an element that doesn't exist until this point — the
+  // browser's native "scroll to fragment" has already had its one chance to
+  // find it and failed, silently, well before this line runs. Handle it
+  // ourselves: find the matching section (if the hash names one) and both
+  // scroll to it and load it directly, rather than depending on whatever
+  // scroll position the browser's failed native attempt left behind plus an
+  // IntersectionObserver tick that may or may not follow. Calling load()
+  // again for the i===0 section (already eager-loaded) is harmless —
+  // fetchSection caches by URL and renderSection clears-then-rebuilds.
+  const hashId = location.hash.replace(/^#/, '');
+  if (hashId) {
+    const target = records.find((r) => r.id === hashId);
+    if (target) {
+      target.container.scrollIntoView({ block: 'start' });
+      target.load();
+    }
+  }
 }
 
 function buildMasthead() {

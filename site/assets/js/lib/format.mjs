@@ -90,3 +90,15 @@ export function formatDateZh(isoString) {
   if (Number.isNaN(d.getTime())) return '—';
   return `${d.getUTCFullYear()} 年 ${d.getUTCMonth() + 1} 月 ${d.getUTCDate()} 日`;
 }
+
+// U+2460..U+2473 = circled digits ①..⑳ (1-20). Design-review fix: annotations
+// and break markers get a small on-chart numeral (never full sentence text —
+// that's what was crowding the endpoint value/gutter) plus a matching
+// numbered footnote line below the chart, at every viewport width.
+const CIRCLED_DIGITS = '①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳';
+
+/** 1 -> "①", 21+ -> "(21)" (fallback beyond the circled-digit table). */
+export function circledNumeral(n) {
+  if (n >= 1 && n <= CIRCLED_DIGITS.length) return CIRCLED_DIGITS[n - 1];
+  return `(${n})`;
+}

@@ -2,6 +2,18 @@
 // panels sharing ONE scale (VIZ-GUIDE rule 11), the panel title standing in
 // for a legend (rule 8: "no legends... panel title is the label"), endpoint
 // value colored 红涨绿跌.
+//
+// Design-review fix (item 7): the value used to be a separate <p> BELOW the
+// svg box, in plain block flow — with panels of differing data amplitude
+// (inherent to a shared scale, rule 11) that read as "line crammed at the
+// top with a large void, value floating at bottom-left" once the box wasn't
+// full. Fixed: the value now lives INSIDE the surface, absolutely positioned
+// at a consistent top-right corner (same physical spot on every panel
+// regardless of that panel's own line position), and the surface uses a
+// fixed CSS aspect-ratio matching its svg viewBox exactly (no stretch
+// distortion). Title now wraps to 2 lines instead of ellipsis-truncating
+// (also item 7), and prefers name_short (item 6) via section.mjs's
+// entryToPanel.
 
 import { h, clear } from '../lib/dom.mjs';
 import { extent, niceTicks, linearScale } from '../lib/scale.mjs';
@@ -12,10 +24,11 @@ import { formatPercent, formatNumber } from '../lib/format.mjs';
 import { getRangeYears, onRangeChange, onThemeChange } from '../store.mjs';
 import { svgEl } from '../lib/dom.mjs';
 
+const PANEL_WIDTH = 260; // abstract viewBox units, matches --sm-panel-aspect in main.css
 const PANEL_HEIGHT = 88;
 
 /**
- * @param panels [{ id, title, values:[{period,value}], derived, isPercent }]
+ * @param panels [{ id, title, values:[{period,value}], derived, isPercent, decimals }]
  */
 export function mountSmallMultiples(container, { panels, caption }) {
   clear(container);
@@ -26,6 +39,16 @@ export function mountSmallMultiples(container, { panels, caption }) {
   container.appendChild(shell);
 
   function render() {
+    try {
+      renderUnsafe();
+    } catch (err) {
+      console.error('[small-multiples] render failed:', err);
+      clear(grid);
+      grid.appendChild(h('p', { class: 'render-error-note' }, '该板块图表渲染失败，请刷新重试。'));
+    }
+  }
+
+  function renderUnsafe() {
     clear(grid);
     const withVisible = panels.map((p) => ({ ...p, pts: visible(p.values) }));
     const allVals = withVisible.flatMap((p) => p.pts.map((pt) => pt.value)).filter((v) => v !== null && v !== undefined);
@@ -36,7 +59,16 @@ export function mountSmallMultiples(container, { panels, caption }) {
     const { domain } = niceTicks(...extent(allVals), 4);
 
     const sorted = [...withVisible].sort((a, b) => latestOf(b) - latestOf(a));
-    for (const p of sorted) grid.appendChild(buildPanel(p, domain));
+    for (const p of sorted) {
+      // Design-review item 1: one malformed panel must not blank the whole
+      // grid — isolate per panel, console.error, inline fallback card.
+      try {
+        grid.appendChild(buildPanel(p, domain));
+      } catch (err) {
+        console.error(`[small-multiples] panel failed for ${p.id}:`, err);
+        grid.appendChild(buildErrorPanel(p));
+      }
+    }
   }
 
   function visible(values) {
@@ -51,29 +83,38 @@ export function mountSmallMultiples(container, { panels, caption }) {
     return last ? last.value : -Infinity;
   }
 
+  function buildErrorPanel(p) {
+    const card = h('div', { class: 'sm-panel sm-panel--error' });
+    card.appendChild(h('p', { class: 'sm-panel-title' }, p.title || p.id));
+    card.appendChild(h('p', { class: 'render-error-note' }, '该序列渲染失败'));
+    return card;
+  }
+
   function buildPanel(p, domain) {
     const card = h('div', { class: 'sm-panel' });
     card.appendChild(h('p', { class: 'sm-panel-title' }, p.title));
     const surface = h('div', { class: 'sm-panel-surface' });
     card.appendChild(surface);
+
     const last = [...p.pts].reverse().find((pt) => pt.value !== null && pt.value !== undefined);
     const decimals = p.decimals ?? null;
     const valueText = last ? (p.isPercent ? formatPercent(last.value, decimals) : formatNumber(last.value, decimals)) : '—';
-    card.appendChild(h('p', { class: 'sm-panel-value', style: { color: upDownColor(last ? last.value : null) } }, valueText));
+    const valueLabel = h('p', { class: 'sm-panel-value', style: { color: upDownColor(last ? last.value : null) } }, valueText);
+    surface.appendChild(valueLabel); // absolutely positioned by CSS, top-right of the surface — consistent baseline across all panels
 
     if (p.pts.length) {
-      // Fixed abstract viewBox (260x88); preserveAspectRatio="none" lets the
-      // SVG stretch to whatever width CSS Grid actually gives the panel.
-      // Safe here because these panels draw pure geometry only (no <text>) —
-      // rule 13's "never scale text via viewBox" doesn't apply to a line +
-      // a dot, and no ResizeObserver is needed since nothing is measured.
-      drawPanelSvg(surface, p, domain, 260);
+      // Fixed abstract viewBox (260x88), CSS aspect-ratio on .sm-panel-surface
+      // matches it exactly so no stretch distortion is needed; kept
+      // preserveAspectRatio="none" as a defensive belt-and-suspenders for any
+      // sub-pixel rounding mismatch. Safe to skip a ResizeObserver here (no
+      // <text> inside — rule 13's "never scale text via viewBox" doesn't
+      // apply to a line + a dot).
+      drawPanelSvg(surface, p, domain, PANEL_WIDTH);
     }
     return card;
   }
 
   function drawPanelSvg(surface, p, domain, width) {
-    clear(surface);
     const height = PANEL_HEIGHT;
     const svg = svgEl('svg', {
       viewBox: `0 0 ${width} ${height}`,
@@ -81,7 +122,7 @@ export function mountSmallMultiples(container, { panels, caption }) {
       class: 'chart-svg',
       'aria-hidden': 'true',
     });
-    surface.appendChild(svg);
+    surface.insertBefore(svg, surface.firstChild); // svg fills the box; value label (already appended) stays on top
     const ordinals = p.pts.map((pt) => periodOrdinal(pt.period));
     const xScale = linearScale([Math.min(...ordinals), Math.max(...ordinals)], [4, width - 4]);
     const yScale = linearScale(domain, [height - 6, 6]);

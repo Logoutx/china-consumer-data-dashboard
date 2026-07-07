@@ -36,10 +36,10 @@ export function mountSurface(container, { height, className = '' }) {
  */
 export function computeScales({ width, height, xDomain, yExtent, padding }) {
   const pad = { top: 10, right: 8, bottom: 8, left: 44, ...padding };
-  const { ticks, domain: yDomain } = niceTicks(yExtent[0], yExtent[1], 4);
+  const { ticks, domain: yDomain, step } = niceTicks(yExtent[0], yExtent[1], 4);
   const xScale = linearScale(xDomain, [pad.left, Math.max(pad.left + 1, width - pad.right)]);
   const yScale = linearScale(yDomain, [Math.max(pad.top + 1, height - pad.bottom), pad.top]);
-  return { xScale, yScale, yTicks: ticks, yDomain, pad };
+  return { xScale, yScale, yTicks: ticks, yDomain, yStep: step, pad };
 }
 
 /** Draw horizontal gridlines (VIZ-GUIDE rule 10): round steps, 1px, zero line strong. */

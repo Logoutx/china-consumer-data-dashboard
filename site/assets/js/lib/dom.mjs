@@ -60,16 +60,50 @@ export function onResize(el, cb, wait = 150) {
   return () => ro.disconnect();
 }
 
-/** Fires cb() once, the first time el scrolls near the viewport. Returns a disposer. */
+const LAZY_MARGIN_PX = 200;
+
+/**
+ * Fires cb() once, the first time el scrolls near the viewport. Returns a
+ * disposer.
+ *
+ * Regression fix (2026-07-08): a direct load at a URL fragment (e.g.
+ * /site/#employment) targets a section container that doesn't exist yet —
+ * app.mjs only builds it after fetchIndex() resolves — so the browser's
+ * native "scroll to fragment" has nothing to find at the moment it would
+ * normally try, and never retries once the element appears later via JS.
+ * Relying solely on IntersectionObserver's first (always-async) callback
+ * left that section's data never loading in this repro. This adds a
+ * synchronous geometry check at the moment observe() is called: if the
+ * element is ALREADY within the lazy-load margin right now — which can
+ * happen for more reasons than the fragment case above (a short initial
+ * page before other sections' content grows in, a very fast scroll before
+ * earlier sections finish loading, browser scroll-restoration on
+ * back/forward, ...) — cb() fires immediately rather than waiting on the
+ * observer's async tick at all. `fired` makes firing from both paths safe:
+ * whichever happens first wins, the other is a no-op.
+ */
 export function onIntersectOnce(el, cb, opts = {}) {
+  let fired = false;
+  const fireOnce = () => {
+    if (fired) return;
+    fired = true;
+    cb();
+  };
+
+  const rect = el.getBoundingClientRect();
+  const viewportHeight = window.innerHeight || 0;
+  if (rect.bottom >= -LAZY_MARGIN_PX && rect.top <= viewportHeight + LAZY_MARGIN_PX) {
+    fireOnce();
+  }
+
   const io = new IntersectionObserver((entries) => {
     for (const entry of entries) {
       if (entry.isIntersecting) {
         io.unobserve(el);
-        cb();
+        fireOnce();
       }
     }
-  }, { rootMargin: '200px 0px', ...opts });
+  }, { rootMargin: `${LAZY_MARGIN_PX}px 0px`, ...opts });
   io.observe(el);
   return () => io.disconnect();
 }

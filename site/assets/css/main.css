@@ -58,7 +58,12 @@ input {
     --ink-faint: #85837b;
     --grid: #2c2c29;
     --grid-strong: #4a4a45;
-    --context: #5c5b55;
+    /* Design-review item 10: #5c5b55 measured 2.06:1 against --grid (below
+       the 3:1 bar for adjacent graphical elements) — a tier-2 context series
+       line could read as barely distinguishable from a gridline in dark
+       mode. #7a7770 clears 3:1 against both --grid and --paper while staying
+       visually distinct from --grid-strong and --ink-faint. */
+    --context: #7a7770;
     --accent-red: #e0654f;
     --accent-blue: #82aac9;
     --fall-green: #8fc79c;
@@ -86,7 +91,7 @@ input {
   --ink-faint: #85837b;
   --grid: #2c2c29;
   --grid-strong: #4a4a45;
-  --context: #5c5b55;
+  --context: #7a7770; /* design-review item 10: see the @media dark block's comment */
   --accent-red: #e0654f;
   --accent-blue: #82aac9;
   --fall-green: #8fc79c;
@@ -209,6 +214,16 @@ body {
   padding: 10px 0;
 }
 
+/* Design-review item 1: a real render failure, distinct from the neutral
+   "pending" tone above — --accent-red is the site's one semantic-error
+   color already (also 涨/up), reused here for "something broke" rather than
+   introducing a second accent. */
+.render-error-note {
+  font-size: 12.5px;
+  color: var(--accent-red);
+  padding: 6px 0;
+}
+
 .tier-heading {
   font-family: var(--font-sans);
   font-size: 12.5px;
@@ -259,6 +274,24 @@ body {
   font-size: 11.5px;
   color: var(--ink-faint);
   margin: 8px 0 0;
+}
+
+/* Design-review items 2+5: annotations/breaks print only a small circled
+   numeral on the chart face (see .footnote-marker below); the full text
+   lives here, in normal HTML flow, at every viewport width. */
+.chart-footnotes {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.chart-footnotes li {
+  font-size: 12px;
+  color: var(--ink-soft);
+  line-height: 1.4;
 }
 
 /* -- chart surface: SVG geometry + HTML text overlay, same coordinate space -- */
@@ -358,6 +391,17 @@ body {
   font-weight: 700;
 }
 
+/* Design-review items 2+5: the on-chart marker is now just a circled
+   numeral (①②...), not full text — small enough to never meaningfully
+   compete with the endpoint gutter, and the full text lives in
+   .chart-footnotes below instead. Overrides the max-width/wrap rule above,
+   which no longer applies to a 1-2 character label. */
+.footnote-marker {
+  max-width: none;
+  white-space: nowrap;
+  font-weight: 700;
+}
+
 .end-label {
   font-size: 13px;
 }
@@ -426,34 +470,61 @@ body {
 
 .sm-panel {
   /* Grid items default to min-width:auto (sized to content) — without this,
-     the title's overflow:hidden/text-overflow:ellipsis below has no narrower
-     box to truncate against and long category names blow out the column. */
+     the title's 2-line clamp below has no narrower box to wrap against and
+     long category names blow out the column. */
+  display: flex;
+  flex-direction: column;
   min-width: 0;
 }
 
+/* Design-review item 7: titles must not ellipsize — wrap to (at most) 2
+   lines instead (prefers name_short, wired in section.mjs). min-height
+   reserves space for 2 lines even when a short name only needs 1, so every
+   panel's surface starts at the same y — the "consistent baseline" ask. */
 .sm-panel-title {
   font-size: 12px;
   color: var(--ink-soft);
-  margin: 0 0 2px;
-  white-space: nowrap;
+  margin: 0 0 4px;
+  line-height: 1.3;
+  min-height: calc(1.3em * 2);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
+/* Fixed aspect ratio matches the svg's own viewBox (260x88) exactly, so
+   preserveAspectRatio="none" in JS never has to stretch-distort the line —
+   "sparkline filling the middle at fixed aspect" (item 7). */
 .sm-panel-surface {
   position: relative;
   width: 100%;
-  height: 56px;
+  aspect-ratio: 260 / 88;
 }
 
 .sm-panel-surface .chart-svg {
-  position: static;
+  position: absolute;
+  inset: 0;
 }
 
+/* Design-review item 7: moved INSIDE .sm-panel-surface (was a separate <p>
+   below it, in plain block flow — with panels of differing data amplitude,
+   that read as "value floating at bottom-left" once the line didn't fill
+   the box). A fixed top-right corner is the same physical spot on every
+   panel regardless of that panel's own line position. */
 .sm-panel-value {
+  position: absolute;
+  top: 2px;
+  right: 2px;
   font-size: 13px;
   font-weight: 700;
-  margin: 2px 0 0;
+  background: color-mix(in srgb, var(--paper) 80%, transparent);
+  padding: 0 2px;
+  line-height: 1.3;
+}
+
+.sm-panel--error {
+  min-height: 56px;
 }
 
 /* -- Tier-3 pulse rows ------------------------------------------------------------ */

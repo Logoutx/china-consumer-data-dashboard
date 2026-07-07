@@ -1,25 +1,38 @@
 // tests.mjs — unit tests for this app's PURE functions, runnable with:
 //   node --test site/assets/js/tests.mjs
 //
-// Scope, deliberately: only modules that never touch `document`/`window` at
-// import time. store.mjs (touches `window.matchMedia`) and config.mjs (touches
-// `location`) are guarded to no-op under Node (see their own files) so they
-// COULD be imported here too, but the DOM-driving modules (app.mjs,
-// components/line-chart.mjs, components/section.mjs, ...) call
-// document.createElement etc. as soon as their mount functions run — those
-// are exercised by the manual browser checklist in the build report instead,
-// not here. This file covers exactly the "scale math, tick rounding,
-// pangu-format helpers, path building" the task asked to extract and test.
+// Scope: modules that never touch `document`/`window` at import time.
+// store.mjs (touches `window.matchMedia`) and config.mjs (touches
+// `location`) are guarded to no-op under Node (see their own files), which
+// means every module that only imports THOSE plus other pure modules is now
+// safely importable here too, including components/section.mjs (its pure
+// decision functions — resolveHeadlineAndDek, primarySeriesValues,
+// seriesForCaliber, buildCaliberOption, buildSourceLine — are exported
+// specifically so the design-review fixes are unit-testable, not just
+// eyeballed). Still out of scope: anything that calls document.createElement
+// etc. as soon as it RUNS (app.mjs's main(), any component's mount*
+// function actually invoked) — those need a real DOM and are exercised by
+// the manual browser checklist in site/DEV-NOTES.md instead.
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { isCJK, needsPanguSpace, panguJoin, formatNumber, formatPercent, formatPP, formatDateZh } from './lib/format.mjs';
+import { isCJK, needsPanguSpace, panguJoin, formatNumber, formatPercent, formatPP, formatDateZh, circledNumeral } from './lib/format.mjs';
 import { periodShape, periodOrdinal, withinRangeYears } from './lib/period.mjs';
-import { extent, niceTicks, linearScale } from './lib/scale.mjs';
+import { extent, niceTicks, linearScale, decimalsForStep } from './lib/scale.mjs';
 import { linePathD } from './lib/path.mjs';
 import { upDownColor, upDownClass, agencyZhFromId } from './lib/color.mjs';
 import { buildCityRows } from './components/city-grid.mjs';
+import {
+  resolveHeadlineAndDek,
+  displayName,
+  agencyFor,
+  levelDecimals,
+  primarySeriesValues,
+  seriesForCaliber,
+  buildCaliberOption,
+  buildSourceLine,
+} from './components/section.mjs';
 
 // -- format.mjs ---------------------------------------------------------------
 
@@ -222,4 +235,171 @@ test('buildCityRows tolerates a city missing from latest_by_city entirely', () =
   const rows = buildCityRows(panel, 'new_home', 'resale_home');
   assert.equal(rows[0].latestPrimary, null);
   assert.equal(rows[0].latestSecondary, null);
+});
+
+// -- design-review fixes ------------------------------------------------------------
+
+test('circledNumeral: ①..⑳ then a bracketed fallback', () => {
+  assert.equal(circledNumeral(1), '①');
+  assert.equal(circledNumeral(2), '②');
+  assert.equal(circledNumeral(20), '⑳');
+  assert.equal(circledNumeral(21), '(21)');
+});
+
+test('decimalsForStep (item 3): whole numbers when step>=1, else the step\'s own decimal count', () => {
+  assert.equal(decimalsForStep(20), 0);
+  assert.equal(decimalsForStep(1), 0);
+  assert.equal(decimalsForStep(0.5), 1);
+  assert.equal(decimalsForStep(0.2), 1);
+  assert.equal(decimalsForStep(0.05), 2);
+  assert.equal(decimalsForStep(0), 0);
+});
+
+test('niceTicks (item 4 regression): CPI domain [-0.8, 2.8] no longer over-pads to [-2, 4]', () => {
+  // The exact case from design review: rendered on [-2,4] (span 6) before
+  // the fix; the direct single-stage step formula tightens this to a span
+  // of 4, still bracketing the data with round numbers.
+  const { domain, ticks } = niceTicks(-0.8, 2.8, 4);
+  assert.deepEqual(domain, [-1, 3]);
+  assert.deepEqual(ticks, [-1, 0, 1, 2, 3]);
+  assert.ok(domain[1] - domain[0] < 6, 'must be tighter than the old 6-unit span');
+});
+
+test('niceTicks: escalates step to stay within the 3-5 tick cap even for domains the direct formula would overshoot', () => {
+  const { ticks } = niceTicks(-41090, 0, 4);
+  assert.ok(ticks.length >= 3 && ticks.length <= 5, `got ${ticks.length} ticks`);
+});
+
+test('niceTicks: 3-5 ticks holds across every real data range this app renders', () => {
+  const domains = [
+    [-0.6, 5.9],
+    [-5.93, -0.2],
+    [0, 45396],
+    [100, 101.2],
+    [-206031, -160000],
+    [0, 70],
+    [3.6, 4.9],
+  ];
+  for (const [min, max] of domains) {
+    const { ticks } = niceTicks(min, max, 4);
+    assert.ok(ticks.length >= 3 && ticks.length <= 5, `domain [${min},${max}] produced ${ticks.length} ticks`);
+  }
+});
+
+// -- section.mjs pure decision functions -----------------------------------------------
+
+function makeEntry(overrides = {}) {
+  return {
+    id: 'nbs-test-series',
+    name_zh: '测试序列',
+    name_en: 'Test series',
+    unit_zh: '%',
+    value_type: 'index',
+    calibers: ['single'],
+    latest: { period: '2026-05', period_label_zh: '2026 年 5 月', m: 101.2, m_yoy: 1.2 },
+    headline: { caliber: 'single' },
+    takeaway: null,
+    yoy_series: [{ period: '2026-05', yoy: 1.2 }],
+    level_series: [{ period: '2026-05', m: 101.2 }],
+    annotations: [],
+    breaks: [],
+    flags_latest: [],
+    revisions_recent: [],
+    ...overrides,
+  };
+}
+
+test('resolveHeadlineAndDek (item 6): no takeaway -> headline=name, dek=unit ONLY (never duplicated)', () => {
+  const entry = makeEntry({ takeaway: null, name_zh: '制造业 PMI' });
+  const { headlineText, dekText } = resolveHeadlineAndDek(entry);
+  assert.equal(headlineText, '制造业 PMI');
+  assert.equal(dekText, '%'); // unit only -- NOT "制造业 PMI · %" (that would repeat the headline)
+});
+
+test('resolveHeadlineAndDek: real takeaway -> headline=takeaway, dek="name · unit"', () => {
+  const entry = makeEntry({ takeaway: '2026 年 5 月制造业 PMI 为 50.2，高于荣枯线', name_zh: '制造业 PMI', name_short: 'PMI' });
+  const { headlineText, dekText } = resolveHeadlineAndDek(entry);
+  assert.equal(headlineText, '2026 年 5 月制造业 PMI 为 50.2，高于荣枯线');
+  assert.equal(dekText, 'PMI · %'); // prefers name_short
+});
+
+test('resolveHeadlineAndDek: takeaway identical to the name is treated as "no takeaway" (still no duplicate)', () => {
+  const entry = makeEntry({ takeaway: '测试序列', name_zh: '测试序列' });
+  const { headlineText, dekText } = resolveHeadlineAndDek(entry);
+  assert.equal(headlineText, '测试序列');
+  assert.equal(dekText, '%');
+});
+
+test('displayName/agencyFor/levelDecimals (item 6): prefer bundle-provided fields, fall back gracefully', () => {
+  assert.equal(displayName(makeEntry({ name_short: 'PMI', name_zh: '制造业 PMI' })), 'PMI');
+  assert.equal(displayName(makeEntry({ name_short: undefined, name_zh: '制造业 PMI' })), '制造业 PMI');
+
+  assert.equal(agencyFor(makeEntry({ source: { agency_zh: '中国物流与采购联合会' } })), '中国物流与采购联合会');
+  assert.equal(agencyFor(makeEntry({ source: undefined, id: 'pbc-m1' })), '中国人民银行'); // falls back to id-prefix guess
+
+  assert.equal(levelDecimals(makeEntry({ decimals: 2 })), 2);
+  assert.equal(levelDecimals(makeEntry({ decimals: undefined })), null);
+});
+
+test('primarySeriesValues: prefers entry.decimals for the LEVEL lane, never for the YoY lane', () => {
+  const levelOnly = makeEntry({
+    value_type: 'level',
+    decimals: 0,
+    yoy_series: [{ period: '2026-05', yoy: null }],
+    level_series: [{ period: '2026-05', m: 7955 }],
+  });
+  const { decimals, isPercent } = primarySeriesValues(levelOnly);
+  assert.equal(isPercent, false);
+  assert.equal(decimals, 0); // uses entry.decimals for the level lane
+
+  const yoyCase = makeEntry({ decimals: 0, yoy_series: [{ period: '2026-05', yoy: 3.6 }] });
+  const yoyResult = primarySeriesValues(yoyCase);
+  assert.equal(yoyResult.isPercent, true);
+  assert.equal(yoyResult.decimals, null); // YoY lane always infers natural precision, ignoring entry.decimals
+});
+
+test('seriesForCaliber (item 9, feature-detected): "single" always resolves (it is just today\'s plain yoy_series/level_series); "ytd" is null until the bundle grows the new suffixed fields', () => {
+  const entry = makeEntry(); // no yoy_series_ytd/level_series_ytd -- today's reality
+  assert.deepEqual(seriesForCaliber(entry, 'single'), { values: [{ period: '2026-05', value: 1.2 }], isPercent: true });
+  assert.equal(seriesForCaliber(entry, 'ytd'), null);
+});
+
+test('seriesForCaliber: detects yoy_series_ytd/level_series_ytd when present and prefers the yoy lane', () => {
+  const entry = makeEntry({
+    yoy_series_ytd: [{ period: '2026-05', yoy: 4.7 }],
+    level_series_ytd: [{ period: '2026-05', m: 206031 }],
+  });
+  const result = seriesForCaliber(entry, 'ytd');
+  assert.deepEqual(result, { values: [{ period: '2026-05', value: 4.7 }], isPercent: true });
+});
+
+test('buildCaliberOption: null when the series only has one caliber', () => {
+  assert.equal(buildCaliberOption(makeEntry({ calibers: ['single'] })), null);
+});
+
+test('buildCaliberOption: builds single/ytd blocks (and stays text-only for the toggle when no ytd-suffixed series arrays exist)', () => {
+  const entry = makeEntry({
+    calibers: ['single', 'ytd'],
+    value_type: 'level',
+    unit_zh: '亿元',
+    decimals: 1, // matches the real nbs-retail-total sample seen in the built bundle
+    latest: { period: '2026-05', period_label_zh: '2026 年 5 月', m: 41090, m_yoy: -0.6, ytd: 206031, ytd_yoy: 1.4 },
+  });
+  const caliber = buildCaliberOption(entry);
+  assert.equal(caliber.single.valueText, '41,090.0 亿元');
+  assert.equal(caliber.single.yoyText, '同比 -0.6%');
+  assert.equal(caliber.ytd.valueText, '206,031.0 亿元');
+  // "single" always resolves (today's plain yoy_series), so the toggle's
+  // fullSwapAvailable gate (line-chart.mjs) correctly still requires BOTH
+  // single AND ytd series to be present -- ytd stays absent until the
+  // bundle grows yoy_series_ytd/level_series_ytd, so the toggle is
+  // text-only today even though .single.series now exists.
+  assert.ok(caliber.single.series);
+  assert.equal(caliber.ytd.series, undefined);
+});
+
+test('buildSourceLine: prefers entry.source.agency_zh, flags revisions with ※', () => {
+  const entry = makeEntry({ source: { agency_zh: '中国物流与采购联合会' }, revisions_recent: [{ period: '2026-04', measure: 'm' }] });
+  const line = buildSourceLine(entry, 'single');
+  assert.equal(line, '资料来源：中国物流与采购联合会 · 截至 2026 年 5 月 · 当月口径 ※ 历史数据已修订');
 });

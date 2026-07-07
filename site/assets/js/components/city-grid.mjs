@@ -46,6 +46,9 @@ export function mountCityGrid(container, { fetchPanel, primaryMetric = 'new_home
         renderGrid(q ? cities.filter((c) => c.city.includes(q)) : cities);
       });
     } catch (err) {
+      // Design-review item 1: was silently swallowed (no console.error) —
+      // exactly the "cost me a debugging round" complaint from review.
+      console.error('[city-grid] panel fetch/build failed:', err);
       status.textContent = '70 城数据加载失败，请刷新重试';
     }
   });
@@ -57,7 +60,15 @@ export function mountCityGrid(container, { fetchPanel, primaryMetric = 'new_home
       grid.appendChild(h('p', { class: 'chart-empty-note' }, '没有匹配的城市'));
       return;
     }
-    for (const c of sorted) grid.appendChild(buildMini(c));
+    for (const c of sorted) {
+      // Design-review item 1: one malformed city row must not blank the grid.
+      try {
+        grid.appendChild(buildMini(c));
+      } catch (err) {
+        console.error(`[city-grid] mini failed for ${c.city}:`, err);
+        grid.appendChild(h('p', { class: 'render-error-note' }, `${c.city}：渲染失败`));
+      }
+    }
   }
 
   function buildMini(c) {
