@@ -1,0 +1,34 @@
+{
+  "schema": "series/v1",
+  "id": "test-retail-revised",
+  "name_zh": "测试_社会消费品零售总额",
+  "name_en": "TEST retail total",
+  "unit_zh": "亿元",
+  "unit_en": "100M CNY",
+  "value_type": "level",
+  "freq": "M",
+  "calibers": ["single", "ytd"],
+  "decimals": 1,
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（非真实序列，仅供 build.py 契约测试使用）",
+    "dataset_en": "Synthetic test series for build.py contract tests (not real data)",
+    "url": "https://example.invalid/test-retail-revised"
+  },
+  "derived": null,
+  "coverage_note_zh": null,
+  "observations": [
+    { "period": "2025-02", "span": 2, "flags": ["jan_feb"], "m": 76500, "m_yoy": 3.2, "ytd": 76500, "ytd_yoy": 3.2, "src": "rel:test-2025-02" },
+    { "period": "2025-03", "m": 38900, "m_yoy": 4.1, "ytd": 115400, "ytd_yoy": 3.6, "src": "rel:test-2025-03" },
+    { "period": "2026-02", "span": 2, "flags": ["jan_feb"], "m": 83726, "m_yoy": 4.0, "ytd": 83726, "ytd_yoy": 4.0, "src": "rel:test-2026-02" },
+    { "period": "2026-03", "m": 40940, "m_yoy": 5.9, "ytd": 124671, "ytd_yoy": 4.6, "src": "rel:test-2026-03" },
+    { "period": "2026-04", "m": 40200, "m_yoy": 5.1, "ytd": 165021, "ytd_yoy": 4.7, "src": "rel:test-2026-04" },
+    { "period": "2026-05", "m": 41090, "m_yoy": -0.6, "ytd": 206031, "ytd_yoy": 1.4, "src": "rel:test-2026-05" }
+  ],
+  "revisions": [
+    { "period": "2026-03", "measure": "m_yoy", "old": 5.8, "new": 5.9, "revised_on": "2025-12-01", "source": "legacy-migration", "note": "旧口径迁移遗留，非近期修订" },
+    { "period": "2026-04", "measure": "ytd", "old": 165000, "new": 165021, "revised_on": "2026-06-16", "source": "rel:test-2026-05" }
+  ],
+  "breaks": [],
+  "generated_at": "2026-06-20T00:00:00Z"
+}

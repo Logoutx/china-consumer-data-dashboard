@@ -1,0 +1,38 @@
+{
+  "schema": "series/v1",
+  "id": "nbs-income-median-rural",
+  "name_zh": "农村居民人均可支配收入中位数",
+  "name_en": "Rural median per capita disposable income",
+  "unit_zh": "元",
+  "unit_en": "CNY",
+  "value_type": "level",
+  "freq": "Q",
+  "calibers": ["ytd"],
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "国家统计局住户收支调查 · 农村居民人均可支配收入中位数",
+    "dataset_en": "NBS Household Income and Expenditure Survey — Rural median per capita disposable income",
+    "url": "https://www.stats.gov.cn/sj/zxfb/"
+  },
+  "derived": null,
+  "coverage_note_zh": "2017年一季度起为完整居民收入和消费支出发布稿口径；2013-2016年为历史补充层，仅补入官方页面可核验的指标，缺项留空。",
+  "observations": [
+    {"period": "2022-Q1", "ytd": 4608.0, "ytd_yoy": 6.2, "src": "legacy:2022-03"},
+    {"period": "2022-Q2", "ytd": 8410.0, "ytd_yoy": 5.7, "src": "legacy:2022-06"},
+    {"period": "2022-Q3", "ytd": 12668.0, "ytd_yoy": 5.9, "src": "legacy:2022-09"},
+    {"period": "2022-Q4", "ytd": 17734.0, "ytd_yoy": 4.9, "src": "legacy:2022-12"},
+    {"period": "2023-Q1", "ytd": 4864.0, "ytd_yoy": 5.6, "src": "legacy:2023-03"},
+    {"period": "2023-Q4", "ytd": 18748.0, "ytd_yoy": 5.7, "src": "legacy:2023-12"},
+    {"period": "2024-Q1", "ytd": 5243.0, "ytd_yoy": 7.8, "src": "legacy:2024-03"},
+    {"period": "2024-Q2", "ytd": 9539.0, "ytd_yoy": 6.9, "src": "rel:20240715"},
+    {"period": "2024-Q3", "ytd": 14310.0, "ytd_yoy": 6.8, "src": "rel:20241018"},
+    {"period": "2025-Q1", "ytd": 5575.0, "ytd_yoy": 6.3, "src": "rel:20250416"},
+    {"period": "2025-Q2", "ytd": 10060.0, "ytd_yoy": 5.5, "src": "legacy:2025-06"},
+    {"period": "2025-Q3", "ytd": 15036.0, "ytd_yoy": 5.1, "src": "rel:20251020"},
+    {"period": "2025-Q4", "ytd": 20711.0, "ytd_yoy": 5.6, "src": "rel:20260119"},
+    {"period": "2026-Q1", "ytd": 5909.0, "ytd_yoy": 6.0, "src": "rel:20260416"}
+  ],
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-07-08T00:00:00Z"
+}

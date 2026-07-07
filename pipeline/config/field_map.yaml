@@ -1,0 +1,80 @@
+# field_map.yaml -- source vocabulary -> canonical series id (DATA-CONTRACT §11.1).
+#
+# Keyed by ParsedRelease.source, then by ParsedRow.source_field (the raw Chinese
+# label a parser read off the release page). The *measure* for each row is NOT
+# looked up here -- it travels directly on the row as `caliber_hint`, already one
+# of the six observation measure names (m/m_yoy/ytd/ytd_yoy/mom/real_yoy). See the
+# "caliber_hint" design note in pipeline/__init__.py for why.
+#
+# PLACEHOLDER IDS: the real catalog (data/catalog.json, data/series/*.json) is being
+# built concurrently by another agent in this same rebuild. The ids below are
+# reasonable, contract-shaped (agency-slug[-qualifier]) guesses so this pipeline is
+# runnable and testable end-to-end today -- they are NOT guaranteed to match
+# whatever ids the real catalog ultimately mints. Reconcile before pointing
+# normalize.py at the real data/series/ tree.
+
+nbs-cpi:
+  居民消费价格: nbs-cpi
+  城市: nbs-cpi-urban
+  农村: nbs-cpi-rural
+  食品: nbs-cpi-food
+  非食品: nbs-cpi-nonfood
+  消费品: nbs-cpi-goods
+  服务: nbs-cpi-services
+  不包括食品和能源: nbs-cpi-core
+  食品烟酒及在外餐饮: nbs-cpi-cat-food-tobacco
+  衣着: nbs-cpi-cat-clothing
+  居住: nbs-cpi-cat-housing
+  生活用品及服务: nbs-cpi-cat-household-goods
+  交通通信: nbs-cpi-cat-transport-comm
+  教育文化娱乐: nbs-cpi-cat-education-culture
+  医疗保健: nbs-cpi-cat-health
+  其他用品及服务: nbs-cpi-cat-other
+
+nbs-retail:
+  社会消费品零售总额: nbs-retail-total
+  除汽车以外的消费品零售额: nbs-retail-ex-auto
+  限额以上单位消费品零售额: nbs-retail-above-quota-total
+  网上商品零售额: nbs-retail-online-goods
+  网上商品和服务零售额: nbs-retail-online-total
+  网上服务零售额: nbs-retail-online-services
+  城镇: nbs-retail-urban
+  乡村: nbs-retail-rural
+  餐饮收入: nbs-retail-catering
+  限额以上单位餐饮收入: nbs-retail-above-quota-catering
+  商品零售额: nbs-retail-goods
+  限额以上单位商品零售额: nbs-retail-above-quota-goods
+  粮油、食品类: nbs-retail-cat-grain-food
+  饮料类: nbs-retail-cat-beverage
+  烟酒类: nbs-retail-cat-tobacco-alcohol
+  服装、鞋帽、针纺织品类: nbs-retail-cat-garments
+  化妆品类: nbs-retail-cat-cosmetics
+  金银珠宝类: nbs-retail-cat-gold-jewelry
+  日用品类: nbs-retail-cat-daily-goods
+  体育、娱乐用品类: nbs-retail-cat-sports-entertainment
+  书报杂志类: nbs-retail-cat-books-magazines
+  家用电器和音像器材类: nbs-retail-cat-household-appliances
+  中西药品类: nbs-retail-cat-medicine
+  文化办公用品类: nbs-retail-cat-cultural-office
+  家具类: nbs-retail-cat-furniture
+  通讯器材类: nbs-retail-cat-communication
+  石油及制品类: nbs-retail-cat-petroleum
+  汽车类: nbs-retail-cat-auto
+  建筑及装潢材料类: nbs-retail-cat-building-materials
+
+pbc-money:
+  M2: pbc-m2
+  M1: pbc-m1
+  M0: pbc-m0
+  社会融资规模存量: pbc-tsf-stock
+  社会融资规模增量: pbc-tsf-flow
+  对实体经济发放的人民币贷款余额: pbc-tsf-rmb-loans-stock
+  对实体经济发放的人民币贷款增加: pbc-tsf-rmb-loans-flow
+  人民币贷款余额: pbc-rmb-loans-stock
+  人民币贷款增加: pbc-rmb-loans-flow
+  人民币存款余额: pbc-rmb-deposits-stock
+  人民币存款增加: pbc-rmb-deposits-flow
+  本外币存款余额: pbc-deposits-total-stock
+  本外币贷款余额: pbc-loans-total-stock
+  住户存款增加: pbc-household-deposits-flow
+  住户贷款增加: pbc-household-loans-flow

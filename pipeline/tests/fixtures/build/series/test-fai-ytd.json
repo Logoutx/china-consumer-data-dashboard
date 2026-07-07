@@ -1,0 +1,29 @@
+{
+  "schema": "series/v1",
+  "id": "test-fai-ytd",
+  "name_zh": "测试_固定资产投资",
+  "name_en": "TEST fixed-asset investment",
+  "unit_zh": "%",
+  "unit_en": "%",
+  "value_type": "level",
+  "freq": "M",
+  "calibers": ["ytd"],
+  "decimals": 1,
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（非真实序列，仅供 build.py 契约测试使用）",
+    "dataset_en": "Synthetic test series for build.py contract tests (not real data)",
+    "url": "https://example.invalid/test-fai-ytd"
+  },
+  "derived": null,
+  "coverage_note_zh": "测试用 YTD-only 序列：仅有累计口径，无当月单值。",
+  "observations": [
+    { "period": "2026-02", "ytd": 8500, "ytd_yoy": 3.0, "src": "rel:test-2026-02" },
+    { "period": "2026-03", "ytd": 13200, "ytd_yoy": 3.5, "src": "rel:test-2026-03" },
+    { "period": "2026-04", "ytd": 18000, "ytd_yoy": 3.2, "src": "rel:test-2026-04" },
+    { "period": "2026-05", "ytd": 23500, "ytd_yoy": 3.8, "src": "rel:test-2026-05" }
+  ],
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-06-20T00:00:00Z"
+}

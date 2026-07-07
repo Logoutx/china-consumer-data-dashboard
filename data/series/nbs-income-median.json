@@ -1,0 +1,40 @@
+{
+  "schema": "series/v1",
+  "id": "nbs-income-median",
+  "name_zh": "居民人均可支配收入中位数",
+  "name_en": "Median per capita disposable income",
+  "unit_zh": "元",
+  "unit_en": "CNY",
+  "value_type": "level",
+  "freq": "Q",
+  "calibers": ["ytd"],
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "国家统计局住户收支调查 · 居民人均可支配收入中位数",
+    "dataset_en": "NBS Household Income and Expenditure Survey — Median per capita disposable income",
+    "url": "https://www.stats.gov.cn/sj/zxfb/"
+  },
+  "derived": null,
+  "coverage_note_zh": "2017年一季度起为完整居民收入和消费支出发布稿口径；2013-2016年为历史补充层，仅补入官方页面可核验的指标，缺项留空。",
+  "observations": [
+    {"period": "2016-Q1", "ytd": 5670.0, "ytd_yoy": 8.7, "src": "legacy-annual-bulletin"},
+    {"period": "2016-Q2", "ytd": 10505.0, "ytd_yoy": 8.3, "src": "legacy-annual-bulletin"},
+    {"period": "2022-Q1", "ytd": 8504.0, "ytd_yoy": 6.1, "src": "legacy:2022-03"},
+    {"period": "2022-Q2", "ytd": 15560.0, "ytd_yoy": 4.5, "src": "legacy:2022-06"},
+    {"period": "2022-Q3", "ytd": 23277.0, "ytd_yoy": 5.1, "src": "legacy:2022-09"},
+    {"period": "2022-Q4", "ytd": 31370.0, "ytd_yoy": 4.7, "src": "legacy:2022-12"},
+    {"period": "2023-Q1", "ytd": 8895.0, "ytd_yoy": 4.6, "src": "legacy:2023-03"},
+    {"period": "2023-Q4", "ytd": 33036.0, "ytd_yoy": 5.3, "src": "legacy:2023-12"},
+    {"period": "2024-Q1", "ytd": 9462.0, "ytd_yoy": 6.4, "src": "legacy:2024-03"},
+    {"period": "2024-Q2", "ytd": 17358.0, "ytd_yoy": 5.9, "src": "rel:20240715"},
+    {"period": "2024-Q3", "ytd": 25978.0, "ytd_yoy": 5.9, "src": "rel:20241018"},
+    {"period": "2025-Q1", "ytd": 9939.0, "ytd_yoy": 5.0, "src": "rel:20250416"},
+    {"period": "2025-Q2", "ytd": 18186.0, "ytd_yoy": 4.8, "src": "legacy:2025-06"},
+    {"period": "2025-Q3", "ytd": 27149.0, "ytd_yoy": 4.5, "src": "rel:20251020"},
+    {"period": "2025-Q4", "ytd": 36231.0, "ytd_yoy": 4.4, "src": "rel:20260119"},
+    {"period": "2026-Q1", "ytd": 10433.0, "ytd_yoy": 5.0, "src": "rel:20260416"}
+  ],
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-07-08T00:00:00Z"
+}

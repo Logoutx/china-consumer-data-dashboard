@@ -1,0 +1,44 @@
+{
+  "schema": "series/v1",
+  "id": "test-cpi-break",
+  "name_zh": "测试_居民消费价格指数",
+  "name_en": "TEST CPI",
+  "unit_zh": "%",
+  "unit_en": "%",
+  "value_type": "index",
+  "freq": "M",
+  "calibers": ["single"],
+  "decimals": 1,
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（非真实序列，仅供 build.py 契约测试使用）",
+    "dataset_en": "Synthetic test series for build.py contract tests (not real data)",
+    "url": "https://example.invalid/test-cpi-break"
+  },
+  "derived": null,
+  "coverage_note_zh": null,
+  "observations": [
+    { "period": "2025-11", "m": 101.8, "m_yoy": 1.8, "src": "rel:test-11" },
+    { "period": "2025-12", "m": 101.9, "m_yoy": 1.9, "src": "rel:test-12" },
+    { "period": "2026-01", "m": 100.1, "flags": ["old_caliber"], "src": "rel:test-01" },
+    { "period": "2026-02", "m": 100.3, "src": "rel:test-02" },
+    { "period": "2026-03", "m": 100.5, "src": "rel:test-03" },
+    { "period": "2026-04", "m": 100.7, "m_yoy": 2.2, "src": "rel:test-04" },
+    { "period": "2026-05", "m": 100.9, "m_yoy": 2.5, "src": "rel:test-05" },
+    { "period": "2026-06", "m": 101.0, "m_yoy": 2.0, "src": "rel:test-06" }
+  ],
+  "revisions": [],
+  "breaks": [
+    {
+      "effective": "2026-01",
+      "kind": "rebase",
+      "no_yoy_across": true,
+      "yoy_valid_from": "2026-04",
+      "supersedes": null,
+      "superseded_by": null,
+      "note_zh": "测试断点：跨基期同比不可比，2026-04 起同比恢复发布。",
+      "note_en": "test break: YoY not comparable across the rebase seam; resumes 2026-04."
+    }
+  ],
+  "generated_at": "2026-06-20T00:00:00Z"
+}

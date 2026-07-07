@@ -1,0 +1,28 @@
+{
+  "schema": "series/v1",
+  "id": "test-retail-total",
+  "name_zh": "测试_社会消费品零售总额",
+  "name_en": "TEST Total retail sales of consumer goods",
+  "unit_zh": "亿元",
+  "unit_en": "100M CNY",
+  "value_type": "level",
+  "freq": "M",
+  "calibers": ["single", "ytd"],
+  "decimals": 1,
+  "source": {
+    "agency": "nbs",
+    "dataset_zh": "测试数据集（非真实序列，仅供 normalize.py 契约测试使用）",
+    "dataset_en": "Synthetic test series for normalize.py contract tests (not real data)",
+    "url": "https://example.invalid/test-retail-total"
+  },
+  "derived": null,
+  "coverage_note_zh": null,
+  "observations": [
+    { "period": "2026-02", "span": 2, "flags": ["jan_feb"], "m": 83726, "m_yoy": 4.0, "ytd": 83726, "ytd_yoy": 4.0, "src": "rel:test-02" },
+    { "period": "2026-03", "m": 40940, "m_yoy": 5.9, "ytd": 124671, "ytd_yoy": 4.6, "src": "rel:test-03" },
+    { "period": "2026-04", "m": 40200, "m_yoy": 5.1, "ytd": 165000, "ytd_yoy": 4.7, "src": "rel:test-04" }
+  ],
+  "revisions": [],
+  "breaks": [],
+  "generated_at": "2026-06-01T00:00:00Z"
+}

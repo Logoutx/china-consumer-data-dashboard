@@ -1,0 +1,10 @@
+{
+  "test-retail-revised": {
+    "_series": [
+      { "text_zh": "测试用序列级备注。", "kind": "context", "author": "test", "added_on": "2026-06-01" }
+    ],
+    "2026-03": [
+      { "text_zh": "测试用期间备注。", "kind": "event", "author": "test", "added_on": "2026-06-01" }
+    ]
+  }
+}

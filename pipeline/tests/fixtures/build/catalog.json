@@ -1,0 +1,104 @@
+{
+  "schema": "catalog/v1",
+  "version": "test-1",
+  "generated_at": "2026-06-20T00:00:00Z",
+  "sections": [
+    { "id": "prices", "name_zh": "物价", "name_en": "Prices", "order": 0 },
+    { "id": "consumption", "name_zh": "消费", "name_en": "Consumption", "order": 1 },
+    { "id": "macro", "name_zh": "宏观大盘", "name_en": "Macro", "order": 2 },
+    { "id": "property", "name_zh": "楼市", "name_en": "Property", "order": 3 }
+  ],
+  "series": [
+    {
+      "id": "test-cpi-break",
+      "name_zh": "测试_居民消费价格指数",
+      "name_en": "TEST CPI",
+      "section": "prices",
+      "tier": 1,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "index",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": ["single"],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（非真实序列，仅供 build.py 契约测试使用）",
+        "dataset_en": "Synthetic test series for build.py contract tests (not real data)",
+        "url": "https://example.invalid/test-cpi-break"
+      },
+      "breaks": [
+        { "effective": "2026-01", "kind": "rebase", "no_yoy_across": true }
+      ],
+      "derived": null,
+      "file": "series/test-cpi-break.json"
+    },
+    {
+      "id": "test-retail-revised",
+      "name_zh": "测试_社会消费品零售总额",
+      "name_en": "TEST retail total",
+      "section": "consumption",
+      "tier": 1,
+      "unit_zh": "亿元",
+      "unit_en": "100M CNY",
+      "value_type": "level",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": ["single", "ytd"],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（非真实序列，仅供 build.py 契约测试使用）",
+        "dataset_en": "Synthetic test series for build.py contract tests (not real data)",
+        "url": "https://example.invalid/test-retail-revised"
+      },
+      "derived": null,
+      "file": "series/test-retail-revised.json"
+    },
+    {
+      "id": "test-fai-ytd",
+      "name_zh": "测试_固定资产投资",
+      "name_en": "TEST fixed-asset investment",
+      "section": "macro",
+      "tier": 2,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "level",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": ["ytd"],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（非真实序列，仅供 build.py 契约测试使用）",
+        "dataset_en": "Synthetic test series for build.py contract tests (not real data)",
+        "url": "https://example.invalid/test-fai-ytd"
+      },
+      "derived": null,
+      "file": "series/test-fai-ytd.json"
+    },
+    {
+      "id": "test-70city-panel",
+      "name_zh": "测试_70 个大中城市房价",
+      "name_en": "TEST 70-city price",
+      "section": "property",
+      "tier": 1,
+      "unit_zh": "%",
+      "unit_en": "%",
+      "value_type": "mom_pct",
+      "decimals": 1,
+      "freq": "M",
+      "calibers": ["single"],
+      "source": {
+        "agency": "nbs",
+        "dataset_zh": "测试数据集（非真实序列，仅供 build.py 契约测试使用）",
+        "dataset_en": "Synthetic test series for build.py contract tests (not real data)",
+        "url": "https://example.invalid/test-70city-panel"
+      },
+      "derived": null,
+      "panel": {
+        "dimensions": { "city": ["北京", "上海"], "metric": ["new_home", "resale_home"] },
+        "measures": ["m", "m_yoy"]
+      },
+      "file": "panels/test-70city-panel.json"
+    }
+  ]
+}
