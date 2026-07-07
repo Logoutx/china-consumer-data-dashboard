@@ -1,0 +1,371 @@
+{
+  "generated_at": "2026-07-08T00:00:00Z",
+  "catalog_version": "audit-test-1",
+  "sections": [
+    {
+      "id": "prices",
+      "name_zh": "物价",
+      "name_en": "Prices",
+      "order": 0
+    },
+    {
+      "id": "consumption",
+      "name_zh": "消费",
+      "name_en": "Consumption",
+      "order": 1
+    },
+    {
+      "id": "property",
+      "name_zh": "楼市",
+      "name_en": "Property",
+      "order": 2
+    },
+    {
+      "id": "macro",
+      "name_zh": "宏观大盘",
+      "name_en": "Macro",
+      "order": 3
+    }
+  ],
+  "tiles": [
+    {
+      "id": "test-cpi-break",
+      "name_zh": "测试_居民消费价格指数",
+      "name_en": "TEST CPI",
+      "name_short": null,
+      "unit_zh": "%",
+      "value_type": "index",
+      "freq": "M",
+      "tier": 1,
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/cpi-break"
+      },
+      "decimals": 1,
+      "latest": {
+        "period": "2026-06",
+        "period_label_zh": "2026 年 6 月",
+        "m": 101.0,
+        "m_yoy": 2.0
+      },
+      "prev": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 5 月",
+        "m": 100.9,
+        "m_yoy": 2.5
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": "up",
+        "latest_yoy": 2.0,
+        "delta_pp_vs_prev": -0.5,
+        "streak": 0,
+        "period_label_zh": "2026 年 6 月"
+      },
+      "takeaway": "2026 年 6 月测试_居民消费价格指数同比上涨 2.0%，涨幅较上月收窄 0.5 个百分点",
+      "plot_kind": "level",
+      "spark": [
+        101.8,
+        101.9,
+        100.1,
+        100.3,
+        100.5,
+        100.7,
+        100.9,
+        101.0
+      ],
+      "breaks": [
+        {
+          "effective": "2026-01",
+          "kind": "rebase",
+          "no_yoy_across": true,
+          "yoy_valid_from": "2026-04",
+          "supersedes": null,
+          "superseded_by": null,
+          "note_zh": "测试断点：跨基期同比不可比，2026-04 起同比恢复发布。",
+          "note_en": "test break: YoY not comparable across the rebase seam; resumes 2026-04."
+        }
+      ],
+      "annotations": [],
+      "flags_latest": [
+        "break_recent"
+      ],
+      "revisions_recent": []
+    },
+    {
+      "id": "test-retail-total",
+      "name_zh": "测试_社会消费品零售总额",
+      "name_en": "TEST retail total",
+      "name_short": null,
+      "unit_zh": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "tier": 1,
+      "calibers": [
+        "single",
+        "ytd"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/retail-total"
+      },
+      "decimals": 0,
+      "latest": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 5 月",
+        "m": 41090,
+        "m_yoy": -0.6,
+        "ytd": 206031,
+        "ytd_yoy": 1.4
+      },
+      "prev": {
+        "period": "2026-04",
+        "period_label_zh": "2026 年 4 月",
+        "m": 40200,
+        "m_yoy": 5.1,
+        "ytd": 165021,
+        "ytd_yoy": 4.7
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": "down",
+        "latest_yoy": -0.6,
+        "delta_pp_vs_prev": -5.7,
+        "streak": 0,
+        "period_label_zh": "2026 年 5 月"
+      },
+      "takeaway": "2026 年 5 月测试_社会消费品零售总额同比由升转降，下降 0.6%",
+      "plot_kind": "level",
+      "spark": [
+        76500,
+        38900,
+        83726,
+        40940,
+        40200,
+        41090
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [],
+      "revisions_recent": [
+        {
+          "period": "2026-04",
+          "measure": "ytd",
+          "revised_on": "2026-06-16"
+        }
+      ]
+    },
+    {
+      "id": "test-70city-newhome-mom",
+      "name_zh": "测试_70城新房价格",
+      "name_en": "TEST 70-city new home price",
+      "name_short": null,
+      "unit_zh": "%",
+      "value_type": "mom_pct",
+      "freq": "M",
+      "tier": 1,
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/70city-newhome-mom"
+      },
+      "decimals": 4,
+      "latest": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 5 月",
+        "m": -0.0667
+      },
+      "prev": {
+        "period": "2026-04",
+        "period_label_zh": "2026 年 4 月",
+        "m": 0.0667
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": null,
+        "latest_yoy": null,
+        "delta_pp_vs_prev": null,
+        "streak": 0,
+        "period_label_zh": "2026 年 5 月"
+      },
+      "takeaway": null,
+      "plot_kind": "level",
+      "spark": [
+        0.0667,
+        -0.0667
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [
+        "derived"
+      ],
+      "revisions_recent": []
+    },
+    {
+      "id": "test-dg-level",
+      "name_zh": "测试_DG层级指标",
+      "name_en": "TEST DG level indicator",
+      "name_short": null,
+      "unit_zh": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "tier": 1,
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://data.stats.gov.cn/dg/website/page.html"
+      },
+      "decimals": 0,
+      "latest": {
+        "period": "2026-06",
+        "period_label_zh": "2026 年 6 月",
+        "m": 1250.0
+      },
+      "prev": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 5 月",
+        "m": 1300.0
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": null,
+        "latest_yoy": null,
+        "delta_pp_vs_prev": null,
+        "streak": 0,
+        "period_label_zh": "2026 年 6 月"
+      },
+      "takeaway": null,
+      "plot_kind": "level",
+      "spark": [
+        1200.0,
+        1300.0,
+        1250.0
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [],
+      "revisions_recent": []
+    },
+    {
+      "id": "test-pmi",
+      "name_zh": "测试_采购经理指数",
+      "name_en": "TEST PMI",
+      "name_short": null,
+      "unit_zh": "%",
+      "value_type": "index",
+      "freq": "M",
+      "tier": 1,
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://data.stats.gov.cn/dg/website/page.html"
+      },
+      "decimals": 1,
+      "latest": {
+        "period": "2026-06",
+        "period_label_zh": "2026 年 6 月",
+        "m": 49.8
+      },
+      "prev": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 5 月",
+        "m": 50.3
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": null,
+        "latest_yoy": null,
+        "delta_pp_vs_prev": null,
+        "streak": 0,
+        "period_label_zh": "2026 年 6 月"
+      },
+      "takeaway": "2026 年 6 月测试_采购经理指数为 49.8%，比上月回落 0.5 个点，位于荣枯线下方",
+      "plot_kind": "level",
+      "spark": [
+        50.3,
+        49.8
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [],
+      "revisions_recent": []
+    }
+  ],
+  "freshness": [
+    {
+      "id": "test-cpi-break",
+      "latest": "2026-06",
+      "revisions_recent": []
+    },
+    {
+      "id": "test-retail-total",
+      "latest": "2026-05",
+      "revisions_recent": [
+        {
+          "period": "2026-04",
+          "measure": "ytd",
+          "revised_on": "2026-06-16"
+        }
+      ]
+    },
+    {
+      "id": "test-retail-ex-auto",
+      "latest": "2026-05",
+      "revisions_recent": []
+    },
+    {
+      "id": "test-retail-online-goods",
+      "latest": "2026-05",
+      "revisions_recent": []
+    },
+    {
+      "id": "test-retail-online-share",
+      "latest": "2026-05",
+      "revisions_recent": []
+    },
+    {
+      "id": "test-tax-a",
+      "latest": "2026-04",
+      "revisions_recent": []
+    },
+    {
+      "id": "test-tax-b",
+      "latest": "2026-04",
+      "revisions_recent": []
+    },
+    {
+      "id": "test-tax-total",
+      "latest": "2026-04",
+      "revisions_recent": []
+    },
+    {
+      "id": "test-70city-newhome-mom",
+      "latest": "2026-05",
+      "revisions_recent": []
+    },
+    {
+      "id": "test-70city-newhome-up-count",
+      "latest": "2026-05",
+      "revisions_recent": []
+    },
+    {
+      "id": "test-dg-level",
+      "latest": "2026-06",
+      "revisions_recent": []
+    },
+    {
+      "id": "test-pmi",
+      "latest": "2026-06",
+      "revisions_recent": []
+    }
+  ]
+}

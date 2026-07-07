@@ -4,5 +4,5 @@ audit_reports/
 __pycache__/
 *.pyc
 .wrangler/
-site-data/
+/site-data/
 site-data-fixtures/

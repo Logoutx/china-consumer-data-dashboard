@@ -1,0 +1,387 @@
+{
+  "section": "consumption",
+  "generated_at": "2026-07-08T00:00:00Z",
+  "catalog_version": "audit-test-1",
+  "series": [
+    {
+      "id": "test-retail-total",
+      "name_zh": "测试_社会消费品零售总额",
+      "name_en": "TEST retail total",
+      "name_short": null,
+      "unit_zh": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "tier": 1,
+      "calibers": [
+        "single",
+        "ytd"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/retail-total"
+      },
+      "decimals": 0,
+      "latest": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 5 月",
+        "m": 41090,
+        "m_yoy": -0.6,
+        "ytd": 206031,
+        "ytd_yoy": 1.4
+      },
+      "prev": {
+        "period": "2026-04",
+        "period_label_zh": "2026 年 4 月",
+        "m": 40200,
+        "m_yoy": 5.1,
+        "ytd": 165021,
+        "ytd_yoy": 4.7
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": "down",
+        "latest_yoy": -0.6,
+        "delta_pp_vs_prev": -5.7,
+        "streak": 0,
+        "period_label_zh": "2026 年 5 月"
+      },
+      "takeaway": "2026 年 5 月测试_社会消费品零售总额同比由升转降，下降 0.6%",
+      "plot_kind": "level",
+      "yoy_series": [
+        {
+          "period": "2025-02",
+          "yoy": 3.2
+        },
+        {
+          "period": "2025-03",
+          "yoy": 4.1
+        },
+        {
+          "period": "2026-02",
+          "yoy": 4.0
+        },
+        {
+          "period": "2026-03",
+          "yoy": 5.9
+        },
+        {
+          "period": "2026-04",
+          "yoy": 5.1
+        },
+        {
+          "period": "2026-05",
+          "yoy": -0.6
+        }
+      ],
+      "level_series": [
+        {
+          "period": "2025-02",
+          "m": 76500
+        },
+        {
+          "period": "2025-03",
+          "m": 38900
+        },
+        {
+          "period": "2026-02",
+          "m": 83726
+        },
+        {
+          "period": "2026-03",
+          "m": 40940
+        },
+        {
+          "period": "2026-04",
+          "m": 40200
+        },
+        {
+          "period": "2026-05",
+          "m": 41090
+        }
+      ],
+      "spark": [
+        76500,
+        38900,
+        83726,
+        40940,
+        40200,
+        41090
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [],
+      "revisions_recent": [
+        {
+          "period": "2026-04",
+          "measure": "ytd",
+          "revised_on": "2026-06-16"
+        }
+      ]
+    },
+    {
+      "id": "test-retail-ex-auto",
+      "name_zh": "测试_除汽车以外的消费品零售额",
+      "name_en": "TEST retail ex-auto",
+      "name_short": null,
+      "unit_zh": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "tier": 2,
+      "calibers": [
+        "single",
+        "ytd"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/retail-ex-auto"
+      },
+      "decimals": 0,
+      "latest": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 5 月",
+        "m": 37781,
+        "ytd": 129874
+      },
+      "prev": {
+        "period": "2026-04",
+        "period_label_zh": "2026 年 4 月",
+        "m": 34218,
+        "ytd": 92093
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": null,
+        "latest_yoy": null,
+        "delta_pp_vs_prev": null,
+        "streak": 0,
+        "period_label_zh": "2026 年 5 月"
+      },
+      "takeaway": null,
+      "plot_kind": "level",
+      "yoy_series": [
+        {
+          "period": "2026-02",
+          "yoy": null
+        },
+        {
+          "period": "2026-03",
+          "yoy": null
+        },
+        {
+          "period": "2026-04",
+          "yoy": null
+        },
+        {
+          "period": "2026-05",
+          "yoy": null
+        }
+      ],
+      "level_series": [
+        {
+          "period": "2026-02",
+          "m": 20000
+        },
+        {
+          "period": "2026-03",
+          "m": 37875
+        },
+        {
+          "period": "2026-04",
+          "m": 34218
+        },
+        {
+          "period": "2026-05",
+          "m": 37781
+        }
+      ],
+      "spark": [
+        20000,
+        37875,
+        34218,
+        37781
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [],
+      "revisions_recent": []
+    },
+    {
+      "id": "test-retail-online-goods",
+      "name_zh": "测试_网上商品零售额",
+      "name_en": "TEST online retail goods",
+      "name_short": null,
+      "unit_zh": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "tier": 2,
+      "calibers": [
+        "single",
+        "ytd"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/retail-online-goods"
+      },
+      "decimals": 0,
+      "latest": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 5 月",
+        "m": 11533.0,
+        "ytd": 52718
+      },
+      "prev": {
+        "period": "2026-04",
+        "period_label_zh": "2026 年 4 月",
+        "m": 9571.0,
+        "ytd": 41185
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": null,
+        "latest_yoy": null,
+        "delta_pp_vs_prev": null,
+        "streak": 0,
+        "period_label_zh": "2026 年 5 月"
+      },
+      "takeaway": null,
+      "plot_kind": "level",
+      "yoy_series": [
+        {
+          "period": "2026-02",
+          "yoy": null
+        },
+        {
+          "period": "2026-03",
+          "yoy": null
+        },
+        {
+          "period": "2026-04",
+          "yoy": null
+        },
+        {
+          "period": "2026-05",
+          "yoy": null
+        }
+      ],
+      "level_series": [
+        {
+          "period": "2026-02",
+          "m": 20812
+        },
+        {
+          "period": "2026-03",
+          "m": 10802.0
+        },
+        {
+          "period": "2026-04",
+          "m": 9571.0
+        },
+        {
+          "period": "2026-05",
+          "m": 11533.0
+        }
+      ],
+      "spark": [
+        20812,
+        10802.0,
+        9571.0,
+        11533.0
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [
+        "derived"
+      ],
+      "revisions_recent": []
+    },
+    {
+      "id": "test-retail-online-share",
+      "name_zh": "测试_网上商品零售额占比",
+      "name_en": "TEST online retail share",
+      "name_short": null,
+      "unit_zh": "%",
+      "value_type": "ratio",
+      "freq": "M",
+      "tier": 2,
+      "calibers": [
+        "single",
+        "ytd"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/retail-online-share"
+      },
+      "decimals": 4,
+      "latest": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 5 月",
+        "m": 30.5259,
+        "ytd": 40.5917
+      },
+      "prev": {
+        "period": "2026-04",
+        "period_label_zh": "2026 年 4 月",
+        "m": 27.9707,
+        "ytd": 44.7211
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": null,
+        "latest_yoy": null,
+        "delta_pp_vs_prev": null,
+        "streak": 0,
+        "period_label_zh": "2026 年 5 月"
+      },
+      "takeaway": "2026 年 5 月测试_网上商品零售额占比为 30.53%，比上月上升 2.56 个点",
+      "plot_kind": "level",
+      "yoy_series": [
+        {
+          "period": "2026-02",
+          "yoy": null
+        },
+        {
+          "period": "2026-03",
+          "yoy": null
+        },
+        {
+          "period": "2026-04",
+          "yoy": null
+        },
+        {
+          "period": "2026-05",
+          "yoy": null
+        }
+      ],
+      "level_series": [
+        {
+          "period": "2026-02",
+          "m": 104.06
+        },
+        {
+          "period": "2026-03",
+          "m": 28.5201
+        },
+        {
+          "period": "2026-04",
+          "m": 27.9707
+        },
+        {
+          "period": "2026-05",
+          "m": 30.5259
+        }
+      ],
+      "spark": [
+        104.06,
+        28.5201,
+        27.9707,
+        30.5259
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [
+        "derived"
+      ],
+      "revisions_recent": []
+    }
+  ]
+}

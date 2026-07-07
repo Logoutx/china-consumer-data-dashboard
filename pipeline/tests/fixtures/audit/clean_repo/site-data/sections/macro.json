@@ -1,0 +1,148 @@
+{
+  "section": "macro",
+  "generated_at": "2026-07-08T00:00:00Z",
+  "catalog_version": "audit-test-1",
+  "series": [
+    {
+      "id": "test-dg-level",
+      "name_zh": "测试_DG层级指标",
+      "name_en": "TEST DG level indicator",
+      "name_short": null,
+      "unit_zh": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "tier": 1,
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://data.stats.gov.cn/dg/website/page.html"
+      },
+      "decimals": 0,
+      "latest": {
+        "period": "2026-06",
+        "period_label_zh": "2026 年 6 月",
+        "m": 1250.0
+      },
+      "prev": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 5 月",
+        "m": 1300.0
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": null,
+        "latest_yoy": null,
+        "delta_pp_vs_prev": null,
+        "streak": 0,
+        "period_label_zh": "2026 年 6 月"
+      },
+      "takeaway": null,
+      "plot_kind": "level",
+      "yoy_series": [
+        {
+          "period": "2026-04",
+          "yoy": null
+        },
+        {
+          "period": "2026-05",
+          "yoy": null
+        },
+        {
+          "period": "2026-06",
+          "yoy": null
+        }
+      ],
+      "level_series": [
+        {
+          "period": "2026-04",
+          "m": 1200.0
+        },
+        {
+          "period": "2026-05",
+          "m": 1300.0
+        },
+        {
+          "period": "2026-06",
+          "m": 1250.0
+        }
+      ],
+      "spark": [
+        1200.0,
+        1300.0,
+        1250.0
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [],
+      "revisions_recent": []
+    },
+    {
+      "id": "test-pmi",
+      "name_zh": "测试_采购经理指数",
+      "name_en": "TEST PMI",
+      "name_short": null,
+      "unit_zh": "%",
+      "value_type": "index",
+      "freq": "M",
+      "tier": 1,
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://data.stats.gov.cn/dg/website/page.html"
+      },
+      "decimals": 1,
+      "latest": {
+        "period": "2026-06",
+        "period_label_zh": "2026 年 6 月",
+        "m": 49.8
+      },
+      "prev": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 5 月",
+        "m": 50.3
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": null,
+        "latest_yoy": null,
+        "delta_pp_vs_prev": null,
+        "streak": 0,
+        "period_label_zh": "2026 年 6 月"
+      },
+      "takeaway": "2026 年 6 月测试_采购经理指数为 49.8%，比上月回落 0.5 个点，位于荣枯线下方",
+      "plot_kind": "level",
+      "yoy_series": [
+        {
+          "period": "2026-05",
+          "yoy": null
+        },
+        {
+          "period": "2026-06",
+          "yoy": null
+        }
+      ],
+      "level_series": [
+        {
+          "period": "2026-05",
+          "m": 50.3
+        },
+        {
+          "period": "2026-06",
+          "m": 49.8
+        }
+      ],
+      "spark": [
+        50.3,
+        49.8
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [],
+      "revisions_recent": []
+    }
+  ]
+}

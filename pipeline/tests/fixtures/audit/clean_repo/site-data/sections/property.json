@@ -1,0 +1,372 @@
+{
+  "section": "property",
+  "generated_at": "2026-07-08T00:00:00Z",
+  "catalog_version": "audit-test-1",
+  "series": [
+    {
+      "id": "test-tax-a",
+      "name_zh": "测试_契税收入",
+      "name_en": "TEST deed tax",
+      "name_short": null,
+      "unit_zh": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "tier": 3,
+      "calibers": [
+        "ytd"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/tax-a"
+      },
+      "decimals": 0,
+      "latest": {
+        "period": "2026-04",
+        "period_label_zh": "2026 年 1-4 月",
+        "ytd": 1370.0,
+        "ytd_yoy": -15.3
+      },
+      "prev": {
+        "period": "2026-03",
+        "period_label_zh": "2026 年 1-3 月",
+        "ytd": 1067.0,
+        "ytd_yoy": -16.2
+      },
+      "headline": {
+        "caliber": "ytd",
+        "direction": "down",
+        "latest_yoy": -15.3,
+        "delta_pp_vs_prev": 0.9,
+        "streak": 3,
+        "period_label_zh": "2026 年 1-4 月"
+      },
+      "takeaway": "1-4 月测试_契税收入累计同比下降 15.3%，降幅较 1-3 月收窄 0.9 个百分点，连续 3 个月同比下降",
+      "plot_kind": "level",
+      "yoy_series": [
+        {
+          "period": "2026-02",
+          "yoy": -11.1
+        },
+        {
+          "period": "2026-03",
+          "yoy": -16.2
+        },
+        {
+          "period": "2026-04",
+          "yoy": -15.3
+        }
+      ],
+      "level_series": [
+        {
+          "period": "2026-02",
+          "m": 650.0
+        },
+        {
+          "period": "2026-03",
+          "m": 1067.0
+        },
+        {
+          "period": "2026-04",
+          "m": 1370.0
+        }
+      ],
+      "spark": [
+        650.0,
+        1067.0,
+        1370.0
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [],
+      "revisions_recent": []
+    },
+    {
+      "id": "test-tax-b",
+      "name_zh": "测试_土地增值税收入",
+      "name_en": "TEST land VAT",
+      "name_short": null,
+      "unit_zh": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "tier": 3,
+      "calibers": [
+        "ytd"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/tax-b"
+      },
+      "decimals": 0,
+      "latest": {
+        "period": "2026-04",
+        "period_label_zh": "2026 年 1-4 月",
+        "ytd": 610.0
+      },
+      "prev": {
+        "period": "2026-03",
+        "period_label_zh": "2026 年 1-3 月",
+        "ytd": 480.0
+      },
+      "headline": {
+        "caliber": "ytd",
+        "direction": null,
+        "latest_yoy": null,
+        "delta_pp_vs_prev": null,
+        "streak": 0,
+        "period_label_zh": "2026 年 1-4 月"
+      },
+      "takeaway": null,
+      "plot_kind": "level",
+      "yoy_series": [
+        {
+          "period": "2026-02",
+          "yoy": null
+        },
+        {
+          "period": "2026-03",
+          "yoy": null
+        },
+        {
+          "period": "2026-04",
+          "yoy": null
+        }
+      ],
+      "level_series": [
+        {
+          "period": "2026-02",
+          "m": 300.0
+        },
+        {
+          "period": "2026-03",
+          "m": 480.0
+        },
+        {
+          "period": "2026-04",
+          "m": 610.0
+        }
+      ],
+      "spark": [
+        300.0,
+        480.0,
+        610.0
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [],
+      "revisions_recent": []
+    },
+    {
+      "id": "test-tax-total",
+      "name_zh": "测试_地产相关税收合计",
+      "name_en": "TEST real estate tax total",
+      "name_short": null,
+      "unit_zh": "亿元",
+      "value_type": "level",
+      "freq": "M",
+      "tier": 2,
+      "calibers": [
+        "ytd"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/tax-total"
+      },
+      "decimals": 0,
+      "latest": {
+        "period": "2026-04",
+        "period_label_zh": "2026 年 1-4 月",
+        "ytd": 1980.0
+      },
+      "prev": {
+        "period": "2026-03",
+        "period_label_zh": "2026 年 1-3 月",
+        "ytd": 1547.0
+      },
+      "headline": {
+        "caliber": "ytd",
+        "direction": null,
+        "latest_yoy": null,
+        "delta_pp_vs_prev": null,
+        "streak": 0,
+        "period_label_zh": "2026 年 1-4 月"
+      },
+      "takeaway": null,
+      "plot_kind": "level",
+      "yoy_series": [
+        {
+          "period": "2026-02",
+          "yoy": null
+        },
+        {
+          "period": "2026-03",
+          "yoy": null
+        },
+        {
+          "period": "2026-04",
+          "yoy": null
+        }
+      ],
+      "level_series": [
+        {
+          "period": "2026-02",
+          "m": 950.0
+        },
+        {
+          "period": "2026-03",
+          "m": 1547.0
+        },
+        {
+          "period": "2026-04",
+          "m": 1980.0
+        }
+      ],
+      "spark": [
+        950.0,
+        1547.0,
+        1980.0
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [
+        "derived"
+      ],
+      "revisions_recent": []
+    },
+    {
+      "id": "test-70city-newhome-mom",
+      "name_zh": "测试_70城新房价格",
+      "name_en": "TEST 70-city new home price",
+      "name_short": null,
+      "unit_zh": "%",
+      "value_type": "mom_pct",
+      "freq": "M",
+      "tier": 1,
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/70city-newhome-mom"
+      },
+      "decimals": 4,
+      "latest": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 5 月",
+        "m": -0.0667
+      },
+      "prev": {
+        "period": "2026-04",
+        "period_label_zh": "2026 年 4 月",
+        "m": 0.0667
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": null,
+        "latest_yoy": null,
+        "delta_pp_vs_prev": null,
+        "streak": 0,
+        "period_label_zh": "2026 年 5 月"
+      },
+      "takeaway": null,
+      "plot_kind": "level",
+      "yoy_series": [
+        {
+          "period": "2026-04",
+          "yoy": null
+        },
+        {
+          "period": "2026-05",
+          "yoy": null
+        }
+      ],
+      "level_series": [
+        {
+          "period": "2026-04",
+          "m": 0.0667
+        },
+        {
+          "period": "2026-05",
+          "m": -0.0667
+        }
+      ],
+      "spark": [
+        0.0667,
+        -0.0667
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [
+        "derived"
+      ],
+      "revisions_recent": []
+    },
+    {
+      "id": "test-70city-newhome-up-count",
+      "name_zh": "测试_70城新房上涨城市数",
+      "name_en": "TEST 70-city new home up-count",
+      "name_short": null,
+      "unit_zh": "个",
+      "value_type": "count",
+      "freq": "M",
+      "tier": 2,
+      "calibers": [
+        "single"
+      ],
+      "source": {
+        "agency_zh": "",
+        "url": "https://example.invalid/70city-newhome-up-count"
+      },
+      "decimals": 0,
+      "latest": {
+        "period": "2026-05",
+        "period_label_zh": "2026 年 5 月",
+        "m": 1.0
+      },
+      "prev": {
+        "period": "2026-04",
+        "period_label_zh": "2026 年 4 月",
+        "m": 2.0
+      },
+      "headline": {
+        "caliber": "single",
+        "direction": null,
+        "latest_yoy": null,
+        "delta_pp_vs_prev": null,
+        "streak": 0,
+        "period_label_zh": "2026 年 5 月"
+      },
+      "takeaway": null,
+      "plot_kind": "level",
+      "yoy_series": [
+        {
+          "period": "2026-04",
+          "yoy": null
+        },
+        {
+          "period": "2026-05",
+          "yoy": null
+        }
+      ],
+      "level_series": [
+        {
+          "period": "2026-04",
+          "m": 2.0
+        },
+        {
+          "period": "2026-05",
+          "m": 1.0
+        }
+      ],
+      "spark": [
+        2.0,
+        1.0
+      ],
+      "breaks": [],
+      "annotations": [],
+      "flags_latest": [
+        "derived"
+      ],
+      "revisions_recent": []
+    }
+  ]
+}
