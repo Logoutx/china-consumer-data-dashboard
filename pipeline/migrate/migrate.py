@@ -83,13 +83,32 @@ def values_equal(a, b):
 
 
 def period_sort_key(period):
-    """Chronological sort key. Plain string sort is WRONG here: within one
-    income series, "2016" (a historical annual bulletin) would lexically
-    sort *before* "2016-Q1"/"2016-Q2"/"2016-Q3" even though the annual print
-    is the full-year total published in December, i.e. chronologically last.
+    """Chronological sort key, by PERIOD START (DATA-CONTRACT §9's canonical
+    ordering rule for a bare annual "YYYY" observation sharing a year with
+    quarterly observations of the same series).
+
+    An earlier version of this function sorted an annual observation to
+    month-rank 13 -- i.e. *after* every quarter of its year -- reasoning that
+    the annual print is "published in December, chronologically last". That
+    reasoning conflated *when NBS published the print* with *what period the
+    value covers*: DATA-CONTRACT §9 orders observations by period, not by
+    release date, and a full-year figure's period *starts* on 1 January of
+    that year -- the same nominal start as Q1 -- not in December. Sorting it
+    after Q1/Q2/Q3 therefore violated the contract's own ordering rule (see
+    pipeline/migrate/REPORT.md and docs/DATA-CONTRACT.md §9 for the fixed
+    rule) and is why 10 real income/consumption series had their historical-
+    annual-bulletin row physically misplaced after the same year's quarters
+    on disk.
+
+    Fixed rule: an annual period is treated as YYYY-01-01 (month-rank 0) --
+    *before* that year's Q1 (month-rank 3) -- so it sorts first among same-
+    year periods. This is a stable, deterministic tie-break (not "whichever
+    happened to load first"): two annual observations, or an annual and a
+    quarterly observation, never share a sort key, so re-running this
+    function always produces the same order regardless of input order.
     """
     if len(period) == 4 and period.isdigit():
-        return (int(period), 13, 0)
+        return (int(period), 0, 0)
     if "-Q" in period:
         y, q = period.split("-Q")
         return (int(y), int(q) * 3, 0)

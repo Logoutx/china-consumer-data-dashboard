@@ -17,9 +17,9 @@
   "derived": null,
   "coverage_note_zh": "2017年一季度起为完整居民收入和消费支出发布稿口径；2013-2016年为历史补充层，仅补入官方页面可核验的指标，缺项留空。",
   "observations": [
+    {"period": "2016", "freq": "A", "ytd": 10130.0, "ytd_yoy": 9.8, "real_yoy": null, "src": "legacy-annual-bulletin"},
     {"period": "2016-Q1", "ytd": 2703.0, "ytd_yoy": null, "real_yoy": null, "src": "legacy-annual-bulletin"},
     {"period": "2016-Q2", "ytd": 4788.0, "ytd_yoy": null, "real_yoy": null, "src": "legacy-annual-bulletin"},
-    {"period": "2016", "freq": "A", "ytd": 10130.0, "ytd_yoy": 9.8, "real_yoy": null, "src": "legacy-annual-bulletin"},
     {"period": "2017-Q1", "ytd": 2921.0, "ytd_yoy": 8.0, "real_yoy": null, "src": "legacy:2017-03"},
     {"period": "2017-Q2", "ytd": 5174.0, "ytd_yoy": 8.1, "real_yoy": null, "src": "legacy:2017-06"},
     {"period": "2017-Q3", "ytd": 7623.0, "ytd_yoy": 8.6, "real_yoy": null, "src": "legacy:2017-09"},

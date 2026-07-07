@@ -1,0 +1,302 @@
+{
+  "generated_at": "2026-07-07T23:09:22.277188+00:00",
+  "staged_dir": "/var/folders/4j/8z2p47wx72302sptwf3k8b200000gn/T/gate-a-uydk44d3",
+  "release_id": "20260610_test-release",
+  "touched_series": [
+    "nbs-cpi"
+  ],
+  "exit_code": 0,
+  "blocked": false,
+  "needs_ack": [],
+  "results": [
+    {
+      "check_id": "gate_a.schema_series",
+      "status": "pass",
+      "findings": []
+    },
+    {
+      "check_id": "gate_a.caliber_declared",
+      "status": "pass",
+      "findings": []
+    },
+    {
+      "check_id": "gate_a.value_type_bounds",
+      "status": "pass",
+      "findings": []
+    },
+    {
+      "check_id": "gate_a.period_monotonic",
+      "status": "pass",
+      "findings": []
+    },
+    {
+      "check_id": "gate_a.unit_magnitude",
+      "status": "skip",
+      "findings": [],
+      "note": "no value_type=='level' series had enough prior single-period history to judge a unit slip"
+    },
+    {
+      "check_id": "gate_a.seasonal_z",
+      "status": "skip",
+      "findings": [],
+      "note": "no touched series had enough history to evaluate"
+    },
+    {
+      "check_id": "gate_a.triangulate_dg_press",
+      "status": "skip",
+      "findings": [],
+      "note": "no (series, period, measure) had both a dg- and press-sourced value this run"
+    },
+    {
+      "check_id": "gate_a.triangulate_pbc_nbs",
+      "status": "skip",
+      "findings": [],
+      "note": "no configured source_pairs entry had both series present/touched this run"
+    },
+    {
+      "check_id": "gate_a.ytd_arithmetic",
+      "status": "skip",
+      "findings": [],
+      "note": "no single+ytd series with both m and ytd touched this run"
+    },
+    {
+      "check_id": "gate_a.yoy_base_tolerance",
+      "status": "skip",
+      "findings": [],
+      "note": "no comparable level+published-yoy pair with a same-caliber prior year on file"
+    },
+    {
+      "check_id": "gate_a.sum_of_parts",
+      "status": "skip",
+      "findings": [],
+      "note": "no sum-of-parts rule's total+parts all present/touched this run"
+    },
+    {
+      "check_id": "gate_a.cpi_envelope",
+      "status": "skip",
+      "findings": [],
+      "note": "no CPI series touched this run"
+    },
+    {
+      "check_id": "gate_a.online_share_bounds",
+      "status": "skip",
+      "findings": [],
+      "note": "no online-share rule touched this run"
+    },
+    {
+      "check_id": "gate_a.calendar_expected",
+      "status": "pass",
+      "findings": []
+    },
+    {
+      "check_id": "gate_a.calendar_window",
+      "status": "pass",
+      "findings": []
+    },
+    {
+      "check_id": "gate_a.partial_parse_completeness",
+      "status": "pass",
+      "findings": []
+    },
+    {
+      "check_id": "gate_a.archive_release_identity",
+      "status": "pass",
+      "findings": []
+    },
+    {
+      "check_id": "gate_a.break_no_yoy",
+      "status": "skip",
+      "findings": [],
+      "note": "no touched series has a no_yoy_across break"
+    },
+    {
+      "check_id": "gate_a.break_link",
+      "status": "skip",
+      "findings": [],
+      "note": "no touched series has a new-id (supersedes/superseded_by) break"
+    },
+    {
+      "check_id": "gate_a.revision_flood",
+      "status": "skip",
+      "findings": [],
+      "note": "no revisions were added this run"
+    },
+    {
+      "check_id": "gate_a.revision_integrity",
+      "status": "skip",
+      "findings": [],
+      "note": "no revisions were added this run"
+    },
+    {
+      "check_id": "gate_a.catalog_consistency",
+      "status": "warn",
+      "findings": [
+        {
+          "check_id": "gate_a.catalog_consistency",
+          "severity": "warn",
+          "message": "source_field '不包括食品和能源' did not map to any series id",
+          "series_id": null,
+          "period": null,
+          "measure": null,
+          "detail": {
+            "source_field": "不包括食品和能源"
+          }
+        },
+        {
+          "check_id": "gate_a.catalog_consistency",
+          "severity": "warn",
+          "message": "source_field '交通通信' did not map to any series id",
+          "series_id": null,
+          "period": null,
+          "measure": null,
+          "detail": {
+            "source_field": "交通通信"
+          }
+        },
+        {
+          "check_id": "gate_a.catalog_consistency",
+          "severity": "warn",
+          "message": "source_field '其他用品及服务' did not map to any series id",
+          "series_id": null,
+          "period": null,
+          "measure": null,
+          "detail": {
+            "source_field": "其他用品及服务"
+          }
+        },
+        {
+          "check_id": "gate_a.catalog_consistency",
+          "severity": "warn",
+          "message": "source_field '农村' did not map to any series id",
+          "series_id": null,
+          "period": null,
+          "measure": null,
+          "detail": {
+            "source_field": "农村"
+          }
+        },
+        {
+          "check_id": "gate_a.catalog_consistency",
+          "severity": "warn",
+          "message": "source_field '医疗保健' did not map to any series id",
+          "series_id": null,
+          "period": null,
+          "measure": null,
+          "detail": {
+            "source_field": "医疗保健"
+          }
+        },
+        {
+          "check_id": "gate_a.catalog_consistency",
+          "severity": "warn",
+          "message": "source_field '城市' did not map to any series id",
+          "series_id": null,
+          "period": null,
+          "measure": null,
+          "detail": {
+            "source_field": "城市"
+          }
+        },
+        {
+          "check_id": "gate_a.catalog_consistency",
+          "severity": "warn",
+          "message": "source_field '居住' did not map to any series id",
+          "series_id": null,
+          "period": null,
+          "measure": null,
+          "detail": {
+            "source_field": "居住"
+          }
+        },
+        {
+          "check_id": "gate_a.catalog_consistency",
+          "severity": "warn",
+          "message": "source_field '教育文化娱乐' did not map to any series id",
+          "series_id": null,
+          "period": null,
+          "measure": null,
+          "detail": {
+            "source_field": "教育文化娱乐"
+          }
+        },
+        {
+          "check_id": "gate_a.catalog_consistency",
+          "severity": "warn",
+          "message": "source_field '服务' did not map to any series id",
+          "series_id": null,
+          "period": null,
+          "measure": null,
+          "detail": {
+            "source_field": "服务"
+          }
+        },
+        {
+          "check_id": "gate_a.catalog_consistency",
+          "severity": "warn",
+          "message": "source_field '消费品' did not map to any series id",
+          "series_id": null,
+          "period": null,
+          "measure": null,
+          "detail": {
+            "source_field": "消费品"
+          }
+        },
+        {
+          "check_id": "gate_a.catalog_consistency",
+          "severity": "warn",
+          "message": "source_field '生活用品及服务' did not map to any series id",
+          "series_id": null,
+          "period": null,
+          "measure": null,
+          "detail": {
+            "source_field": "生活用品及服务"
+          }
+        },
+        {
+          "check_id": "gate_a.catalog_consistency",
+          "severity": "warn",
+          "message": "source_field '衣着' did not map to any series id",
+          "series_id": null,
+          "period": null,
+          "measure": null,
+          "detail": {
+            "source_field": "衣着"
+          }
+        },
+        {
+          "check_id": "gate_a.catalog_consistency",
+          "severity": "warn",
+          "message": "source_field '非食品' did not map to any series id",
+          "series_id": null,
+          "period": null,
+          "measure": null,
+          "detail": {
+            "source_field": "非食品"
+          }
+        },
+        {
+          "check_id": "gate_a.catalog_consistency",
+          "severity": "warn",
+          "message": "source_field '食品' did not map to any series id",
+          "series_id": null,
+          "period": null,
+          "measure": null,
+          "detail": {
+            "source_field": "食品"
+          }
+        },
+        {
+          "check_id": "gate_a.catalog_consistency",
+          "severity": "warn",
+          "message": "source_field '食品烟酒及在外餐饮' did not map to any series id",
+          "series_id": null,
+          "period": null,
+          "measure": null,
+          "detail": {
+            "source_field": "食品烟酒及在外餐饮"
+          }
+        }
+      ]
+    }
+  ]
+}

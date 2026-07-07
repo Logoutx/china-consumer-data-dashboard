@@ -1,84 +1,95 @@
 # 中国消费数据看板
 
-一个纯静态网页看板，用于长期追踪中国消费、居民收入支出、房价和房贷相关官方数据。
+一个跟踪中国官方消费和经济数据的看板：数据自动更新，上线前有 2 道独立校验，页面照《纽约时报》图表部门的规范呈现。目前收录 89 个数据序列，外加一个 70 城房价面板，分成 8 个板块，最早的序列能追溯到 1985 年。
 
-## 看板内容
+## 架构
 
-- 社会消费品零售总额：社零总额、除汽车以外、汽车、城乡、线上、餐饮和商品零售。
-- 居民收入和支出：居民人均可支配收入、收入结构、中位数、人均消费支出和八大消费支出分项。
-- 70 城房价：70 城整体新房/二手房价格、上涨城市数，以及北上广深、省会和新一线、其他城市的城市明细。
-- 房贷和土地出让：房贷余额、地产相关税收和土地出让收入。
-
-## 打开方式
-
-在本目录运行：
-
-```bash
-python3 -m http.server 8017
+```
+数据源（统计局 / 央行 / 财政部 / 海关）
+  → fetch/archive   抓取，原始页面和接口存进 data/archive/，此后不再改动
+  → parse           解析成统一字段
+  → stage           临时副本里试合并，不碰真正的 data/series/
+  → Gate A          入库前 22 项校验
+  → data/series     校验通过后落盘，人工维护的真实数据
+  → build           生成 site-data/ 里各板块的数据包
+  → site-data       构建产物，网页实际读取的目录
+  → Gate B          发布前 9 项独立复核
+  → deploy          发布到 GitHub Pages
 ```
 
-然后打开：
+data/ 是人读、人管的真实来源，site-data/ 是构建出来给网页用的产物，从不手改。stage 这一步只在临时副本里试合并，从不直接碰 data/series/，Gate A 通过才真正落盘。Gate A 管进不进 data/，Gate B 管上不上线，任何一步失败，上一份能用的数据都不会被替换掉。
+
+## 数据来源与口径
+
+| 机构 | 提供什么 | 抓取方式 |
+|---|---|---|
+| 国家统计局 | 物价、消费、收入与信心、就业、楼市 70 城、宏观大盘 | 发布稿 HTML 抓当月，国家数据 DG 接口补历史（最早到 1985 年） |
+| 中国人民银行 | 货币、信贷、社会融资规模 | 官网报告页正文解析 |
+| 财政部 | 房产相关税收、土地出让收入 | 官网发布数据 |
+| 海关总署 | 进出口 | 英文页是个 JS 壳，中文页有反爬，目前经第三方数据库转取美元计价序列 |
+
+PMI 由统计局和中国物流与采购联合会联合发布，算官方数据。高频脉搏板块规划收录快递、旅游、票房、汽车协会这类行业协会和第三方数据，但还没接进来，暂时是空的。完整信源清单和可靠度评级见 docs/ACQUISITION.md。
+
+官方数据本身有一堆口径细节，流水线照单全收，不替官方做判断。1-2 月的数据经常合并成一期发布。当月值和累计值是两个字段，不会相互换算。同比是官方发布时给出的数字，从不用现值反推。CPI、PPI 基期轮换、M1 统计口径扩大、青年失业率统计对象变化，断点两侧都标清楚，断点两边的同比不会被硬接成一条线。历史数据每一次修订，都留一条改前改后的记录。完整规则见 docs/DATA-CONTRACT.md。
+
+## 准确性
+
+数据从抓到上线要过 2 道独立关卡。Gate A 在入库前跑，一共 22 项检查：格式对不对、当月和累计能不能相互印证、同比有没有跨断点硬接、发布窗口对不对得上，任何一项没过，数字就进不了 data/。Gate B 在部署前跑，一共 9 项检查，拿构建出来的 site-data/ 反查 data/archive/ 里的原始发布稿：抽查原文数字、重算累计差分、重算 70 城均值和上涨城市数；每一项检查都配了变异测试，先故意改错一个数字，再确认检查真的能抓出来。Gate B 拦下时部署不会发生，线上网站保持上一版。完整机制见 docs/OPERATIONS.md。
+
+## 本地运行
+
+```bash
+pip install -r requirements.txt
+python3 -m pipeline.build --out site-data/
+python3 -m http.server 8123
+```
+
+打开：
 
 ```text
-http://127.0.0.1:8017/
+http://localhost:8123/site/
 ```
 
-## GitHub Pages
+跑测试用 `pytest`，覆盖抓取、解析、入库校验、构建、审计 5 个阶段，一共 26 个测试文件。
 
-这是静态站点，推到 GitHub 后可以直接用 GitHub Pages 发布。项目站点通常是：
+## 自动更新
 
-```text
-https://<owner>.github.io/<repo>/
+`.github/workflows/update-data.yml` 每天从北京时间 8 点到 18 点，每 2 小时跑一次，一共 6 次。是否真的去抓，要看当时在不在下面这些窗口里，不落在窗口里就跳过。
+
+| 数据 | 抓取窗口（北京时间，每月） |
+|---|---|
+| CPI、PPI | 9-13 号 |
+| PMI | 25 号到月末，顺延到下月 1 号 |
+| 进出口 | 7-14 号 |
+| 人民银行货币信贷 | 10-15 号 |
+| 统计局月度批量（社零、工业、固定资产投资、70 城等） | 14-18 号 |
+| 季度 GDP 和收入支出 | 1、4、7、10 月的 14-18 号 |
+
+Gate 拦下时：Gate A 拦下，数字进不了 data/，系统开一个标 data-audit 标签的 issue，附上校验报告；Gate B 拦下，部署不会发生，线上网站保持上一版，同样开一个 issue。两种情况都不会让坏数据静默上线。
+
+## 设计
+
+页面照 docs/VIZ-GUIDE.md 定的《纽约时报》图表规范做，能靠滚动读完的就不做交互，全局只留时间范围和当月/累计 2 个控件。最新值、同比、来源直接印在图上，不靠悬浮提示，颜色只认一条铁律：红涨绿跌。完整的 15 条规则和配色见 docs/VIZ-GUIDE.md。
+
+## 目录结构
+
+```
+data/                人工维护的真实数据
+  catalog.json         序列和板块清单
+  series/*.json        每个序列一个文件
+  panels/*.json        70 城这类面板数据
+  archive/             官方原始页面和接口返回，只读不改
+docs/                数据契约、抓取策略、可视化规范、运维手册
+pipeline/            fetch → parse → stage → validate → build → audit 6 个阶段
+  validate/            Gate A
+  audit/               Gate B
+site/                前端页面，零依赖 ES 模块
+site-data/           构建产物，网页实际读取的目录
+.github/workflows/   ci.yml、update-data.yml、deploy.yml
 ```
 
-如果仓库是 private，GitHub Pages 可用性取决于账号/组织套餐。最稳妥的结构是：代码仓库保持 private，发布出的 Pages 站点作为公开链接分享。
+## 旧版说明
 
-## 数据来源
+仓库根目录下的 index.html、app.js、data.js、styles.css 是切换前的旧版静态站点。当时是手工跑脚本刷新数据，再打包进 data.js，现在的自动化流水线不会碰它们。新版页面在 site/ 目录下，数据从 site-data/ 读取。
 
-- 国家统计局“数据发布”归档：https://www.stats.gov.cn/sj/zxfb/
-- 国家数据：https://data.stats.gov.cn/
-- 中国人民银行《金融机构贷款投向统计报告》
-- 财政部《财政收支情况》
-
-所有数据均保留在本目录的 JSON/JS 静态文件中，页面打开时不依赖后端服务。
-
-## 刷新脚本
-
-```bash
-python3 tools/fetch_retail_archive.py
-python3 tools/fetch_income_archive.py
-python3 tools/fetch_property_archive.py
-python3 tools/merge_property_city_history.py
-```
-
-刷新 JSON 后，需要重新生成 `data.js`，让页面直接加载嵌入数据。
-
-## 官方数据抽查 agent
-
-运行随机审计：
-
-```bash
-python3 tools/audit_official_data.py --samples-per-pool 35 --seed 2026-06-22
-```
-
-它会生成 `audit_reports/official_data_audit_*.json`、`.md` 和 `.html`，默认使用 `_cache/` 内已保存的官方页面和国家数据原始表。需要重新请求官方页面时：
-
-```bash
-python3 tools/audit_official_data.py --refresh-official --samples-per-pool 50
-```
-
-当前检查包括：
-
-- 发布稿页面数值抽查：随机抽取发布时字段，确认数字能在官方页面文本中找到。
-- 社零累计差分抽查：只对金额类指标用相邻累计值复核当月值；该项只作为 warning，因为官方发布稿可能四舍五入或修订前期累计值。比例类指标（如网上商品零售额占比）不使用累计差分。
-- 70 城整体复算：用逐城新房/二手房环比数据重算 70 城平均和上涨城市数。
-- 70 城逐城原始表复核：把看板逐城数据回查到国家数据原始表中的城市、月份、指标单元格。
-
-## 修订处理
-
-社零数据保留“修正后数据”和“发布时数据”两套口径。居民收入和支出当前没有发现发布时字段与最新字段的差异，因此页面不展示版本切换。
-
-长期维护时建议保留：
-
-- `observations_latest`：每次刷新后的最新有效序列，供看板默认展示。
-- `observation_versions`：每次抓取的原始版本快照，记录旧值、新值、来源 URL 和抓取时间。
+仓库目前是私有的，GitHub Pages 还没开通。docs/OPERATIONS.md 写了切换步骤：把 Pages 指到 Actions 构建产物，把仓库变量 PAGES_LIVE 设成 1，部署才会真正发布。开通以后，网站地址会是 https://logoutx.github.io/china-consumer-data-dashboard/，旧文件届时可以删掉。

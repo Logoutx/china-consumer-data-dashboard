@@ -7,7 +7,7 @@
   "unit_en": "100M CNY",
   "value_type": "level",
   "freq": "M",
-  "calibers": ["single"],
+  "calibers": ["single", "ytd"],
   "source": {
     "agency": "nbs",
     "dataset_zh": "国家统计局数据发布 · 限额以上单位商品零售额",

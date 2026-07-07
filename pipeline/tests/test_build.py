@@ -521,6 +521,155 @@ def test_yoy_only_populated_field_direct():
     assert _yoy_only_populated_field("m", "m_yoy", [{"period": "2026-05"}]) is None
 
 
+# -- value_type=="rate_pct": the 城镇调查失业率 family (no YoY, no 荣枯线, streak n>=3) --
+
+_UNEMP_ENTRY = {
+    "id": "test-urban-unemp",
+    "name_zh": "测试_全国城镇调查失业率",
+    "name_en": "TEST surveyed urban unemployment rate",
+    "unit_zh": "%",
+    "unit_en": "%",
+    "value_type": "rate_pct",
+    "freq": "M",
+    "tier": 1,
+    "calibers": ["single"],
+    "derived": None,
+}
+
+
+def test_rate_pct_takeaway_rising():
+    from pipeline.build import _build_series_entry
+
+    series = {
+        "observations": [
+            {"period": "2026-04", "m": 5.0},
+            {"period": "2026-05", "m": 5.2},
+        ],
+        "revisions": [],
+        "breaks": [],
+    }
+    bundle_entry = _build_series_entry(_UNEMP_ENTRY, series, {}, AS_OF)
+    assert bundle_entry["takeaway"] == "2026 年 5 月测试_全国城镇调查失业率为 5.2%，比上月上升 0.2 个百分点"
+    assert "荣枯线" not in bundle_entry["takeaway"]
+    assert bundle_entry["headline"]["direction"] is None  # no YoY concept -- "unknown", never fabricated
+
+
+def test_rate_pct_takeaway_falling():
+    from pipeline.build import _build_series_entry
+
+    series = {
+        "observations": [
+            {"period": "2026-04", "m": 5.2},
+            {"period": "2026-05", "m": 5.0},
+        ],
+        "revisions": [],
+        "breaks": [],
+    }
+    bundle_entry = _build_series_entry(_UNEMP_ENTRY, series, {}, AS_OF)
+    assert bundle_entry["takeaway"] == "2026 年 5 月测试_全国城镇调查失业率为 5.0%，比上月下降 0.2 个百分点"
+
+
+def test_rate_pct_takeaway_flat():
+    from pipeline.build import _build_series_entry
+
+    series = {
+        "observations": [
+            {"period": "2026-04", "m": 5.0},
+            {"period": "2026-05", "m": 5.0},
+        ],
+        "revisions": [],
+        "breaks": [],
+    }
+    bundle_entry = _build_series_entry(_UNEMP_ENTRY, series, {}, AS_OF)
+    assert bundle_entry["takeaway"] == "2026 年 5 月测试_全国城镇调查失业率为 5.0%，与上月持平"
+
+
+def test_rate_pct_takeaway_streak_of_3_gets_the_clause():
+    from pipeline.build import _build_series_entry
+
+    series = {
+        "observations": [
+            {"period": "2026-02", "m": 4.8},
+            {"period": "2026-03", "m": 4.9},
+            {"period": "2026-04", "m": 5.0},
+            {"period": "2026-05", "m": 5.1},
+        ],
+        "revisions": [],
+        "breaks": [],
+    }
+    bundle_entry = _build_series_entry(_UNEMP_ENTRY, series, {}, AS_OF)
+    assert bundle_entry["takeaway"] == "2026 年 5 月测试_全国城镇调查失业率为 5.1%，比上月上升 0.1 个百分点，连续 3 个月上升"
+
+
+def test_rate_pct_takeaway_streak_of_2_is_not_shown():
+    """2-month streaks are noise for a rate that wiggles month to month
+    (unlike the YoY streak's n>=2 floor) -- the clause only appears at n>=3."""
+    from pipeline.build import _build_series_entry
+
+    series = {
+        "observations": [
+            {"period": "2026-03", "m": 4.9},
+            {"period": "2026-04", "m": 5.0},
+            {"period": "2026-05", "m": 5.1},
+        ],
+        "revisions": [],
+        "breaks": [],
+    }
+    bundle_entry = _build_series_entry(_UNEMP_ENTRY, series, {}, AS_OF)
+    assert bundle_entry["takeaway"] == "2026 年 5 月测试_全国城镇调查失业率为 5.1%，比上月上升 0.1 个百分点"
+    assert "连续" not in bundle_entry["takeaway"]
+
+
+def test_rate_pct_frozen_series_still_generates_a_takeaway():
+    """The old-basis youth series (nbs-urban-unemp-youth-1624's real shape)
+    stopped publishing in 2023-07 and is frozen (catalog `end`), but build.py
+    doesn't special-case "is this series stale" -- it just runs the same
+    level-only template against whatever the LATEST available observation
+    is. The stale period_label_zh ("2023 年 6 月", not a recent month) is
+    exactly what makes the staleness visible to the site; the takeaway itself
+    must still generate, not silently stay null."""
+    from pipeline.build import _build_series_entry
+
+    frozen_entry = dict(_UNEMP_ENTRY, id="test-urban-unemp-youth-frozen")
+    series = {
+        "observations": [
+            {"period": "2023-05", "m": 21.2},
+            {"period": "2023-06", "m": 21.3},
+        ],
+        "revisions": [],
+        "breaks": [
+            {"effective": "2023-08", "kind": "suspended", "no_yoy_across": True}
+        ],
+    }
+    bundle_entry = _build_series_entry(frozen_entry, series, {}, AS_OF)
+    assert bundle_entry["latest"]["period"] == "2023-06"
+    assert bundle_entry["takeaway"] == "2023 年 6 月测试_全国城镇调查失业率为 21.3%，比上月上升 0.1 个百分点"
+
+
+def test_rate_pct_break_first_obs_does_not_compare_across():
+    """The exstudent series' real shape: a brand-new id whose first
+    observation is flagged break_first (no prior data in ITS OWN series at
+    all -- the frozen old-basis series is a completely separate id/file, so
+    there is structurally nothing to compare across even without this test).
+    Truncated to just that first observation: prev must resolve to None, so
+    the takeaway is a bare statement, never a fabricated comparison."""
+    from pipeline.build import _build_series_entry
+
+    entry = dict(_UNEMP_ENTRY, id="test-urban-unemp-youth-exstudent")
+    series = {
+        "observations": [
+            {"period": "2023-12", "m": 14.9, "flags": ["break_first"]},
+        ],
+        "revisions": [],
+        "breaks": [
+            {"effective": "2023-12", "kind": "methodology", "no_yoy_across": True, "yoy_valid_from": "2024-12"}
+        ],
+    }
+    bundle_entry = _build_series_entry(entry, series, {}, AS_OF)
+    assert bundle_entry["prev"] is None
+    assert bundle_entry["takeaway"] == "2023 年 12 月测试_全国城镇调查失业率为 14.9%"
+
+
 # -- name_short passthrough (catalog schema addition) ----------------------------------
 
 

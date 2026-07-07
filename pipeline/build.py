@@ -50,16 +50,20 @@ the series is nominally declared as. `entry["freq"]` itself is still read, but
 only for the bundle's own `"freq"` metadata field exposed to the client (a
 description of the series, not of any single period string).
 
-`observations[]` is not always ascending by period either, despite DATA-
-CONTRACT §9's invariant: 10 real income/consumption series physically place
-their bare-"YYYY" annual-supplement row AFTER the quarterly rows for the same
-year (e.g. nbs-income-disposable has "...,2016-Q1,2016-Q2,2016-Q3,2016,2017-
-Q1,..."). `_resolve_prev`'s array-adjacent fallback therefore never trusts
-raw array position -- it sorts same-shape period STRINGS and finds the
-neighbor that way, which is correct regardless of how the array happens to be
-ordered on disk. (This data-quality issue itself -- observations[] not sorted
--- is out of this module's scope to fix; data/series/ belongs to a different
-agent. Flagged back to the lead.)
+`observations[]` is not guaranteed to be ascending by period, despite DATA-
+CONTRACT §9's invariant -- `_resolve_prev`'s array-adjacent fallback therefore
+never trusts raw array position -- it sorts same-shape period STRINGS and
+finds the neighbor that way, which is correct regardless of how the array
+happens to be ordered on disk. This defensive stance is deliberately kept even
+though its original trigger is now fixed: 10 real income/consumption series
+used to physically place their bare-"YYYY" annual-supplement row AFTER the
+quarterly rows for the same year (e.g. nbs-income-disposable had "...,2016-
+Q1,2016-Q2,2016-Q3,2016,2017-Q1,..."), traced to a sort-key bug in
+pipeline/migrate/migrate.py's `period_sort_key` (fixed 2026-07-08 -- see
+pipeline/migrate/REPORT.md's addendum and DATA-CONTRACT §9). Sorting by
+period string rather than array position costs nothing and removes any
+future dependency on migrate.py (or a future agent's re-migration) getting
+that ordering right on disk.
 """
 from __future__ import annotations
 
@@ -72,7 +76,15 @@ from dataclasses import dataclass, field
 from datetime import date, timedelta
 from pathlib import Path
 
-from pipeline.takeaways import TakeawayInput, choose_verb, compute_streak, generate_takeaway
+from pipeline.takeaways import (
+    LevelTakeawayInput,
+    TakeawayInput,
+    choose_verb,
+    compute_level_streak,
+    compute_streak,
+    generate_level_takeaway,
+    generate_takeaway,
+)
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_DATA_DIR = ROOT / "data"
@@ -172,36 +184,44 @@ def _month_num(period: str) -> int | None:
     return int(period.split("-")[1])
 
 
+_QUARTER_ORDINAL_ZH = {1: "一", 2: "二", 3: "三", 4: "四"}
+
+
 def _period_label_zh(period: str, *, caliber: str, span: int = 1) -> str:
-    """Human period label per DATA-CONTRACT §12 (Arabic numerals throughout),
-    dispatched on the period STRING's own shape (see _period_shape) -- NOT on
-    a series' declared freq, which real data has shown can disagree within a
-    single series (annual-supplement rows inside an otherwise quarterly
-    series). An annual-shaped period always renders "{YYYY} 年全年" ("full
-    year"), whether it comes from a genuinely annual series or is a stray
-    annual row mixed into quarterly/monthly data -- the label needs to read
-    unambiguously either way, and "全年" is accurate and no worse for a "pure"
-    annual series either.
+    """Human period label per DATA-CONTRACT §12, dispatched on the period
+    STRING's own shape (see _period_shape) -- NOT on a series' declared freq,
+    which real data has shown can disagree within a single series (annual-
+    supplement rows inside an otherwise quarterly series). An annual-shaped
+    period always renders "{YYYY} 年全年" ("full year"), whether it comes from
+    a genuinely annual series or is a stray annual row mixed into quarterly/
+    monthly data -- the label needs to read unambiguously either way, and
+    "全年" is accurate and no worse for a "pure" annual series either.
 
-    Lead decision, called out explicitly per the task spec: quarters render
-    with an Arabic digit ("2026 年 2 季度"), not the conventional NBS prose
-    "二季度" -- the house typography rule (Arabic numerals, always) wins here
-    even though it reads slightly unusually to a Chinese business-press eye.
+    Quarters render with the conventional Chinese ordinal ("2026 年二季度"),
+    matching §12's own worked example -- a deliberate *exception* to the
+    "numerals are Arabic" rule (§12 point 2), treated the same way as that
+    rule's own carve-out for closed conventional sets (colloquial small
+    numbers, idioms): a quarter is always one of exactly four values, so
+    "二季度" is unambiguous the way spelling out an arbitrary count would not
+    be. An earlier draft rendered this as "2026 年 2 季度" (Arabic digit)
+    under a stricter reading of point 2; reverted 2026-07-08.
 
-    Note this is a *different* convention from pipeline/takeaways.py's own
-    "1-{M} 月" YTD-only sentence prefix (plain hyphen, no year) -- that is
-    deliberate, not an inconsistency; see takeaways.py's module docstring.
+    Cumulative/Jan-Feb spans use the half-width hyphen ("2026 年 1-5 月"),
+    per the owner's global range-typesetting rule (also §12) -- this now
+    matches pipeline/takeaways.py's own "1-{M} 月" YTD-only sentence anchor,
+    which always used the hyphen; the two had briefly disagreed (this
+    function used an em dash) before the 2026-07-08 unification.
     """
     shape = _period_shape(period)
     if shape == "annual":
         return f"{period} 年全年"
     if shape == "quarterly":
         year, q = period.split("-Q")
-        return f"{year} 年 {q} 季度"
+        return f"{year} 年{_QUARTER_ORDINAL_ZH[int(q)]}季度"
     year, month_str = period.split("-")
     month = int(month_str)
     if span > 1 or caliber == "ytd":
-        return f"{year} 年 1—{month} 月"
+        return f"{year} 年 1-{month} 月"
     return f"{year} 年 {month} 月"
 
 
@@ -446,23 +466,172 @@ def _annotations_for(series_id: str, annotations: dict) -> list[dict]:
     return out
 
 
+# -- name_short / source / decimals (DATA-CONTRACT §10.2) -----------------------
+
+
+def _headline_name(entry: dict) -> str:
+    """The name pipeline/takeaways.py renders into a headline sentence: the
+    catalog's optional compact `name_short` ("CPI", "M2", "制造业 PMI", ...)
+    when present, else the full `name_zh`. Centralized here so every takeaway
+    path (sign-matrix, quarterly-income, YTD-only, break-first, level-only)
+    resolves the name identically -- see catalog.schema.json's `name_short`."""
+    return entry.get("name_short") or entry["name_zh"]
+
+
+def _bundle_source(entry: dict) -> dict:
+    """Per-series `source` object for the bundle (§10.2): the publishing
+    agency's Chinese name (catalog `source.agency_zh`) plus the release URL
+    when the catalog has one. The site consumes both fields defensively
+    already (optional), so a catalog entry that somehow still lacks
+    `agency_zh` degrades to an empty string rather than a KeyError."""
+    src = entry.get("source") or {}
+    out = {"agency_zh": src.get("agency_zh") or ""}
+    if src.get("url"):
+        out["url"] = src["url"]
+    return out
+
+
+def _decimal_places(value: float) -> int:
+    """The number of decimal places `value` actually carries, capped at 4 --
+    mirrors takeaways.py's own _fmt() rounding-noise guard (round-trip through
+    round() rather than string-parsing, so 5.10 and 5.1 agree)."""
+    value = round(value, 6)
+    for dp in range(0, 4):
+        if round(value, dp) == value:
+            return dp
+    return 4
+
+
+def _infer_decimals(observations: list[dict], value_field: str) -> int:
+    """Fallback display precision when the catalog doesn't declare `decimals`
+    (§10.2): the maximum precision actually used across this series' own
+    values for the headline measure. A pure inference from the data actually
+    present -- never a guess, never overriding an explicit catalog value.
+    Defaults to 1 (the NBS-headline norm; matches takeaways.py's own default)
+    when the series has no values to infer from at all."""
+    seen = [obs[value_field] for obs in observations if obs.get(value_field) is not None]
+    if not seen:
+        return 1
+    return max(_decimal_places(v) for v in seen)
+
+
+def _bundle_decimals(entry: dict, observations: list[dict], value_field: str) -> int:
+    if "decimals" in entry:
+        return entry["decimals"]
+    return _infer_decimals(observations, value_field)
+
+
+_ALL_YOY_FIELDS = ("m_yoy", "ytd_yoy", "real_yoy")
+_LEVEL_ONLY_VALUE_TYPES = {"index", "ratio", "rate_pct"}
+
+# value_type -> (fall_word, delta_in_pp) for generate_level_takeaway. Every
+# entry here PRESERVES the original PMI/GDP-contribution wording ("回落",
+# "个点") except rate_pct (2026-07-08 widening, the surveyed-unemployment
+# family): a RATE declining reads as "下降", and its month-over-month change
+# is conventionally a "个百分点" (percentage point), not a diffusion index's
+# "个点". Absent entries (e.g. a future value_type reusing this template)
+# fall back to the PMI-era default via .get(...)'s second argument below.
+_LEVEL_WORDING_BY_VALUE_TYPE = {
+    "rate_pct": ("下降", True),
+}
+
+
+def _is_level_only_series(entry: dict, observations: list[dict]) -> bool:
+    """True for a series whose headline caliber has a real "level"-shaped
+    reading but never publishes a same-caliber YoY at all -- a genuine
+    diffusion index (PMI and similar), a share/contribution-rate reading
+    (GDP's three 贡献率 components), or a surveyed rate with no YoY concept at
+    all (the 城镇调查失业率 family: nbs-urban-unemp, -31city, -youth-1624(-
+    exstudent) -- widened 2026-07-08). Two conditions, both required:
+
+      1. `value_type` is `"index"` (CPI/PPI/PMI's own catalog shape, a same-
+         month-comparison index), `"ratio"` (GDP-contribution's shape, a
+         point-in-time share of GDP growth), or `"rate_pct"` (a surveyed
+         rate) -- the "opt in via catalog value_type" the task asks for.
+         `_build_series_entry` disables the level-only template's 荣枯线
+         (boom-bust line) clause for everything except `"index"` -- that
+         clause is meaningful only for a genuine diffusion index, never for a
+         GDP-contribution share or an unemployment rate.
+      2. The series never carries ANY YoY-shaped measure (`m_yoy`, `ytd_yoy`,
+         `real_yoy`) anywhere in its history -- a structural absence, not a
+         transient/break-blocked gap. A genuinely YoY-capable series that is
+         merely mid-break (CPI, PPI) still has `m_yoy` present on *other*
+         observations, so this correctly returns False for it and it keeps
+         getting `takeaway: null` during the blocked window instead of a
+         fabricated level-only sentence. (No real rate_pct series in the
+         current catalog publishes a YoY/pp-change field at all, but a future
+         one that did would correctly keep getting `takeaway: null` here too,
+         same as CPI mid-break.)
+
+    Both conditions matter: condition 1 alone would also catch every CPI/PPI
+    sub-index (all `value_type=="index"`, but they DO carry `m_yoy`, so
+    condition 2 excludes them); condition 2 alone -- checking only "no YoY
+    measure anywhere" without the value_type gate -- would also catch several
+    series that structurally never populate a YoY field for unrelated reasons
+    and must NOT get a "为 X，比上月...个点，位于荣枯线..." sentence: `nbs-gdp`
+    (a currency level with `real_yoy` on close inspection, but no `m_yoy` --
+    caught while testing this function, see pipeline/tests/test_build.py) and
+    the two `nbs-70city-*-up-count` city counts. `nbs-industrial-va` and
+    `nbs-fai` (whose only-ever-populated field already IS a yoy_pct value) are
+    excluded a different way -- see `_yoy_only_populated_field` -- they never
+    reach this function with `y is None` in the first place once that fix
+    applies, because their `y` resolves to a real value instead."""
+    if entry.get("value_type") not in _LEVEL_ONLY_VALUE_TYPES:
+        return False
+    return not any(any(f in obs for f in _ALL_YOY_FIELDS) for obs in observations)
+
+
+_YOY_ONLY_VALUE_TYPES = {"yoy_pct"}
+
+
+def _yoy_only_populated_field(value_field: str, yoy_field: str, observations: list[dict]) -> str | None:
+    """For a `value_type=="yoy_pct"` series (FAI, industrial value added): NBS
+    publishes no absolute level for these concepts at all, ever -- only a
+    growth rate (see pipeline/backfill/backfill.py's build_fai/build_iva
+    `coverage_note_zh`). Which JSON key that rate happens to land under still
+    follows the ordinary single/ytd caliber convention, but which HALF of the
+    pair (`value_field` or `yoy_field`) actually holds it differs by series:
+    industrial-va's rate is under "m"/"ytd" -- the caliber's own VALUE slot,
+    because NBS does publish a distinct monthly print for it; FAI's is under
+    "ytd_yoy" -- the caliber's YOY slot, because FAI structurally only ever
+    gets a cumulative YTD print with no separate monthly reading to tell
+    "value" apart from "yoy" in the first place. Detects empirically which
+    slot actually has data (scanning real observations, most recent first)
+    rather than hardcoding per-id, so a third series shaped like this needs
+    no build.py change at all -- only the right catalog `value_type`. Returns
+    None if genuinely nothing is populated in either slot (no data at all
+    yet)."""
+    for obs in reversed(observations):
+        if obs.get(value_field) is not None:
+            return value_field
+        if obs.get(yoy_field) is not None:
+            return yoy_field
+    return None
+
+
 # -- per-series bundle entry -----------------------------------------------------
 
 
-def _empty_series_entry(entry: dict, observations: list[dict], breaks: list[dict], yoy_field: str, value_field: str, annotations: dict) -> dict:
+def _empty_series_entry(
+    entry: dict, observations: list[dict], breaks: list[dict], yoy_field: str, value_field: str, annotations: dict, *, plot_kind: str = "level"
+) -> dict:
     return {
         "id": entry["id"],
         "name_zh": entry["name_zh"],
         "name_en": entry["name_en"],
+        "name_short": entry.get("name_short"),
         "unit_zh": entry["unit_zh"],
         "value_type": entry["value_type"],
         "freq": entry["freq"],
         "tier": entry.get("tier", 3),
         "calibers": entry["calibers"],
+        "source": _bundle_source(entry),
+        "decimals": _bundle_decimals(entry, observations, value_field),
         "latest": None,
         "prev": None,
         "headline": None,
         "takeaway": None,
+        "plot_kind": plot_kind,
         "yoy_series": _build_yoy_series(observations, yoy_field, breaks),
         "level_series": _build_level_series(observations, value_field),
         "spark": [],
@@ -482,13 +651,28 @@ def _build_series_entry(entry: dict, series: dict, annotations: dict, as_of: dat
     breaks = series.get("breaks", [])
     index_by_period = {obs["period"]: obs for obs in observations}
 
+    # A value_type=="yoy_pct" series (FAI, industrial value added) never
+    # publishes an absolute level at all -- see _yoy_only_populated_field's
+    # docstring. Point BOTH value_field/yoy_field at whichever slot actually
+    # has the data so every downstream step (latest-detection, y/yp, decimals,
+    # yoy_series/level_series) just works unmodified; `plot_kind` records that
+    # this bundle's "level" IS a growth rate, for the client to render it like
+    # one (a "yoy" line, %-formatted) instead of expecting a separate,
+    # structurally-always-empty yoy_series.
+    plot_kind = "level"
+    if entry.get("value_type") in _YOY_ONLY_VALUE_TYPES:
+        populated = _yoy_only_populated_field(value_field, yoy_field, observations)
+        if populated is not None:
+            value_field = yoy_field = populated
+            plot_kind = "yoy"
+
     # Scan backward for the last observation actually carrying the headline
     # caliber's value -- not simply observations[-1], in case the newest
     # array entry only landed a different measure first.
     latest = next((obs for obs in reversed(observations) if obs.get(value_field) is not None), None)
 
     if latest is None:
-        return _empty_series_entry(entry, observations, breaks, yoy_field, value_field, annotations)
+        return _empty_series_entry(entry, observations, breaks, yoy_field, value_field, annotations, plot_kind=plot_kind)
 
     latest_shape = _period_shape(latest["period"])
     # The "1-{M} 月...累计" phrasing is inherently monthly (M is a month
@@ -532,10 +716,12 @@ def _build_series_entry(entry: dict, series: dict, annotations: dict, as_of: dat
         ]
         streak_n, streak_kind = compute_streak(history)
 
+    name_for_takeaway = _headline_name(entry)
+
     takeaway = None
     if y is not None:
         takeaway_input = TakeawayInput(
-            name_zh=entry["name_zh"],
+            name_zh=name_for_takeaway,
             verb=choose_verb(entry),
             period_label_zh=latest_label,
             latest_yoy=y,
@@ -550,6 +736,48 @@ def _build_series_entry(entry: dict, series: dict, annotations: dict, as_of: dat
             streak_kind=streak_kind,
         )
         takeaway = generate_takeaway(takeaway_input)
+    elif caliber == "single" and _is_level_only_series(entry, observations):
+        # No published YoY anywhere in this series' history (e.g. PMI/any
+        # diffusion index, a GDP-contribution share, or a surveyed rate like
+        # unemployment) -- fall back to the level-only "为 X，比上月上升/回落
+        # D 个点[，位于荣枯线...]" template (takeaways.py) instead of leaving
+        # the takeaway blank forever. Scoped to caliber=="single"
+        # (value_field=="m"): that is the real shape of every no-YoY series
+        # in the current catalog; a future ytd-only, no-YoY series would need
+        # this extended. The 荣枯线 (boom-bust line) clause only makes sense
+        # for a genuine diffusion index -- disabled for everything else
+        # (a contribution share or an unemployment rate crossing 50 means
+        # nothing), per _is_level_only_series's docstring.
+        #
+        # The level streak ("，连续 N 个月上升/下降") is a DIFFERENT concept
+        # from streak_n/streak_kind above (which scans YoY values and stayed
+        # 0/None here since `y is None` skipped that loop) -- it scans the
+        # LEVEL itself, and is currently only requested for rate_pct
+        # (unemployment wiggles too much month to month for index/ratio to
+        # want this; PMI keeps its 荣枯线 clause instead). Same monthly-shape
+        # + None-padding discipline as the YoY streak history above.
+        level_streak_n, level_streak_kind = 0, None
+        if entry.get("value_type") == "rate_pct" and latest_shape == "monthly":
+            level_history = [
+                pt["m"] if _period_shape(pt["period"]) == "monthly" else None
+                for pt in _build_level_series(observations, value_field)
+            ]
+            level_streak_n, level_streak_kind = compute_level_streak(level_history)
+        fall_word, delta_in_pp = _LEVEL_WORDING_BY_VALUE_TYPE.get(entry.get("value_type"), ("回落", False))
+        level_input = LevelTakeawayInput(
+            name_zh=name_for_takeaway,
+            period_label_zh=latest_label,
+            latest_level=latest[value_field],
+            prev_level=prev.get(value_field) if prev is not None else None,
+            is_percent_unit=entry.get("unit_zh") == "%",
+            freq=takeaway_freq,
+            fall_word=fall_word,
+            delta_in_pp=delta_in_pp,
+            streak=level_streak_n,
+            streak_kind=level_streak_kind,
+            **({"boom_bust_line": None} if entry.get("value_type") != "index" else {}),
+        )
+        takeaway = generate_level_takeaway(level_input)
 
     if y is None:
         direction = None  # e.g. latest observation exists but its YoY is blocked by a break -- "unknown", not "flat"
@@ -570,11 +798,14 @@ def _build_series_entry(entry: dict, series: dict, annotations: dict, as_of: dat
         "id": entry["id"],
         "name_zh": entry["name_zh"],
         "name_en": entry["name_en"],
+        "name_short": entry.get("name_short"),
         "unit_zh": entry["unit_zh"],
         "value_type": entry["value_type"],
         "freq": entry["freq"],
         "tier": entry.get("tier", 3),
         "calibers": calibers,
+        "source": _bundle_source(entry),
+        "decimals": _bundle_decimals(entry, observations, value_field),
         "latest": _measure_block(latest, latest_label, breaks),
         "prev": prev_block,
         "headline": {
@@ -586,6 +817,7 @@ def _build_series_entry(entry: dict, series: dict, annotations: dict, as_of: dat
             "period_label_zh": latest_label,
         },
         "takeaway": takeaway,
+        "plot_kind": plot_kind,
         "yoy_series": _build_yoy_series(observations, yoy_field, breaks),
         "level_series": _build_level_series(observations, value_field),
         "spark": _build_spark(_build_level_series(observations, value_field)),

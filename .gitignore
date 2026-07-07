@@ -5,3 +5,4 @@ __pycache__/
 *.pyc
 .wrangler/
 site-data/
+site-data-fixtures/

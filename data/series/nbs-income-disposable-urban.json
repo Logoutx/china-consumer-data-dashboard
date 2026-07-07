@@ -19,9 +19,9 @@
   "observations": [
     {"period": "2014", "freq": "A", "ytd": 28844.0, "ytd_yoy": null, "real_yoy": null, "src": "legacy-annual-bulletin"},
     {"period": "2015", "freq": "A", "ytd": 31195.0, "ytd_yoy": null, "real_yoy": null, "src": "legacy-annual-bulletin"},
+    {"period": "2016", "freq": "A", "ytd": 33616.0, "ytd_yoy": 7.8, "real_yoy": null, "src": "legacy-annual-bulletin"},
     {"period": "2016-Q1", "ytd": 9255.0, "ytd_yoy": 8.0, "real_yoy": null, "src": "legacy-annual-bulletin"},
     {"period": "2016-Q2", "ytd": 16957.0, "ytd_yoy": 8.0, "real_yoy": null, "src": "legacy-annual-bulletin"},
-    {"period": "2016", "freq": "A", "ytd": 33616.0, "ytd_yoy": 7.8, "real_yoy": null, "src": "legacy-annual-bulletin"},
     {"period": "2017-Q1", "ytd": 8700.0, "ytd_yoy": 6.7, "real_yoy": null, "src": "legacy:2017-03"},
     {"period": "2017-Q2", "ytd": 16803.0, "ytd_yoy": 7.3, "real_yoy": null, "src": "legacy:2017-06"},
     {"period": "2017-Q3", "ytd": 25340.0, "ytd_yoy": 7.7, "real_yoy": null, "src": "legacy:2017-09"},

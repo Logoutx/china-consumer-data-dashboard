@@ -44,3 +44,21 @@ Generated 2026-07-07T19:23:24Z. 26 series built, 4820 total observations, 4 targ
 
 - pbc-m1 basis check: OLD-BASIS then re-definition: 2024-12=670959.4亿元 -> 2025-01=1124457.4亿元 (+67.6%，远超此前典型环比 ~1.81%）——历史看起来是旧口径，2025-01 是新口径下的第一个印数，DG 库未见对 2024-01~2024-12 的追溯改写。
 - docs/MIGRATION-MAP.md §8 lists nbs-urban-unemp-2534/nbs-urban-unemp-3159 assuming a 25-34 age bracket; the DG tree's actual age brackets are 25—29岁, 30—59岁, and 25—59岁 (no 25-34, no 34 at all). Flagging the mismatch for whoever wires that part of the catalog -- not minted here since the task only asked for national/31-city/youth-exstudent unemployment.
+
+## Verification note (2026-07-08)
+
+Spot-checked `nbs-ppi-yoy` against the official NBS release. Stored data: 2026-05 `m_yoy`
+= 3.9 (`m` index 103.9, `mom` 0.5), 2026-04 `m_yoy` = 2.8. Official NBS release
+"2026年5月份工业生产者出厂价格同比上涨3.9% 环比上涨0.5%"
+(<https://www.stats.gov.cn/sj/zxfb/202606/t20260610_1963922.html>, published 2026-06-10)
+states 工业生产者出厂价格 for May 2026: 同比 +3.9%, 环比 +0.5%; the same release states the
+April 2026 figure was 同比 +2.8% (matching NBS's separate April release
+<https://www.stats.gov.cn/sj/zxfb/202605/t20260511_1963658.html>,
+"2026年4月份工业生产者出厂价格同比上涨2.8% 环比上涨1.7%" -- `mom` 1.7 also matches the stored
+2026-04 observation). **Confirmed: the DG indicator mapping for `nbs-ppi-yoy` is correct** --
+no re-pull needed.
+
+Also cross-checked `nbs-cpi-yoy` 2026-05 (`m_yoy` = 1.2) against NBS's companion release
+"2026年5月份居民消费价格同比上涨1.2%"
+(<https://www.stats.gov.cn/sj/zxfb/202606/t20260610_1963923.html>) -- **matches**,
+consistent with this series having been cross-checked before.

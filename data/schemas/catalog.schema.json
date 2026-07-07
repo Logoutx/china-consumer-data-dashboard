@@ -55,6 +55,14 @@
         "name_en": { "type": "string" },
         "short_zh": { "type": "string", "description": "Optional compact label for tiles." },
         "short_en": { "type": "string" },
+        "name_short": {
+          "type": "string",
+          "description": "Optional compact Chinese headline name (e.g. CPI, PPI, 社零总额, M2) -- pipeline/takeaways.py uses this instead of name_zh when present, and build.py passes both through to the bundle. Populated for tier-1 and other long-named series."
+        },
+        "verb": {
+          "enum": ["上涨", "增长"],
+          "description": "Optional explicit sign-matrix verb for pipeline/takeaways.py's choose_verb() (price/index series say 上涨, activity/money series say 增长). Falls back to a value_type heuristic when absent."
+        },
         "section": { "$ref": "#/definitions/section_id" },
         "group": { "type": "string", "description": "Sub-group within the section (e.g. 城乡, 商品分类)." },
         "tier": {
@@ -79,6 +87,7 @@
           "required": ["agency"],
           "properties": {
             "agency": { "enum": ["nbs", "pbc", "mof", "mohurd", "customs", "caam", "safe", "cflp"] },
+            "agency_zh": { "type": "string", "description": "Chinese agency name (e.g. 国家统计局, 中国人民银行), surfaced in the bundle's per-series source object (DATA-CONTRACT §10.2)." },
             "dataset_zh": { "type": "string" },
             "dataset_en": { "type": "string" },
             "url": { "type": "string", "format": "uri" },

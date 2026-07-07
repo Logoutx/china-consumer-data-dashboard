@@ -109,12 +109,28 @@ Applying the rule to the known breaks:
 | Event | Decision | Mechanics |
 |---|---|---|
 | CPI / PPI rebase to 2025 base (eff. 2026-01) | **Same id** (`nbs-cpi`, `nbs-ppi`) | `break{kind:"rebase", no_yoy_across:true, yoy_valid_from:"2026-01"}`. Do **not** mint `-2025base`. |
-| M1 redefinition (2025-01, NBS/PBC revised history back to 2024-01) | **Same id** (`pbc-m1`) | `break{kind:"redefinition", effective:"2025-01", no_yoy_across:true, yoy_valid_from:"2025-01"}` — YoY valid once 12 months of restated base exist. Pre-2024-01 obs flagged `old_caliber`. |
+| M1 redefinition (2025-01) | **Same id** (`pbc-m1`) | `break{kind:"redefinition", effective:"2025-01", no_yoy_across:true, yoy_valid_from:"2025-01"}`. Pre-2025-01 obs flagged `old_caliber`. |
 | Youth unemployment excl-students (old suspended 2023-08; new methodology from 2023-12 / 2024-01) | **New id** | old `nbs-urban-unemp-youth-1624` gets `end:"2023-07"` + `break{kind:"suspended"}`; new `nbs-urban-unemp-youth-1624-exstudent` starts 2023-12. `superseded_by` / `supersedes` link them. **No cross-id YoY, ever.** |
 | Online-retail indicator replacement (2026) | **New id** | old online indicator frozen with `end`; new indicator new id; linked. |
 
 `no_yoy_across` is a hard instruction to the build stage: at the seam, YoY series get a
 `null` so the line does not connect and no delta is shown (§10.2).
+
+**`yoy_valid_from` equal to `effective` is a legitimate, common case — not a no-op.** For
+`pbc-m1`, `nbs-cpi` and `nbs-ppi`'s breaks above, `yoy_valid_from` equals `effective`, which
+makes the blocked window empty (no period is ever nulled). This is correct, not a mistake:
+backfill found that NBS/PBC's own **published** `m_yoy` (for M1) and "上年同月=100" index
+(for CPI/PPI, which by construction is always a same-month-last-year comparison) remain
+available and comparable immediately from the first post-break period — per axiom 1 (§0),
+a published growth rate is data, never second-guessed or nulled by the pipeline. What
+`no_yoy_across:true` still guards against here is a **level-derived** YoY some future
+feature might compute from the raw level series across the seam (e.g. charting M1's level
+and deriving a naive YoY from it) — that comparison genuinely would straddle two
+incompatible calibers/bases and must stay blocked; the *published* `m_yoy`/index field is
+unaffected. Contrast the youth-unemployment break (`nbs-urban-unemp-youth-1624-exstudent`),
+where `yoy_valid_from` is 12 months after `effective` — that series is a brand-new id with
+no prior comparable history at all, so no published YoY exists until a full 12 months of
+its own history accumulates.
 
 ---
 
@@ -437,6 +453,17 @@ build; they are only read.
 - **Stable key order** in every object (schema field order above). Arrays sorted:
   `observations` and `periods` ascending by period; `revisions` ascending by
   `(period, measure)`; `breaks` ascending by `effective`.
+- **Ascending "by period" means by period START, not by release date** — the rule that
+  actually matters for a bare annual `"YYYY"` observation sharing a year with quarterly
+  observations of the same series (e.g. an income series' 2013-2016 historical-annual-
+  bulletin rows alongside `2016-Q1/Q2/Q3`). An annual period's start is 1 January of that
+  year — nominally the same start as `Q1` — so it sorts **before** that year's quarters,
+  not after: `canonical order = (year, month-rank)` with annual at month-rank `0` (< `Q1`'s
+  `3`), stable and deterministic (two periods never share a sort key). Sorting the annual
+  row *after* the year's quarters (reasoning that it's "published in December, so
+  chronologically last") conflates publication date with period coverage and violates this
+  rule — `pipeline/migrate/migrate.py`'s `period_sort_key` had exactly this bug for 10
+  income/consumption series; fixed 2026-07-08 (see `pipeline/migrate/REPORT.md`).
 - **UTF-8, no BOM, `\n` line endings, trailing newline.** Numbers as JSON numbers (never
   quoted); no thousands separators; `null` only for genuinely-missing.
 - A build must be **idempotent**: re-running on unchanged inputs produces a byte-identical
@@ -469,9 +496,11 @@ the client renders without recomputing anything caliber-sensitive.
   "series": [
     {
       "id": "nbs-retail-total",
-      "name_zh": "社会消费品零售总额", "name_en": "…",
+      "name_zh": "社会消费品零售总额", "name_en": "…", "name_short": "社零总额",
       "unit_zh": "亿元", "value_type": "level", "freq": "M", "tier": 1,
       "calibers": ["single","ytd"],
+      "source": { "agency_zh": "国家统计局", "url": "https://www.stats.gov.cn/sj/zxfb/" },
+      "decimals": 1,
       "latest": { "period":"2026-05", "period_label_zh":"2026 年 5 月", "m":41090, "m_yoy":-0.6, "ytd":206031, "ytd_yoy":1.4 },
       "prev":   { "period":"2026-04", "m":40200, "m_yoy":5.1, "ytd":165021, "ytd_yoy":4.7 },
       "headline": { "caliber":"single", "direction":"down", "latest_yoy":-0.6, "delta_pp_vs_prev":-6.5, "streak":1, "period_label_zh":"2026 年 5 月" },
@@ -488,6 +517,17 @@ the client renders without recomputing anything caliber-sensitive.
 
 **Pre-computation done at build (the client does none of it):**
 
+- `name_short` — the catalog's optional compact headline name (`null` when the catalog
+  doesn't set one), passed through unchanged; `pipeline/takeaways.py` already used it (in
+  place of `name_zh`) to render `takeaway` below, so the client can rely on the two being
+  consistent rather than re-deriving a short label itself.
+- `source` — `{agency_zh, url?}`: the publishing agency's Chinese name (from the catalog's
+  `source.agency_zh`) and its release URL when the catalog has one. `agency_zh` degrades to
+  `""` (never a missing key) if a catalog entry somehow still lacks it; the site already
+  consumes both fields defensively.
+- `decimals` — display precision: the catalog's own `decimals` when set, else inferred at
+  build time as the maximum precision actually present across the series' own headline-
+  measure values (never a guess, never overriding an explicit catalog value).
 - `latest` / `prev` blocks for the stat tile and delta arrow — resolved to the correct
   comparable prior period (respects Jan-Feb: prev of `2026-02[jan_feb]` is `2025-02[jan_feb]`).
 - `yoy_series` — extracted from stored `m_yoy`/`ytd_yoy` **verbatim**; a `null` is inserted at
@@ -496,7 +536,7 @@ the client renders without recomputing anything caliber-sensitive.
 - `headline` — **structured inputs** for the takeaway sentence (direction, latest YoY,
   pp-change vs prev, streak length, period label), not prose. The client (or an editor)
   templates the sentence; the numbers are authoritative and pre-labelled.
-- `period_label_zh` — human label following §12 (`2026 年 1—5 月` for a cumulative print;
+- `period_label_zh` — human label following §12 (`2026 年 1-5 月` for a cumulative print;
   `2026 年 5 月` for a single month; note the Jan-Feb / cumulative forms differ).
 - `annotations` — the merged notes for that series (§7).
 - `flags_latest` — e.g. `jan_feb`, `derived`, `break_recent`, surfaced as a tooltip badge.
@@ -577,13 +617,31 @@ fetch → parse → normalize → validate → build → (audit)
 mapping table and the only place a new source field is wired to a series. Adding a series =
 add a catalog entry + a field_map line + (optionally) an annotation.
 
-### 11.2 GitHub Actions polling
+### 11.2 GitHub Actions polling (as implemented)
 
-`config/release_calendar.yaml` lists per-source release windows (NBS retail ~mid-month 10:00,
-income quarterly, PBC/MoF cadence). The poller runs `fetch → … → validate` inside each window
-and opens a PR with the resulting `data/` diff for human review; `build` + deploy run on
-merge. Values never reach the site without passing gate #1, and the audit (gate #2) runs on a
-schedule against the built tree.
+**Rewritten 2026-07-08 to match the shipped flow — the PR-based design this section
+previously described was dropped by decision 2026-07-08; see `docs/OPERATIONS.md` for the
+full runbook.**
+
+`update-data.yml` runs on a fixed six-times-a-day cron (`docs/OPERATIONS.md` §1) and calls
+`python -m pipeline.schedule --due`, which checks `config/release_calendar.yaml`'s per-source
+windows against `data/catalog.json`'s own `latest` field and prints the names of every source
+that is both in-window and stale. For each due name, the workflow runs
+`python -m pipeline.runner --source <name>`, which is `fetch → parse → normalize → **stage**
+→ gate #1 → write` — Gate A (`pipeline/validate/`, run *inside* the runner, not a separate
+job) dry-run-merges into a private staged copy first; only a passing (or `--no-gate`-overridden)
+batch is promoted into the real `data/series/` tree. **There is no PR step**: a passing run
+commits straight to `main`. `dg_refresh` (`pipeline/dg_refresh.py`) is one of the pollable
+sources alongside the press-release ones — it re-pulls the last few periods for every series
+whose provenance is the DG API directly (CPI/PPI, PMI, unemployment, IVA, FAI, trade, M0/M1/M2,
+GDP), through this exact same stage → gate #1 → write flow, rather than a bespoke HTML parser.
+
+`runner.py` exit codes: `0` ok (wrote data, or a clean no-op), `1` a genuine fetch/parse
+failure, `2` Gate A **BLOCKED** (also printed as a grep-able `GATE_BLOCKED` marker line —
+`data/` is left untouched), `3` an unrecognized `--source`. A commit touching `data/**` /
+`site/**` / `pipeline/**` re-triggers `deploy.yml`, which rebuilds `site-data/` and runs the
+independent audit (gate #2, `pipeline/audit/`) against it before deploying — a gate #2 block
+leaves the previous deployment live, never gate #1's concern.
 
 ---
 
@@ -594,11 +652,17 @@ All Chinese strings written into data (`name_zh`, `unit_zh`, notes, labels) MUST
 1. **Quotes:** full-width curly only — “ ” outer, ‘ ’ inner. Never `「」`/`『』` or ASCII
    `"`/`'` (ASCII allowed only inside code, URLs, English).
 2. **Numerals:** Arabic (`16 个城市`, not `十六个城市`; `60-70B`). Keep Chinese numerals only
-   for very short spoken small counts (两个、三五个) and idioms.
+   for very short spoken small counts (两个、三五个) and idioms. **Quarter ordinals are a
+   second, deliberate exception**: render `一/二/三/四季度`, never an Arabic digit
+   (`2026 年二季度`, not `2026 年 2 季度`) — a quarter is always one of exactly four values,
+   a closed conventional set exactly like the colloquial-small-number carve-out above, so
+   spelling it out is unambiguous (unlike an arbitrary count, where Arabic wins).
 3. **Pangu spacing:** one half-width space between CJK and adjacent Latin/digits
-   (`用 GPT-4 做`, `覆盖 80% 用户`, `2026 年 5 月`). **No** space between a number and a unit
-   glyph/percent (`80%`, `$50`), or next to full-width punctuation.
+   (`用 GPT-4 做`, `覆盖 80% 用户`, `2026 年 5 月`, `CPI 同比上涨`). **No** space between a
+   number and a unit glyph/percent (`80%`, `$50`), or next to full-width punctuation.
+4. **Ranges use the half-width hyphen**, never an em dash (`1-5 月`, not `1—5 月`) — applies
+   to period ranges and any other approximate/numeric range alike.
 
-Example period labels: single month `2026 年 5 月`; cumulative `2026 年 1—5 月`; Jan-Feb
-`2026 年 1—2 月`; quarter `2026 年一季度`. IDs, field names, and enum values remain English
+Example period labels: single month `2026 年 5 月`; cumulative `2026 年 1-5 月`; Jan-Feb
+`2026 年 1-2 月`; quarter `2026 年二季度`. IDs, field names, and enum values remain English
 regardless.

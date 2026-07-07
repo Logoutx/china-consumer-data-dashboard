@@ -19,10 +19,10 @@
   "observations": [
     {"period": "2014", "freq": "A", "ytd": 3427.0, "ytd_yoy": 12.6, "src": "legacy-annual-bulletin"},
     {"period": "2015", "freq": "A", "ytd": 3812.0, "ytd_yoy": null, "src": "legacy-annual-bulletin"},
+    {"period": "2016", "freq": "A", "ytd": 4259.0, "ytd_yoy": 11.7, "src": "legacy-annual-bulletin"},
     {"period": "2016-Q1", "ytd": 1111.0, "ytd_yoy": 11.3, "src": "legacy-annual-bulletin"},
     {"period": "2016-Q2", "ytd": 2078.0, "ytd_yoy": 9.8, "src": "legacy-annual-bulletin"},
     {"period": "2016-Q3", "ytd": 3158.0, "ytd_yoy": 10.3, "src": "legacy-annual-bulletin"},
-    {"period": "2016", "freq": "A", "ytd": 4259.0, "ytd_yoy": 11.7, "src": "legacy-annual-bulletin"},
     {"period": "2017-Q1", "ytd": 1237.0, "ytd_yoy": 11.4, "src": "legacy:2017-03"},
     {"period": "2017-Q2", "ytd": 2324.0, "ytd_yoy": 11.9, "src": "legacy:2017-06"},
     {"period": "2017-Q3", "ytd": 3542.0, "ytd_yoy": 12.1, "src": "legacy:2017-09"},
