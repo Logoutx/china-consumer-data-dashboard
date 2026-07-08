@@ -9,8 +9,14 @@
 // the rest of the section, and every failure console.errors instead of
 // failing silently. See lib/safe.mjs's module comment for the employment-
 // bug root-cause investigation this responds to.
+//
+// Second design-review pass — unit-label bug: the dek used to always print
+// entry.unit_zh (the catalog's LEVEL unit) regardless of which array
+// primarySeriesValues() actually chose to plot. plottedUnitLabel() below
+// derives the label from the SAME resolution the chart itself uses, so the
+// two can never drift apart again by construction.
 
-import { h, clear } from '../lib/dom.mjs';
+import { h, clear, onIntersectOnce } from '../lib/dom.mjs';
 import { formatPercent, formatNumber, panguJoin } from '../lib/format.mjs';
 import { agencyZhFromId } from '../lib/color.mjs';
 import { renderSafely } from '../lib/safe.mjs';
@@ -35,6 +41,11 @@ export function renderSection(container, { meta, bundle }) {
     const tier2 = series.filter((s) => s.tier === 2);
     const tier3 = series.filter((s) => s.tier === 3);
 
+    // Eager heroes (coordinator hardening): on a dedicated section page the
+    // tier-1 charts ARE the page's whole point — render them immediately,
+    // synchronously, no observer gate. Kills the blank-hero flash at first
+    // paint. Tier-2/3 are genuinely below-the-fold extras, so THEY lazy-load
+    // via onIntersectOnce, same as the 70-city panel below.
     if (tier1.length) {
       const tier1Wrap = h('div', { class: 'tier1-stack' });
       container.appendChild(tier1Wrap);
@@ -47,10 +58,10 @@ export function renderSection(container, { meta, bundle }) {
       const heading = h('h3', { class: 'tier-heading' }, '分项走势');
       const tier2Wrap = h('div', { class: 'tier2-wrap' });
       container.append(heading, tier2Wrap);
-      renderSafely(tier2Wrap, '分项走势', () => {
-        mountSmallMultiples(tier2Wrap, {
-          caption: '同比 %，各图共用一套纵轴',
-          panels: tier2.map((e) => entryToPanel(e)),
+      onIntersectOnce(tier2Wrap, () => {
+        renderSafely(tier2Wrap, '分项走势', () => {
+          const panels = tier2.map((e) => entryToPanel(e));
+          mountSmallMultiples(tier2Wrap, { caption: sharedAxisCaption(panels), panels });
         });
       });
     }
@@ -59,7 +70,9 @@ export function renderSection(container, { meta, bundle }) {
       const heading = h('h3', { class: 'tier-heading' }, '更多指标');
       const tier3Wrap = h('div', { class: 'tier3-wrap' });
       container.append(heading, tier3Wrap);
-      renderSafely(tier3Wrap, '更多指标', () => mountPulseList(tier3Wrap, tier3));
+      onIntersectOnce(tier3Wrap, () => {
+        renderSafely(tier3Wrap, '更多指标', () => mountPulseList(tier3Wrap, tier3));
+      });
     }
   }
 
@@ -105,13 +118,36 @@ export function levelDecimals(entry) {
  * function (rather than left inline in buildTier1Chart) specifically so this
  * exact decision is unit-testable without a DOM.
  */
-export function resolveHeadlineAndDek(entry) {
+export function resolveHeadlineAndDek(entry, unitLabel) {
   const name = displayName(entry);
   const hasTakeaway = !!entry.takeaway && entry.takeaway !== entry.name_zh && entry.takeaway !== name;
   return {
     headlineText: hasTakeaway ? entry.takeaway : name,
-    dekText: hasTakeaway ? `${name} · ${entry.unit_zh}` : entry.unit_zh,
+    dekText: hasTakeaway ? `${name} · ${unitLabel}` : unitLabel,
   };
+}
+
+/**
+ * Second design-review bug, root cause: the dek printed entry.unit_zh (the
+ * catalog's LEVEL unit, e.g. "亿元" for M1) unconditionally, even on renders
+ * where primarySeriesValues() chose to plot yoy_series instead (a percent) —
+ * "M1 · 亿元" next to a 同比 % line. Fix: derive the label from the SAME
+ * `plottedKind` primarySeriesValues() already resolved, so the two can never
+ * disagree again:
+ *   - plottedKind "yoy"   -> "同比 %" (yoy_series chosen, OR a value_type
+ *     "yoy_pct" series whose level_series field IS already a yoy number —
+ *     nbs-fai, nbs-industrial-va; see pipeline/build.py's plot_kind, which
+ *     flags exactly this case and confirms the client doesn't need to read
+ *     plot_kind itself to get this right, per docs/OPERATIONS.md)
+ *   - plottedKind "mom"   -> "环比 %" (level_series chosen for a value_type
+ *     "mom_pct" series — DATA-CONTRACT §3.3: its `m` IS the 环比 value)
+ *   - plottedKind "level" -> the catalog's own unit_zh (a genuine level,
+ *     index, count, rate, or share — unit_zh is already correct for these)
+ */
+export function plottedUnitLabel(plottedKind, unitZh) {
+  if (plottedKind === 'yoy') return '同比 %';
+  if (plottedKind === 'mom') return '环比 %';
+  return unitZh;
 }
 
 // -- Tier 1 --------------------------------------------------------------
@@ -126,7 +162,9 @@ function buildTier1Chart(entry) {
 
   const name = displayName(entry);
   const seriesLevelNote = (entry.annotations || []).find((a) => a.period === null);
-  const { headlineText, dekText } = resolveHeadlineAndDek(entry);
+  const { valuesForChart, isPercent, decimals, plottedKind } = primarySeriesValues(entry);
+  const unitLabel = plottedUnitLabel(plottedKind, entry.unit_zh);
+  const { headlineText, dekText } = resolveHeadlineAndDek(entry, unitLabel);
 
   const h3 = h('h3', { class: 'chart-headline' }, headlineText);
   const dek = h('p', { class: 'dek' }, dekText);
@@ -141,11 +179,10 @@ function buildTier1Chart(entry) {
   const sourceLine = h('p', { class: 'source-line' }, buildSourceLine(entry, entry.headline ? entry.headline.caliber : 'single'));
   article.appendChild(sourceLine);
 
-  const { valuesForChart, isPercent, decimals } = primarySeriesValues(entry);
   const isDerived = (entry.flags_latest || []).includes('derived');
 
   mountLineChart(mount, {
-    ariaLabel: entry.takeaway || `${name}：${entry.latest.period_label_zh}`,
+    ariaLabel: entry.takeaway || `${name}（${unitLabel}）：${entry.latest.period_label_zh}`,
     seriesList: [
       {
         id: entry.id,
@@ -153,10 +190,12 @@ function buildTier1Chart(entry) {
         values: valuesForChart,
         derived: isDerived,
         colorVar: '--accent-red',
+        decimals,
       },
     ],
     valueFormatter: (v) => (isPercent ? formatPercent(v, decimals) : formatNumber(v, decimals)),
     isPercent,
+    unitLabel,
     annotations: (entry.annotations || []).filter((a) => a.period !== null),
     breaks: entry.breaks || [],
     caliber: buildCaliberOption(entry),
@@ -169,21 +208,56 @@ function buildTier1Chart(entry) {
 }
 
 /**
- * Which array (yoy vs level) carries the chart's story, per series shape.
+ * Which array (yoy vs level) carries the chart's story, per series shape,
+ * PLUS `plottedKind` ("yoy" | "mom" | "level") describing what that chosen
+ * array actually represents — the single source of truth plottedUnitLabel()
+ * and the chart's own tick "%" suffix both key off, so the label and the
+ * plotted numbers can never disagree.
+ *
  * `decimals` prefers the bundle's own entry.decimals (item 6 feature-detect)
- * for the LEVEL lane; falls back to natural-precision inference (or 0 for
- * value_type "count", which the bundle's decimals field doesn't cover)
- * otherwise. YoY/percent values always use natural-precision inference
- * regardless (see levelDecimals()'s doc comment).
+ * for the LEVEL lane, when that lane is a genuine level (not a yoy_pct
+ * series falling through to level_series — those want natural-precision
+ * percent formatting, same as any other percent, not entry.decimals, which
+ * describes the catalog's level-precision convention and doesn't apply).
  */
 export function primarySeriesValues(entry) {
   const isCount = entry.value_type === 'count';
+  const isInherentlyYoy = entry.value_type === 'yoy_pct'; // nbs-fai, nbs-industrial-va: the level/ytd field IS already a growth rate
+  const isMom = entry.value_type === 'mom_pct'; // 70-city price entries: `m` IS the 环比 value
   const yoyHasData = !isCount && entry.yoy_series.some((p) => p.yoy !== null && p.yoy !== undefined);
+
   if (yoyHasData) {
-    return { valuesForChart: entry.yoy_series.map((p) => ({ period: p.period, value: p.yoy })), isPercent: true, decimals: null };
+    return {
+      valuesForChart: entry.yoy_series.map((p) => ({ period: p.period, value: p.yoy })),
+      isPercent: true,
+      decimals: null,
+      plottedKind: 'yoy',
+    };
   }
-  const decimals = isCount ? 0 : levelDecimals(entry);
-  return { valuesForChart: entry.level_series.map((p) => ({ period: p.period, value: p.m })), isPercent: false, decimals };
+
+  const decimals = isCount ? 0 : isInherentlyYoy ? null : levelDecimals(entry);
+  return {
+    valuesForChart: entry.level_series.map((p) => ({ period: p.period, value: p.m })),
+    isPercent: isInherentlyYoy,
+    decimals,
+    plottedKind: isInherentlyYoy ? 'yoy' : isMom ? 'mom' : 'level',
+  };
+}
+
+/**
+ * Tier-2 small-multiples share ONE caption above the whole grid (VIZ-GUIDE
+ * rule 11: "shared scale... stated once"). Design-review fix: it used to
+ * hardcode "同比 %" regardless of what each panel actually resolved to —
+ * correct for the common case (nearly every tier-2 series has yoy data) but
+ * a real mismatch risk the moment one panel falls through to a level/mom
+ * lane. Now derives the caption from what the panels actually share: one
+ * label if they agree, a unit-free caption if they don't (never asserts a
+ * unit that isn't true for every panel in the grid).
+ */
+function sharedAxisCaption(panels) {
+  const labels = new Set(panels.map((p) => p.unitLabel));
+  const shared = labels.size === 1 ? [...labels][0] : null;
+  return shared ? `${shared}，各图共用一套纵轴` : '各图共用一套纵轴（各序列口径不同，见各图数值）';
 }
 
 /**
@@ -254,13 +328,14 @@ export function buildSourceLine(entry, caliberKey) {
 // -- Tier 2 ----------------------------------------------------------------
 
 function entryToPanel(entry) {
-  const { valuesForChart, isPercent, decimals } = primarySeriesValues(entry);
+  const { valuesForChart, isPercent, decimals, plottedKind } = primarySeriesValues(entry);
   return {
     id: entry.id,
     title: displayName(entry),
     values: valuesForChart,
     isPercent,
     decimals,
+    unitLabel: plottedUnitLabel(plottedKind, entry.unit_zh),
     derived: (entry.flags_latest || []).includes('derived'),
   };
 }

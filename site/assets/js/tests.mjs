@@ -22,17 +22,20 @@ import { periodShape, periodOrdinal, withinRangeYears } from './lib/period.mjs';
 import { extent, niceTicks, linearScale, decimalsForStep } from './lib/scale.mjs';
 import { linePathD } from './lib/path.mjs';
 import { upDownColor, upDownClass, agencyZhFromId } from './lib/color.mjs';
-import { buildCityRows } from './components/city-grid.mjs';
+import { buildCityRows, cityMeasureSeries, groupAverageSeries } from './components/city-grid.mjs';
+import { CORE_CITIES, CAPITAL_AND_NEW_TIER_CITIES, cityGroups } from './lib/city-groups.mjs';
 import {
   resolveHeadlineAndDek,
   displayName,
   agencyFor,
   levelDecimals,
   primarySeriesValues,
+  plottedUnitLabel,
   seriesForCaliber,
   buildCaliberOption,
   buildSourceLine,
 } from './components/section.mjs';
+import { nearestIndexByOrdinal, tooltipPeriodLabel, tooltipValueLabel } from './lib/tooltip.mjs';
 
 // -- format.mjs ---------------------------------------------------------------
 
@@ -311,23 +314,34 @@ function makeEntry(overrides = {}) {
 
 test('resolveHeadlineAndDek (item 6): no takeaway -> headline=name, dek=unit ONLY (never duplicated)', () => {
   const entry = makeEntry({ takeaway: null, name_zh: '制造业 PMI' });
-  const { headlineText, dekText } = resolveHeadlineAndDek(entry);
+  const { headlineText, dekText } = resolveHeadlineAndDek(entry, '%');
   assert.equal(headlineText, '制造业 PMI');
   assert.equal(dekText, '%'); // unit only -- NOT "制造业 PMI · %" (that would repeat the headline)
 });
 
 test('resolveHeadlineAndDek: real takeaway -> headline=takeaway, dek="name · unit"', () => {
   const entry = makeEntry({ takeaway: '2026 年 5 月制造业 PMI 为 50.2，高于荣枯线', name_zh: '制造业 PMI', name_short: 'PMI' });
-  const { headlineText, dekText } = resolveHeadlineAndDek(entry);
+  const { headlineText, dekText } = resolveHeadlineAndDek(entry, '%');
   assert.equal(headlineText, '2026 年 5 月制造业 PMI 为 50.2，高于荣枯线');
   assert.equal(dekText, 'PMI · %'); // prefers name_short
 });
 
 test('resolveHeadlineAndDek: takeaway identical to the name is treated as "no takeaway" (still no duplicate)', () => {
   const entry = makeEntry({ takeaway: '测试序列', name_zh: '测试序列' });
-  const { headlineText, dekText } = resolveHeadlineAndDek(entry);
+  const { headlineText, dekText } = resolveHeadlineAndDek(entry, '%');
   assert.equal(headlineText, '测试序列');
   assert.equal(dekText, '%');
+});
+
+test('resolveHeadlineAndDek (2nd design review, unit-label bug): dek unit is whatever is PLOTTED, not entry.unit_zh directly', () => {
+  // The exact repro: M1's catalog unit is 亿元 but yoy_series has data, so
+  // the chart plots 同比 % — the dek must say that, not "M1 · 亿元".
+  const entry = makeEntry({ name_zh: 'M1', name_short: 'M1', unit_zh: '亿元', takeaway: null });
+  const { plottedKind } = primarySeriesValues(entry);
+  const unitLabel = plottedUnitLabel(plottedKind, entry.unit_zh);
+  const { dekText } = resolveHeadlineAndDek(entry, unitLabel);
+  assert.equal(unitLabel, '同比 %');
+  assert.equal(dekText, '同比 %');
 });
 
 test('displayName/agencyFor/levelDecimals (item 6): prefer bundle-provided fields, fall back gracefully', () => {
@@ -348,14 +362,53 @@ test('primarySeriesValues: prefers entry.decimals for the LEVEL lane, never for 
     yoy_series: [{ period: '2026-05', yoy: null }],
     level_series: [{ period: '2026-05', m: 7955 }],
   });
-  const { decimals, isPercent } = primarySeriesValues(levelOnly);
+  const { decimals, isPercent, plottedKind } = primarySeriesValues(levelOnly);
   assert.equal(isPercent, false);
   assert.equal(decimals, 0); // uses entry.decimals for the level lane
+  assert.equal(plottedKind, 'level');
 
   const yoyCase = makeEntry({ decimals: 0, yoy_series: [{ period: '2026-05', yoy: 3.6 }] });
   const yoyResult = primarySeriesValues(yoyCase);
   assert.equal(yoyResult.isPercent, true);
   assert.equal(yoyResult.decimals, null); // YoY lane always infers natural precision, ignoring entry.decimals
+  assert.equal(yoyResult.plottedKind, 'yoy');
+});
+
+test('primarySeriesValues (2nd design review): value_type "yoy_pct" (nbs-fai, nbs-industrial-va) falling through to level_series is STILL a percent', () => {
+  // These series' level/ytd field IS already a growth rate (pipeline's
+  // plot_kind:"yoy" flags exactly this) -- no separate m_yoy to prefer, so
+  // yoy_series has no data and the fallback to level_series must not treat
+  // -4.1 as a bare number ("M1 · 亿元"-style bug applied to FAI instead).
+  const fai = makeEntry({
+    value_type: 'yoy_pct',
+    unit_zh: '%',
+    calibers: ['ytd'],
+    yoy_series: [{ period: '2026-05', yoy: null }],
+    level_series: [{ period: '2026-05', m: -4.1 }],
+  });
+  const result = primarySeriesValues(fai);
+  assert.equal(result.isPercent, true);
+  assert.equal(result.plottedKind, 'yoy');
+  assert.equal(result.decimals, null); // natural precision, not entry.decimals
+});
+
+test('primarySeriesValues: value_type "mom_pct" (70-city price) falling through to level_series plots as 环比, not a bare level', () => {
+  const city = makeEntry({
+    value_type: 'mom_pct',
+    unit_zh: '%',
+    yoy_series: [{ period: '2026-05', yoy: null }],
+    level_series: [{ period: '2026-05', m: -0.2 }],
+  });
+  const result = primarySeriesValues(city);
+  assert.equal(result.plottedKind, 'mom');
+  assert.equal(result.isPercent, false); // the number itself isn't re-tagged as "%"-formatted -- see plottedUnitLabel for the label
+});
+
+test('plottedUnitLabel: yoy -> 同比 %, mom -> 环比 %, level -> the catalog unit', () => {
+  assert.equal(plottedUnitLabel('yoy', '亿元'), '同比 %');
+  assert.equal(plottedUnitLabel('mom', '%'), '环比 %');
+  assert.equal(plottedUnitLabel('level', '亿元'), '亿元');
+  assert.equal(plottedUnitLabel('level', '个'), '个');
 });
 
 test('seriesForCaliber (item 9, feature-detected): "single" always resolves (it is just today\'s plain yoy_series/level_series); "ytd" is null until the bundle grows the new suffixed fields', () => {
@@ -402,4 +455,104 @@ test('buildSourceLine: prefers entry.source.agency_zh, flags revisions with ※'
   const entry = makeEntry({ source: { agency_zh: '中国物流与采购联合会' }, revisions_recent: [{ period: '2026-04', measure: 'm' }] });
   const line = buildSourceLine(entry, 'single');
   assert.equal(line, '资料来源：中国物流与采购联合会 · 截至 2026 年 5 月 · 当月口径 ※ 历史数据已修订');
+});
+
+// -- hover tooltip (owner addendum): nearest-point snapping + formatting ---------------
+
+test('nearestIndexByOrdinal: exact match, and snaps to the nearer neighbor for an in-between target', () => {
+  const ordinals = [10, 20, 30, 40];
+  assert.equal(nearestIndexByOrdinal(ordinals, 20), 1);
+  assert.equal(nearestIndexByOrdinal(ordinals, 24), 1); // closer to 20 than 30
+  assert.equal(nearestIndexByOrdinal(ordinals, 26), 2); // closer to 30 than 20
+  assert.equal(nearestIndexByOrdinal(ordinals, 25), 1); // tie -> the earlier index
+});
+
+test('nearestIndexByOrdinal: clamps to the first/last point, never returns out of range', () => {
+  const ordinals = [10, 20, 30];
+  assert.equal(nearestIndexByOrdinal(ordinals, -500), 0);
+  assert.equal(nearestIndexByOrdinal(ordinals, 500), 2);
+  assert.equal(nearestIndexByOrdinal([], 5), -1);
+});
+
+test('nearestIndexByOrdinal: correct for UNEVEN spacing (a time-range change or an annual-supplement row)', () => {
+  const ordinals = [0, 1, 2, 3, 4, 5, 100, 101]; // a big gap, then two closely-spaced points
+  assert.equal(nearestIndexByOrdinal(ordinals, 52), 5); // |52-5|=47 < |52-100|=48 -- nearer to 5
+  assert.equal(nearestIndexByOrdinal(ordinals, 53), 6); // |53-5|=48 > |53-100|=47 -- nearer to 100
+  assert.equal(nearestIndexByOrdinal(ordinals, 3), 3);
+});
+
+test('tooltipPeriodLabel: monthly, quarterly, annual, and the cumulative "1-N 月" range (subsumes Jan-Feb)', () => {
+  assert.equal(tooltipPeriodLabel('2026-05', {}), '2026 年 5 月');
+  assert.equal(tooltipPeriodLabel('2026-Q2'), '2026 年 2 季度');
+  assert.equal(tooltipPeriodLabel('2026'), '2026 年');
+  assert.equal(tooltipPeriodLabel('2026-02', { cumulative: true }), '2026 年 1-2 月');
+  assert.equal(tooltipPeriodLabel('2026-05', { cumulative: true }), '2026 年 1-5 月');
+  assert.equal(tooltipPeriodLabel('2026-01', { cumulative: true }), '2026 年 1 月'); // month 1: no range to show
+});
+
+test('tooltipValueLabel: percent skips the unit suffix (already has "%"); level appends the plotted unit; null/undefined -> em dash', () => {
+  assert.equal(tooltipValueLabel(-0.6, { isPercent: true }), '-0.6%');
+  assert.equal(tooltipValueLabel(41090, { isPercent: false, decimals: 1, unitLabel: '亿元' }), '41,090.0 亿元');
+  assert.equal(tooltipValueLabel(null, { isPercent: true }), '—');
+  assert.equal(tooltipValueLabel(undefined, { isPercent: false }), '—');
+});
+
+// -- 70-city depth restore: groups + full-history series -------------------------------
+
+test('city-groups: exact ported lists (北上广深, 省会和新一线) are non-empty and disjoint', () => {
+  assert.deepEqual(CORE_CITIES, ['北京', '上海', '广州', '深圳']);
+  assert.equal(CAPITAL_AND_NEW_TIER_CITIES.length, 29);
+  assert.ok(!CAPITAL_AND_NEW_TIER_CITIES.some((c) => CORE_CITIES.includes(c)));
+});
+
+test('cityGroups: assigns every city to exactly one group (core / capital-new-tier / other), covers a partial panel gracefully', () => {
+  const cities = ['北京', '上海', '杭州', '呼和浩特', '某未知城市'];
+  const groups = cityGroups(cities);
+  const allAssigned = groups.flatMap((g) => g.cities);
+  assert.deepEqual([...allAssigned].sort(), [...cities].sort());
+  const core = groups.find((g) => g.key === 'core');
+  assert.deepEqual(core.cities, ['北京', '上海']); // 广州/深圳 not in this partial panel -- filtered out, not fabricated
+  const other = groups.find((g) => g.key === 'other');
+  assert.deepEqual(other.cities, ['某未知城市']);
+});
+
+test('cityGroups: omits an empty group entirely rather than rendering a blank one', () => {
+  const groups = cityGroups(['某未知城市']); // no core/capital-tier cities present at all
+  assert.equal(groups.length, 1);
+  assert.equal(groups[0].key, 'other');
+});
+
+test('cityMeasureSeries: full-history {period,value} pairs for one city+metric+measure, missing cells stay null', () => {
+  const panel = {
+    periods: ['2011-01', '2011-02'],
+    cells: { 北京: { new_home: { m: [-0.2, null] } } },
+  };
+  assert.deepEqual(cityMeasureSeries(panel, '北京', 'new_home', 'm'), [
+    { period: '2011-01', value: -0.2 },
+    { period: '2011-02', value: null },
+  ]);
+  assert.deepEqual(cityMeasureSeries(panel, '上海', 'new_home', 'm'), [
+    { period: '2011-01', value: null },
+    { period: '2011-02', value: null },
+  ]); // city entirely absent from cells -- graceful, not a throw
+});
+
+test('groupAverageSeries: simple mean across the group\'s cities per period, skipping nulls (mirrors build.py\'s simple_mean_of_cities)', () => {
+  const panel = {
+    periods: ['2011-01', '2011-02'],
+    cells: {
+      北京: { new_home: { m: [-0.2, -0.4] } },
+      上海: { new_home: { m: [0.2, null] } },
+    },
+  };
+  const group = { key: 'core', label: '北上广深', cities: ['北京', '上海'] };
+  const series = groupAverageSeries(panel, group, 'new_home', 'm');
+  assert.equal(series[0].value, 0); // mean(-0.2, 0.2) = 0
+  assert.equal(series[1].value, -0.4); // only 北京 has data at 2011-02 -- mean of the one available value, not null
+});
+
+test('groupAverageSeries: null when every city in the group is missing that period (never fabricates a zero)', () => {
+  const panel = { periods: ['2011-01'], cells: { 北京: { new_home: { m: [null] } } } };
+  const group = { key: 'core', label: '北上广深', cities: ['北京'] };
+  assert.equal(groupAverageSeries(panel, group, 'new_home', 'm')[0].value, null);
 });

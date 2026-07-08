@@ -1,21 +1,67 @@
 # DEV-NOTES — manual verification checklist
 
-`site/assets/js/tests.mjs` (`node --test site/assets/js/tests.mjs`, 38 cases) covers every pure
-function — scale math, tick rounding/trimming, pangu formatting, path building, and the
-design-review decision functions pulled out of `section.mjs` (headline/dek fallback, caliber
-feature-detection, source-line construction). This file is for everything that needs an actual
-browser: layout, collision avoidance, interaction, dark mode.
+`site/assets/js/tests.mjs` (`node --test site/assets/js/tests.mjs`) covers every pure function —
+scale math, tick rounding/trimming, pangu formatting, path building, the design-review decision
+functions pulled out of `section.mjs` (headline/dek fallback, caliber feature-detection,
+source-line construction, the yoy/mom/level unit-label fix), the hover-tooltip's nearest-point
+snapping + formatting, and the 70-city group/full-history helpers.
+`site/assets/js/tests.dom.mjs` (`node --test site/assets/js/tests.dom.mjs`) adds the one
+DOM-dependent case that needs a render path: `mountLineChart`'s repeated-render idempotency (the
+stray-vertical-lines fix). Run both: `node --test site/assets/js/tests.mjs site/assets/js/tests.dom.mjs`.
+This file is for everything that still needs an actual browser: layout, collision avoidance,
+interaction, dark mode.
+
+## Page structure (2026-07-08 restructure)
+
+One page per section, replacing the old single long scroll: `site/index.html` is a front-page
+overview (one block per section: name + lead tier-1 takeaway + mini sparkline + link, built by
+fetching each section's own bundle — see `app.mjs`'s module comment for why index.json's tiles
+alone aren't enough); `site/prices.html`, `consumption.html`, `income-confidence.html`,
+`employment.html`, `property.html`, `money-credit.html`, `macro.html`, `high-frequency.html` each
+render exactly their own section via the shared `section-page.mjs` bootstrap (reads
+`<body data-section="...">`). `page-shell.mjs` builds the masthead/nav/range-control/footer
+shared by every page; the nav marks the current page (`aria-current="page"` + `.active`). The
+time-range control persists across page loads via `localStorage` (`store.mjs`, key `range-key`,
+default 5 年) — a real navigation, not an SPA route, so this was necessary for the control to
+feel global rather than resetting per page. The 70-city panel still lazy-loads within
+`property.html` via `city-grid.mjs`'s own `IntersectionObserver`, unchanged.
+
+`config.mjs`'s `DATA_BASE` constant is untouched (`'../site-data'`) — every page lives directly
+in `site/` at the same depth as the old single `index.html`, so the existing relative path and
+`.github/workflows/deploy.yml`'s scoped `sed -i '/DATA_BASE/ s#\.\./site-data#\./site-data#'`
+rewrite both keep working unmodified for all 9 pages. Verified by copying `site/` + a built
+`site-data/` into a temp dir mirroring `_site/`'s flattened deploy layout and serving that (see
+"How to run locally" below).
 
 ## How to run locally
 
 ```
 python3 -m http.server 8123   # from the repo root
-open http://127.0.0.1:8123/site/
+open http://127.0.0.1:8123/site/            # front-page overview
+open http://127.0.0.1:8123/site/property.html
 ```
 
-`?data=../site-data-fixtures` points the page at the synthetic fixtures bundle instead of the
-real one — useful below, since real data currently has zero breaks/annotations and only one
-series with both calibers (`nbs-retail-total`).
+`?data=../site-data-fixtures` points a page at the synthetic fixtures bundle instead of the real
+one — useful below, since real data currently has zero breaks/annotations and only one series
+with both calibers (`nbs-retail-total`).
+
+## Parity audit (design-review item 5)
+
+All 89 `data/catalog.json` series were cross-referenced against the built `site-data/sections/*`
+bundles: every one of the 88 non-panel series is present in its section's bundle with
+`tier` ∈ {1,2,3} (`renderSection` renders all three tiers unconditionally — chart / small-multiples
+panel / pulse row — so presence + a valid tier is sufficient to guarantee visibility); the 89th,
+the `nbs-70city-price` panel, renders via `property.html`'s city-grid (mini grid + click-to-expand
+detail + the grouped-average charts). **Result: 89/89 series visible on exactly one page.** The
+one intentional exception named by the owner: `high-frequency.html` currently has zero catalog
+series assigned to it (`data/catalog.json` has no `section:"high-frequency"` entries yet) and
+renders the standard "数据接入中" empty-section state — not a bug, a backfill-in-progress section.
+
+**Retired by design, not an oversight:** the old site's 修正后/发布时 (revised-vs-as-published) and
+TTM view-mode toggles are gone. The new design's revision markers (`※ 历史数据已修订` in the source
+line, driven by `revisions_recent`) and a future data-diary link replace them — VIZ-GUIDE's
+15-rule constitution never asked for a vintage toggle or a rolling-12-month view, and re-adding
+either would exceed the two-controls budget for no VIZ-GUIDE-mandated payoff.
 
 ## Regression: a section already intersecting when its observer attaches
 

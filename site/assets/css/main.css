@@ -137,6 +137,11 @@ body {
   text-wrap: balance;
 }
 
+.site-name-link {
+  color: inherit;
+  text-decoration: none;
+}
+
 .freshness-stamp {
   font-family: var(--font-sans);
   font-size: 11.5px;
@@ -160,6 +165,62 @@ body {
 .section-nav a:hover,
 .section-nav a:focus-visible {
   border-bottom-color: var(--ink-soft);
+}
+
+/* Restructure task 3: "nav bar on every page marks the current page." */
+.section-nav a.active {
+  color: var(--ink);
+  font-weight: 700;
+  border-bottom-color: var(--accent-red);
+}
+
+/* -- front page (index.html): one overview block per section --------------- */
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.overview-block {
+  display: block;
+  padding: 16px;
+  border: 1px solid var(--grid);
+  color: inherit;
+  text-decoration: none;
+  min-width: 0;
+}
+
+.overview-block:hover,
+.overview-block:focus-visible {
+  border-color: var(--grid-strong);
+}
+
+.overview-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.overview-takeaway {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink);
+  margin: 0 0 10px;
+  text-wrap: balance;
+}
+
+.overview-spark {
+  display: block;
+  width: 120px;
+  height: 32px;
+  margin: 0 0 8px;
+}
+
+.overview-link-label {
+  font-size: 12px;
+  color: var(--ink-faint);
 }
 
 /* -- global range control (VIZ-GUIDE rule 1: one of exactly two controls) --- */
@@ -303,6 +364,14 @@ body {
 .chart-surface {
   position: relative;
   width: 100%;
+  /* BUG FIX (design review, stray vertical lines): this is the chart's own
+     containing block AND its clip boundary. Any geometry that computes an
+     out-of-bounds coordinate (a bad xScale/yScale input, a marker stacked
+     past the chart height, ...) now gets clipped HERE instead of visually
+     escaping into whatever page content sits above/below/beside this box —
+     "between the two charts" and "down into the strip below" were exactly
+     that: content escaping a box that didn't clip. */
+  overflow: hidden;
 }
 
 .chart-svg {
@@ -311,13 +380,19 @@ body {
   width: 100%;
   height: 100%;
   display: block;
-  overflow: visible;
+  /* Was overflow:visible (to avoid clipping a stroke's antialiased edge at
+     the box boundary) — not worth the risk of unclipped geometry escaping
+     the chart on any bug; .chart-surface's own overflow:hidden above is the
+     real, deliberate clip boundary regardless of this value, so this is now
+     just a defensive second layer at the SVG level itself. */
+  overflow: hidden;
 }
 
 .chart-overlay {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  overflow: hidden;
 }
 
 .grid-line {
@@ -358,6 +433,52 @@ body {
 .leader-line--break {
   stroke-dasharray: 3 3;
   opacity: 0.9;
+}
+
+/* -- hover tooltip (owner addendum, pointer devices only) ------------------- */
+
+.hover-guide {
+  stroke: var(--grid-strong);
+  stroke-width: 1;
+  opacity: 0;
+  transition: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.hover-dot {
+  stroke: var(--paper);
+  stroke-width: 1.5;
+}
+
+.chart-tooltip {
+  position: absolute;
+  z-index: 1;
+  background: var(--paper);
+  border: 1px solid var(--grid-strong);
+  padding: 7px 8px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.chart-tooltip-period {
+  color: var(--ink-faint);
+  margin-bottom: 2px;
+}
+
+.chart-tooltip-row {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.chart-tooltip-name {
+  font-weight: 700;
 }
 
 .chart-label {
@@ -609,10 +730,25 @@ body {
   gap: 10px 14px;
 }
 
+/* .city-mini is a <button> (depth-restore: click to expand a city's detail
+   chart) — reset button chrome back to the plain-card look it had as a div. */
 .city-mini {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 2px;
+  width: 100%;
+  border: 1px solid transparent;
+  background: none;
+  padding: 4px;
+  margin: -4px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.city-mini:hover,
+.city-mini[aria-expanded='true'] {
+  border-color: var(--grid);
 }
 
 .city-name {
@@ -621,6 +757,7 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .city-values {
@@ -631,6 +768,36 @@ body {
 
 .city-value {
   font-weight: 700;
+}
+
+/* -- city detail expand + grouped view (depth restore) ------------------------------ */
+
+.city-detail {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--grid);
+}
+
+.city-detail-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 10px;
+}
+
+.city-detail-grid {
+  display: grid;
+  /* auto-fit + minmax instead of a fixed breakpoint: naturally stacks to one
+     column whenever the AVAILABLE width (not just viewport width — this
+     also matters embedded in a narrower column) can't fit two >=280px
+     charts, no media query needed. */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+.city-group-view {
+  margin-top: 24px;
 }
 
 /* -- footer -------------------------------------------------------------------------- */

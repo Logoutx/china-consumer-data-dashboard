@@ -1,40 +1,46 @@
 // components/line-chart.mjs — the Tier-1 chart: 1-2 series, direct end
 // labels, endpoint dot + printed value, annotations as numbered footnote
-// markers, break markers, dashed-derived lines. VIZ-GUIDE rules 2/4/5/6/8/
-// 10/13.
+// markers, break markers, dashed-derived lines, hover tooltip. VIZ-GUIDE
+// rules 2/4/5/6/8/10/13. Also the engine behind property.html's city-detail
+// expand and group-average charts (both feed it 2-series data).
 //
-// Design-review fixes (2026-07-08):
-//  - Annotations/breaks used to print their FULL text inline on the chart
-//    face, which could crowd the endpoint value (rule 2 says the latest
-//    value must ALWAYS be visible) and got dropped entirely on narrow
-//    viewports. Fixed uniformly at every width: the chart face gets only a
-//    leader tick + a small circled numeral (①②...), clamped to never enter
-//    the endpoint's reserved right-side gutter; the full text renders as a
-//    numbered footnote list below the chart, in normal HTML flow, always.
-//  - Gridline tick labels now trim to whole numbers when the axis step is
-//    >=1 (no more "4.0%" next to "0%"); the endpoint/data value keeps its
-//    own natural-precision formatting (formatNumber/formatPercent, chosen in
-//    section.mjs) since a printed observation's actual precision is a
-//    different question from the axis's round step.
-//  - Every render (including ones triggered asynchronously later by resize/
-//    range/theme callbacks, which previously had no error boundary at all)
-//    is now wrapped: an exception logs via console.error and falls back to
-//    an inline error note instead of silently leaving a blank/stuck chart.
+// Design-review fixes (2026-07-08, two passes):
+//  - Annotations/breaks print only a small circled numeral on the chart
+//    face (never full text — that crowded the endpoint gutter and got
+//    dropped on narrow viewports); the full text is a numbered footnote
+//    list below the chart, in normal HTML flow, at every width.
+//  - Gridline tick labels trim to whole numbers when the axis step is >=1.
+//  - Every render (including later async resize/range/theme callbacks) is
+//    wrapped: an exception logs via console.error and falls back to an
+//    inline error note instead of silently leaving a blank/stuck chart.
+//  - Stray vertical lines bug: .chart-surface/.chart-svg/.chart-overlay now
+//    clip (overflow:hidden) instead of allowing geometry to escape the
+//    chart's own box (see main.css) — a defensive fix regardless of the
+//    exact original cause, which could not be reproduced as a JS-level
+//    accumulation bug (render() clears the mount point fresh every call,
+//    verified via a repeated-render idempotency test — see tests.dom.mjs).
+//  - Unit-label bug: dek/tooltip/tick units are now driven by the SAME
+//    isPercent/decimals/unitLabel resolution the chart plots, per series
+//    (section.mjs's plottedUnitLabel/primarySeriesValues) — no more "M1 ·
+//    亿元" next to a 同比 % line.
+//  - Hover tooltip added (desktop-bonus, pointer devices only): snaps to
+//    the nearest data point by x, shows a guide line + per-series dot +
+//    a small period/value box. Purely additive — the printed endpoint
+//    value stays the always-visible source of truth (rule 2).
 //
 // Endpoint readout: by default the bundle's yoy_series/level_series is a
-// single array resolved to ONE caliber (build.py's _resolve_caliber picks
-// "single" when a series has it) — so the toggle text-swaps the printed
-// 当月/累计 readout only. Where the bundle ALSO carries the other caliber's
-// series arrays (feature-detected via props.caliber.<key>.series — see
-// section.mjs's buildCaliberOption; field names yoy_series_ytd/
-// level_series_ytd are a best guess per the design-review note, unverified
+// single array resolved to ONE caliber — so the toggle text-swaps the
+// printed 当月/累计 readout only. Where the bundle ALSO carries the other
+// caliber's series arrays (feature-detected via props.caliber.<key>.series;
+// field names yoy_series_ytd/level_series_ytd are a best guess, unverified
 // against a real bundle as of this fix), the toggle instead swaps the
 // plotted line + domain + endpoint position, not just the caption text.
 
-import { clear, onResize, h } from '../lib/dom.mjs';
+import { clear, onResize, h, supportsHover, ensureMeasuredWidth } from '../lib/dom.mjs';
 import { extent, decimalsForStep } from '../lib/scale.mjs';
 import { periodOrdinal, withinRangeYears } from '../lib/period.mjs';
 import { circledNumeral } from '../lib/format.mjs';
+import { nearestIndexByOrdinal, tooltipPeriodLabel, tooltipValueLabel } from '../lib/tooltip.mjs';
 import { getRangeYears, onRangeChange, onThemeChange } from '../store.mjs';
 import {
   mountSurface,
@@ -55,9 +61,11 @@ const ENDPOINT_KEEPOUT_Y = 24; // px
  * @param container HTMLElement
  * @param props {
  *   ariaLabel: string,
- *   seriesList: [{ id, name, values:[{period,value}], derived, colorVar }],
- *   valueFormatter: (n) => string,   // endpoint/data-value formatting (natural precision)
- *   isPercent: boolean,              // whether seriesList[0].values are already a percent (drives tick "%" suffix)
+ *   seriesList: [{ id, name, values:[{period,value}], derived, colorVar,
+ *                  isPercent?, decimals?, unitLabel?, cumulative? }],
+ *   valueFormatter: (n) => string,   // endpoint/data-value formatting for series[0] (natural precision)
+ *   isPercent: boolean,              // series[0]'s plotted kind (drives tick "%" suffix); overridable per-series above
+ *   unitLabel?: string,              // series[0]'s plotted unit (tooltip fallback when not set per-series)
  *   annotations: [{period, text}],   // period-anchored only (series-level notes render elsewhere)
  *   breaks: [{effective, note}],
  *   caliber: null | {
@@ -65,6 +73,7 @@ const ENDPOINT_KEEPOUT_Y = 24; // px
  *     ytd:    { label, valueText, yoyText, series?: {values, isPercent} },
  *   },
  *   height?: number,
+ *   ignoreRange?: boolean,           // skip the global time-range control — city-detail/group charts want full history
  * }
  */
 export function mountLineChart(container, props) {
@@ -73,16 +82,19 @@ export function mountLineChart(container, props) {
     seriesList,
     valueFormatter,
     isPercent = false,
+    unitLabel = '',
     annotations = [],
     breaks = [],
     caliber = null,
     height = 260,
     onCaliberChange,
+    ignoreRange = false,
   } = props;
 
   // Feature-detect the "full swap" caliber shape (design-review item 9):
   // both calibers additionally carry their own {values, isPercent} series.
   const fullSwapAvailable = !!(caliber && caliber.single && caliber.ytd && caliber.single.series && caliber.ytd.series);
+  const hoverEnabled = supportsHover();
 
   let activeCaliber = 'single';
   let disposeResize = null;
@@ -98,6 +110,7 @@ export function mountLineChart(container, props) {
 
   function visiblePoints(values) {
     if (!values.length) return [];
+    if (ignoreRange) return values;
     const withData = values.filter((v) => v.value !== null && v.value !== undefined);
     const latestPeriod = withData.length ? withData[withData.length - 1].period : values[values.length - 1].period;
     const years = getRangeYears();
@@ -108,9 +121,6 @@ export function mountLineChart(container, props) {
     try {
       renderUnsafe(width);
     } catch (err) {
-      // Design-review item 1: a render exception (including ones raised
-      // asynchronously from a later resize/range/theme callback, which had
-      // no error boundary at all before this fix) must never fail silently.
       console.error(`[line-chart] render failed for series ${seriesList.map((s) => s.id).join(',')}:`, err);
       clear(container);
       container.appendChild(h('p', { class: 'render-error-note' }, '该图表渲染失败，请刷新重试。'));
@@ -160,9 +170,9 @@ export function mountLineChart(container, props) {
 
     const gutterLeft = width - padRight;
 
-    // Compute the primary series' endpoint FIRST so footnote markers can
-    // avoid it (item 2: "reserve a right-side gutter for the endpoint
-    // dot+value; annotations must collision-avoid").
+    // Compute the primary series' endpoint FIRST so footnote markers (and
+    // the tooltip's flip logic) can avoid it (item 2: "reserve a right-side
+    // gutter for the endpoint dot+value; annotations must collision-avoid").
     const primaryPts = visSeries[0].pts;
     const primaryLast = [...primaryPts].reverse().find((p) => p.value !== null && p.value !== undefined);
     const endpoint = primaryLast ? { x: xScale(periodOrdinal(primaryLast.period)), y: yScale(primaryLast.value) } : null;
@@ -178,8 +188,10 @@ export function mountLineChart(container, props) {
       endpoint,
     });
 
+    const seriesColors = [];
     visSeries.forEach((s, i) => {
       const color = `var(${s.colorVar || '--context'})`;
+      seriesColors.push(color);
       const pathPoints = s.pts.map((p) => ({ x: periodOrdinal(p.period), y: p.value }));
       const line = drawLine(svg, { points: pathPoints, xScale, yScale, color, dashed: s.derived });
       if (line) svg.appendChild(line);
@@ -201,14 +213,27 @@ export function mountLineChart(container, props) {
         });
       }
     });
+
+    if (hoverEnabled) {
+      wireTooltip(svg, overlay, wrap, {
+        visSeries,
+        seriesColors,
+        xScale,
+        yScale,
+        width,
+        height,
+        pad,
+        gutterLeft,
+        topKeepout: pad.top + 20, // stay clear of footnote markers near the top
+      });
+    }
   }
 
   /**
    * Numbered footnote system (items 2+5): every break/annotation gets a
    * leader tick + a tiny circled-numeral marker on the chart face (never
-   * full text — that's what crowded the endpoint gutter and got dropped on
-   * narrow viewports), plus a matching <li> in a footnote list appended
-   * right after the chart surface, at every viewport width. Renumbers each
+   * full text), plus a matching <li> in a footnote list appended right
+   * after the chart surface, at every viewport width. Renumbers each
    * render() call from whatever is currently visible, in chronological
    * order, so numbers always match what's on screen for the active range.
    */
@@ -260,18 +285,126 @@ export function mountLineChart(container, props) {
     container.appendChild(list);
   }
 
+  /**
+   * Hover tooltip (desktop-bonus, additive per VIZ-GUIDE rule 2 — the
+   * printed endpoint value is the always-visible fact; this is a lookup
+   * convenience on top). Idempotent by construction: it's built fresh
+   * inside renderUnsafe's already-cleared overlay/svg every render, so
+   * there is never more than one tooltip node per chart, and a redraw
+   * can't leave a stale one behind.
+   */
+  function wireTooltip(svg, overlay, wrap, { visSeries, seriesColors, xScale, yScale, width, height, pad, gutterLeft, topKeepout }) {
+    const guide = drawLeader(svg, { x: -1000, top: pad.top, bottom: height - pad.bottom });
+    guide.classList.add('hover-guide');
+    guide.style.opacity = '0';
+    svg.appendChild(guide);
+
+    const seriesDots = visSeries.map((s, i) => {
+      const dot = drawEndpointDot(svg, { x: -1000, y: -1000, color: seriesColors[i] });
+      dot.classList.add('hover-dot');
+      dot.style.opacity = '0';
+      svg.appendChild(dot);
+      return dot;
+    });
+
+    const box = h('div', { class: 'chart-tooltip', 'aria-hidden': 'true' });
+    box.style.opacity = '0';
+    overlay.appendChild(box);
+
+    const ordinalsBySeries = visSeries.map((s) => s.pts.map((p) => periodOrdinal(p.period)));
+
+    function hide() {
+      guide.style.opacity = '0';
+      seriesDots.forEach((d) => (d.style.opacity = '0'));
+      box.style.opacity = '0';
+    }
+
+    function show(clientX) {
+      const rect = wrap.getBoundingClientRect();
+      const px = clientX - rect.left;
+      if (px < pad.left || px > width - 4) {
+        hide();
+        return;
+      }
+      const targetOrdinal = xScale.invert(px);
+      const primaryIdx = nearestIndexByOrdinal(ordinalsBySeries[0], targetOrdinal);
+      if (primaryIdx === -1) {
+        hide();
+        return;
+      }
+      const primaryPeriod = visSeries[0].pts[primaryIdx].period;
+      const x = xScale(periodOrdinal(primaryPeriod));
+
+      guide.setAttribute('x1', x);
+      guide.setAttribute('x2', x);
+      guide.style.opacity = '1';
+
+      const rows = [];
+      let anyY = height / 2;
+      visSeries.forEach((s, i) => {
+        const idx = nearestIndexByOrdinal(ordinalsBySeries[i], targetOrdinal);
+        const pt = idx >= 0 ? s.pts[idx] : null;
+        const dot = seriesDots[i];
+        if (!pt || pt.value === null || pt.value === undefined) {
+          dot.style.opacity = '0';
+          return;
+        }
+        const py = yScale(pt.value);
+        dot.setAttribute('cx', xScale(periodOrdinal(pt.period)));
+        dot.setAttribute('cy', py);
+        dot.style.opacity = '1';
+        anyY = py;
+        const seriesIsPercent = s.isPercent ?? isPercent;
+        const valueText = tooltipValueLabel(pt.value, {
+          isPercent: seriesIsPercent,
+          decimals: s.decimals ?? null,
+          unitLabel: seriesIsPercent ? '' : (s.unitLabel ?? unitLabel),
+        });
+        rows.push({ label: visSeries.length > 1 ? s.name : null, value: valueText, color: seriesColors[i] });
+      });
+      if (!rows.length) {
+        hide();
+        return;
+      }
+
+      const periodLabel = tooltipPeriodLabel(primaryPeriod, { cumulative: !!seriesList[0].cumulative });
+      renderTooltipBox(box, periodLabel, rows);
+      positionTooltipBox(box, { x, y: anyY, width, height, pad, gutterLeft, topKeepout });
+    }
+
+    wrap.addEventListener('pointermove', (e) => show(e.clientX));
+    wrap.addEventListener('pointerleave', hide);
+  }
+
+  function renderTooltipBox(box, periodLabel, rows) {
+    box.textContent = '';
+    box.appendChild(h('div', { class: 'chart-tooltip-period' }, periodLabel));
+    for (const row of rows) {
+      box.appendChild(
+        h('div', { class: 'chart-tooltip-row' }, [
+          row.label ? h('span', { class: 'chart-tooltip-name', style: { color: row.color } }, row.label) : null,
+          h('span', { class: 'chart-tooltip-value' }, row.value),
+        ]),
+      );
+    }
+  }
+
+  function positionTooltipBox(box, { x, y, pad, gutterLeft, topKeepout }) {
+    const flipLeft = x > gutterLeft - 90;
+    const flipDown = y < topKeepout;
+    box.style.left = `${x}px`;
+    box.style.top = `${y}px`;
+    box.style.opacity = '1';
+    const horiz = flipLeft ? 'calc(-100% - 10px)' : '10px';
+    const vert = flipDown ? '10px' : 'calc(-100% - 10px)';
+    box.style.transform = `translate(${horiz}, ${vert})`;
+  }
+
   function renderPrimaryReadout(overlay, wrap, { x, y, color, lastValue }) {
-    // BUG FIX (design-review item 2, root cause): currentValueText()/
-    // currentCaptionText() previously returned null whenever a series has no
-    // caliber toggle — which is every tier-1 series except retail-total (CPI,
-    // PMI, 70-city, M1, ...). That meant the endpoint printed NO value at all
-    // for nearly the whole site, not merely "crowded by an annotation" on
-    // CPI specifically. Fallback: when there's no caliber block, format the
-    // series' own last plotted value with valueFormatter — this is exactly
-    // rule 2's "latest value... printed on the chart face", and since the
-    // plotted value for most series already IS the YoY (see
-    // section.mjs's primarySeriesValues preferring yoy_series), it also
-    // covers "its YoY change" without a separate caption.
+    // BUG FIX (design-review item 2, root cause): the endpoint printed NO
+    // value at all for any series without a caliber toggle (every tier-1
+    // series except retail-total). Fallback: format the series' own last
+    // plotted value with valueFormatter when there's no caliber block.
     const valueText = caliber ? currentValueText() : valueFormatter(lastValue);
     const captionText = caliber ? currentCaptionText() : null;
     const node = buildReadoutNode({ color, valueText, captionText });
@@ -341,14 +474,18 @@ export function mountLineChart(container, props) {
   onRangeChange(() => rerenderCurrentWidth());
   onThemeChange(() => rerenderCurrentWidth());
 
-  // Initial synchronous render at the container's current width (ResizeObserver
-  // also fires once on observe(), but doing it eagerly avoids a blank flash
-  // before the first callback tick).
-  const initialWidth = container.getBoundingClientRect().width;
-  if (initialWidth) {
-    lastWidth = initialWidth;
-    render(initialWidth);
-  }
+  // Initial render at the container's current width (ResizeObserver also
+  // fires once on observe(), but doing it eagerly avoids a blank flash
+  // before the first callback tick). Zero-width mount fragility fix: a
+  // container that's momentarily 0-width (fresh grid insert, a display:none
+  // ancestor mid-transition, ...) used to just silently never render if
+  // ResizeObserver was slow or inert — ensureMeasuredWidth retries via
+  // requestAnimationFrame then a scroll/resize fallback until a real width
+  // shows up.
+  ensureMeasuredWidth(container, (width) => {
+    lastWidth = width;
+    render(width);
+  });
 
   return {
     destroy() {
