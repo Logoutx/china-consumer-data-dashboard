@@ -50,7 +50,7 @@ def test_run_audit_end_to_end_against_the_clean_fixture(tmp_path):
         ensure_ascii=False,
         indent=2,
     )
-    assert len(report_payload["checks"]) == 9  # all 9 gate_b.* checks ran
+    assert len(report_payload["checks"]) == 10  # all 10 gate_b.* checks ran
 
     json_path = report_dir / "e2e-run.json"
     md_path = report_dir / "e2e-run.md"

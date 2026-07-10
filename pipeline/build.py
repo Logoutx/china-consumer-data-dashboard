@@ -27,14 +27,25 @@ wave and are deliberately never read here except through an explicit --data
 override in a test's tmp_path.
 
 Determinism (DATA-CONTRACT §9's idempotence requirement, restated for the
-build stage): `generated_at` in every emitted file is a *passthrough* of the
-input catalog's own `generated_at`, never `datetime.now()` -- using wall-clock
-time here would make two back-to-back builds of the same unchanged input
-non-byte-identical for no reason. The one deliberately time-relative field is
-`revisions_recent` / the `break_recent` flag, which are genuinely defined
-relative to "today" (an `as_of` date, defaulting to date.today() but
-injectable for tests) -- that is a property of *what the field means*, not an
-accident of using the wrong clock.
+build stage): `generated_at` in every emitted file is never `datetime.now()`
+-- using wall-clock time here would make two back-to-back builds of the same
+unchanged input non-byte-identical for no reason. It is NOT, however, a bare
+passthrough of `data/catalog.json`'s own `generated_at` (that was this
+module's behavior through 2026-07-09; fixed 2026-07-10): an autonomous
+runtime writer updates individual `data/series/<id>.json` files -- and stamps
+each one's OWN `generated_at` -- without ever touching `data/catalog.json`'s,
+so a passthrough left the whole site-data tree's freshness signal frozen at
+whenever the catalog was last hand-edited, even after real new data landed.
+`generated_at` is instead computed as the MAX `generated_at` across every
+successfully-loaded series (`_max_generated_at`) -- still a pure, deterministic
+function of the input data (advances if and only if some series' own
+`generated_at` advances), just no longer anchored on a field a per-series
+writer has no reason to keep current. Falls back to the catalog's
+`generated_at` only if no series loaded at all. The one deliberately time-
+relative field is `revisions_recent` / the `break_recent` flag, which are
+genuinely defined relative to "today" (an `as_of` date, defaulting to
+date.today() but injectable for tests) -- that is a property of *what the
+field means*, not an accident of using the wrong clock.
 
 Period FORMAT is not the same thing as a series' declared `freq` (hard lesson
 from the first real-build run): several freq=="Q" income series carry a
@@ -73,7 +84,7 @@ import re
 import sys
 import time
 from dataclasses import dataclass, field
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 from pipeline.takeaways import (
@@ -105,6 +116,37 @@ def _load_json(path: Path) -> dict:
 
 def _write_json(path: Path, obj) -> None:
     path.write_text(json.dumps(obj, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def _parse_generated_at(value: str) -> datetime:
+    """Parse an ISO-8601 `generated_at` string for chronological comparison.
+    Different writers in this pipeline stamp different-but-valid ISO-8601
+    shapes -- e.g. `"2026-07-07T19:23:24Z"` (backfill) vs
+    `"2026-07-10T08:45:33.025790+00:00"` (the autonomous runtime writer) --
+    which do NOT compare correctly as plain strings (a fractional-seconds
+    "+00:00" suffix sorts lexicographically *before* a same-second bare "Z"
+    string, "." < "Z" in ASCII, even though it's chronologically later).
+    Normalizes a trailing "Z" to "+00:00" first since `datetime.fromisoformat`
+    only accepts "Z" directly on Python 3.11+; this must stay correct on
+    whatever Python the CI runner has."""
+    text = value[:-1] + "+00:00" if value.endswith("Z") else value
+    return datetime.fromisoformat(text)
+
+
+def _max_generated_at(series_by_id: dict[str, dict], fallback: str) -> str:
+    """The build's own `generated_at`: the MAX `generated_at` across every
+    successfully-loaded series -- a deterministic function of the data
+    itself (advances exactly when some series' own `generated_at` advances),
+    never data/catalog.json's cached `generated_at` (see module docstring for
+    why that passthrough was wrong). Returns the WINNING series' own string
+    verbatim (no reformatting) so a build's output is traceable back to
+    exactly which series' timestamp it reflects. Falls back to `fallback`
+    (the catalog's own `generated_at`) only if no series loaded at all (e.g.
+    every series file failed to parse)."""
+    candidates = [s["generated_at"] for s in series_by_id.values() if s.get("generated_at")]
+    if not candidates:
+        return fallback
+    return max(candidates, key=_parse_generated_at)
 
 
 def _load_json_with_retry(path: Path, *, retries: int = 1, delay_seconds: float = 0.2) -> tuple[dict | None, str | None]:
@@ -666,10 +708,26 @@ def _build_series_entry(entry: dict, series: dict, annotations: dict, as_of: dat
             value_field = yoy_field = populated
             plot_kind = "yoy"
 
-    # Scan backward for the last observation actually carrying the headline
-    # caliber's value -- not simply observations[-1], in case the newest
-    # array entry only landed a different measure first.
-    latest = next((obs for obs in reversed(observations) if obs.get(value_field) is not None), None)
+    # Scan backward for the last observation actually carrying EITHER of the
+    # headline caliber's two measures (value_field OR yoy_field) -- not
+    # simply observations[-1], in case the newest array entry only landed a
+    # different measure first, and NOT value_field alone (fixed 2026-07-10):
+    # a live autonomous data commit can land an observation whose YoY/MoM
+    # figures are already published but whose absolute level isn't yet (real
+    # case: nbs-cpi-yoy 2026-06 arrived with m_yoy/mom/ytd_yoy but no "m" at
+    # all). Requiring value_field specifically left that period undetected as
+    # "latest" -- yoy_series correctly included it (built straight from
+    # yoy_field, independent of this scan) while latest/prev/headline/
+    # takeaway/freshness all silently stayed one period behind, a split state
+    # between the chart and the headline. Both measures are checked here
+    # (never data/catalog.json's cached `latest` field, which this module has
+    # never read for this and must not start now -- see DATA-CONTRACT §1 and
+    # pipeline/schedule.py's own analogous 2026-07-08 fix for why a cached
+    # `latest` a runtime writer doesn't advance is the wrong anchor).
+    latest = next(
+        (obs for obs in reversed(observations) if obs.get(value_field) is not None or obs.get(yoy_field) is not None),
+        None,
+    )
 
     if latest is None:
         return _empty_series_entry(entry, observations, breaks, yoy_field, value_field, annotations, plot_kind=plot_kind)
@@ -778,6 +836,13 @@ def _build_series_entry(entry: dict, series: dict, annotations: dict, as_of: dat
             **({"boom_bust_line": None} if entry.get("value_type") != "index" else {}),
         )
         takeaway = generate_level_takeaway(level_input)
+        # `headline.streak` and the takeaway TEXT must be the SAME number --
+        # they used to come from two different computations (streak_n stayed
+        # 0 here, the YoY-streak variable, while the text used level_streak_n)
+        # and could disagree, which is exactly what Gate B's takeaway_numbers
+        # check caught on the frozen youth-1624 series (text said "连续 6 个
+        # 月上升", headline.streak said 0). One number now feeds both.
+        streak_n = level_streak_n
 
     if y is None:
         direction = None  # e.g. latest observation exists but its YoY is blocked by a break -- "unknown", not "flat"
@@ -969,7 +1034,6 @@ def build_site_data(data_dir: Path, out_dir: Path, *, as_of: date | None = None)
     catalog = _load_json(data_dir / "catalog.json")  # not retried: a different agent's manifest, not backfill's concern
     annotations_path = data_dir / "annotations.json"
     annotations = _load_json(annotations_path) if annotations_path.exists() else {}
-    generated_at = catalog["generated_at"]  # deterministic passthrough -- see module docstring
 
     series_by_id: dict[str, dict] = {}
     panel_entries: list[dict] = []
@@ -988,6 +1052,10 @@ def build_site_data(data_dir: Path, out_dir: Path, *, as_of: date | None = None)
             skipped.append(entry["id"])
             continue
         series_by_id[entry["id"]] = series
+
+    # Computed from the loaded series themselves (max generated_at), never a
+    # passthrough of catalog["generated_at"] -- see module docstring.
+    generated_at = _max_generated_at(series_by_id, catalog["generated_at"])
 
     section_bundles: dict[str, dict] = {}
     for section in catalog["sections"]:

@@ -20,6 +20,7 @@ actually runs.
 from __future__ import annotations
 
 import json
+import re
 import shutil
 from datetime import date
 from pathlib import Path
@@ -108,6 +109,99 @@ def test_section_bundle_shape_matches_contract(built):
     assert section["section"] == "consumption"
     assert section["catalog_version"] == "test-1"
     assert isinstance(section["series"], list)
+
+
+def test_latest_advances_on_a_period_that_has_yoy_but_no_level_yet():
+    """Regression, real 2026-07-10 incident: an autonomous data commit landed
+    nbs-cpi-yoy's 2026-06 observation with mom/m_yoy/ytd_yoy published but no
+    "m" (index level) yet. Requiring `value_field` specifically for "latest"
+    left the whole headline path (latest/prev/headline/takeaway/freshness)
+    one period behind the chart (yoy_series, built independently straight
+    from yoy_field, already showed 2026-06 correctly) -- a split state where
+    the chart plots June but the headline still claims May. `latest` must now
+    resolve to the newest period carrying EITHER measure, and every
+    downstream anchor (takeaway period, prev-comparison, endpoint value) must
+    follow it -- never data/catalog.json's cached `latest` field, which this
+    module has never read for this in the first place."""
+    from pipeline.build import _build_series_entry
+
+    series = json.loads((FIXTURES_DIR / "series" / "test-cpi-break.json").read_text(encoding="utf-8"))
+    catalog = json.loads((FIXTURES_DIR / "catalog.json").read_text(encoding="utf-8"))
+    entry = next(e for e in catalog["series"] if e["id"] == "test-cpi-break")
+    # entry["latest"] (if the fixture even carries one) is irrelevant here by
+    # design -- build.py must never consult it. Extend the fixture's real
+    # observations with one more period that has YoY/MoM but no level yet.
+    extended = dict(
+        series,
+        observations=series["observations"] + [{"period": "2026-07", "m_yoy": 1.8, "mom": -0.2, "src": "rel:test-07"}],
+    )
+
+    bundle_entry = _build_series_entry(entry, extended, {}, AS_OF)
+    assert bundle_entry["latest"]["period"] == "2026-07"  # NOT "2026-06" -- the observations' true max
+    assert "m" not in bundle_entry["latest"]  # honest: this period genuinely has no level yet
+    assert bundle_entry["latest"]["m_yoy"] == 1.8
+    assert bundle_entry["prev"]["period"] == "2026-06"  # array-adjacent same-shape predecessor, not 2026-05
+    assert bundle_entry["headline"]["latest_yoy"] == 1.8
+    assert bundle_entry["headline"]["period_label_zh"] == "2026 年 7 月"
+    # 2026-06's m_yoy was 2.0 (fixture) -> 2026-07's 1.8 is a narrowing, same-sign-both, price-type verb;
+    # 06-vs-05 was also a narrowing (2.5->2.0), so this is genuinely a 2-month decelerating streak
+    assert bundle_entry["takeaway"] == "2026 年 7 月测试_居民消费价格指数同比上涨 1.8%，涨幅较上月收窄 0.2 个百分点，连续 2 个月放缓"
+
+
+def test_freshness_and_generated_at_track_series_data_not_catalog_latest(tmp_path):
+    """Integration-level companion to the white-box test above: the built
+    index.json's freshness entry must report the observations' true max
+    period, and the build's overall generated_at must be the MAX
+    generated_at across the loaded series -- not a frozen passthrough of
+    data/catalog.json's own generated_at, which an autonomous per-series
+    writer has no reason to ever advance (see build.py's module docstring,
+    fixed 2026-07-10)."""
+    data_copy = tmp_path / "data"
+    shutil.copytree(FIXTURES_DIR, data_copy)
+
+    series_path = data_copy / "series" / "test-cpi-break.json"
+    series = json.loads(series_path.read_text(encoding="utf-8"))
+    series["observations"].append({"period": "2026-07", "m_yoy": 1.8, "mom": -0.2, "src": "rel:test-07"})
+    newer_generated_at = "2026-07-10T08:45:33.025790+00:00"  # deliberately NOT lexicographically > catalog's "Z" form
+    series["generated_at"] = newer_generated_at
+    series_path.write_text(json.dumps(series, ensure_ascii=False), encoding="utf-8")
+
+    catalog = json.loads((data_copy / "catalog.json").read_text(encoding="utf-8"))
+    assert catalog["generated_at"] == "2026-06-20T00:00:00Z"  # unchanged -- the autonomous writer never touches this
+
+    report = build_site_data(data_copy, tmp_path / "out", as_of=AS_OF)
+    assert report.series == 7
+
+    index = _load(tmp_path / "out" / "index.json")
+    assert index["generated_at"] == newer_generated_at  # the series' own timestamp won, not the catalog's
+    freshness = next(f for f in index["freshness"] if f["id"] == "test-cpi-break")
+    assert freshness["latest"] == "2026-07"
+
+    prices = _load(tmp_path / "out" / "sections" / "prices.json")
+    assert prices["generated_at"] == newer_generated_at
+    cpi = _series_by_id(prices, "test-cpi-break")
+    assert cpi["latest"]["period"] == "2026-07"
+
+
+def test_max_generated_at_handles_mixed_iso_formats_correctly():
+    """Direct unit test on the comparison helper: a fractional-seconds
+    "+00:00" timestamp must correctly compare as later than a same-second
+    bare "Z" timestamp, even though it sorts *earlier* as a plain string
+    ("." < "Z" in ASCII) -- the exact trap a naive max(strings) would fall
+    into."""
+    from pipeline.build import _max_generated_at
+
+    series_by_id = {
+        "a": {"generated_at": "2026-07-10T08:45:33Z"},
+        "b": {"generated_at": "2026-07-10T08:45:33.025790+00:00"},
+    }
+    assert _max_generated_at(series_by_id, fallback="1970-01-01T00:00:00Z") == "2026-07-10T08:45:33.025790+00:00"
+
+
+def test_max_generated_at_falls_back_when_no_series_loaded():
+    from pipeline.build import _max_generated_at
+
+    assert _max_generated_at({}, fallback="2026-06-20T00:00:00Z") == "2026-06-20T00:00:00Z"
 
 
 def test_headline_direction_is_none_not_flat_when_yoy_is_blocked_by_break():
@@ -1239,3 +1333,83 @@ def test_build_skips_an_unparseable_series_file_with_a_loud_warning(tmp_path, ca
     # other sections are completely unaffected
     prices = _load(tmp_path / "out" / "sections" / "prices.json")
     assert any(s["id"] == "test-cpi-break" for s in prices["series"])
+
+
+# -- headline.streak must equal the streak number asserted in the takeaway text ------
+
+_STREAK_IN_TEXT_RE = re.compile(r"连续 (\d+) 个月(?:以上)?")
+
+
+def _streak_number_in_takeaway(text: str | None) -> int | None:
+    """Extract the streak count the takeaway TEXT itself asserts (from either
+    the YoY streak's "连续 N 个月放缓/加快/同比下降" or the level streak's
+    "连续 N 个月上升/下降"), or None if no streak clause is present. "24 个月
+    以上" is a capped DISPLAY string for streak>24 -- not compared to
+    headline.streak (the true uncapped count) at that boundary; see the
+    dedicated cap-aware assertion in the property test below."""
+    if not text:
+        return None
+    m = _STREAK_IN_TEXT_RE.search(text)
+    return int(m.group(1)) if m else None
+
+
+def _assert_streak_consistent(bundle_entry: dict) -> None:
+    text_n = _streak_number_in_takeaway(bundle_entry.get("takeaway"))
+    headline = bundle_entry.get("headline")
+    if text_n is None:
+        return  # no streak clause in the text -- nothing to cross-check
+    assert headline is not None, f"{bundle_entry['id']}: takeaway has a streak clause but headline is null"
+    struct_n = headline["streak"]
+    if "24 个月以上" in bundle_entry["takeaway"]:
+        # capped display string -- the true count must be >24, not literally 24
+        assert struct_n > 24, f"{bundle_entry['id']}: text shows the >24 cap but headline.streak={struct_n}"
+    else:
+        assert struct_n == text_n, (
+            f"{bundle_entry['id']}: takeaway text says {text_n}-month streak but headline.streak={struct_n} "
+            f"-- text: {bundle_entry['takeaway']!r}"
+        )
+
+
+def test_headline_streak_matches_takeaway_text_across_every_fixture_series(built):
+    """Property-style regression over every series build_site_data actually
+    produces from the fixtures: whatever streak number the takeaway TEXT
+    asserts, headline.streak (the structured field a client/gate reads
+    instead of re-parsing prose) must report the identical number -- they
+    used to come from two different computations for the level-only path
+    (streak_n stayed the YoY-streak's 0; the text used a separate
+    level_streak_n) and could disagree, which is exactly what the real
+    Gate B audit caught on nbs-urban-unemp-youth-1624 (text: "连续 6 个月
+    上升", headline.streak: 0)."""
+    _report, out_dir = built
+    for section_path in sorted((out_dir / "sections").glob("*.json")):
+        section = _load(section_path)
+        for entry in section["series"]:
+            _assert_streak_consistent(entry)
+
+
+def test_headline_streak_matches_takeaway_text_for_the_frozen_youth_series():
+    """Direct reproduction of the real Gate B failure: a rate_pct series
+    whose LATEST print is itself part of a genuine 6-month rising streak
+    (the frozen youth-1624 series' real 2023 shape, right before it was
+    discontinued) must carry headline.streak==6, matching the "连续 6 个月
+    上升" the text asserts -- not 0."""
+    from pipeline.build import _build_series_entry
+
+    entry = dict(_UNEMP_ENTRY, id="test-urban-unemp-youth-frozen-streak")
+    series = {
+        "observations": [
+            {"period": "2022-12", "m": 18.0},
+            {"period": "2023-01", "m": 18.6},
+            {"period": "2023-02", "m": 19.1},
+            {"period": "2023-03", "m": 19.6},
+            {"period": "2023-04", "m": 20.4},
+            {"period": "2023-05", "m": 20.8},
+            {"period": "2023-06", "m": 21.3},
+        ],
+        "revisions": [],
+        "breaks": [{"effective": "2023-08", "kind": "suspended", "no_yoy_across": True}],
+    }
+    bundle_entry = _build_series_entry(entry, series, {}, AS_OF)
+    assert "连续 6 个月上升" in bundle_entry["takeaway"]
+    assert bundle_entry["headline"]["streak"] == 6
+    _assert_streak_consistent(bundle_entry)

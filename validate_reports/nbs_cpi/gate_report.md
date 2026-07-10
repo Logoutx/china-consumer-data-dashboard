@@ -1,6 +1,6 @@
 # Gate A report
 
-- generated_at: 2026-07-07T23:09:22.277188+00:00
+- generated_at: 2026-07-10T17:06:16.692179+00:00
 - release_id: 20260610_test-release
 - touched series: 1
 - verdict: **PASS** (exit 0)

@@ -94,11 +94,16 @@ def test_every_active_source_is_implemented_by_runner():
         assert spec.name in RUNNER_SOURCES, f"{spec.name!r} is active in schedule.SOURCES but not in runner.SOURCES"
 
 
-def test_commented_out_sources_never_appear_in_due_or_explain(capsys):
+def test_commented_out_sources_never_appear_in_due_or_explain(tmp_path, monkeypatch, capsys):
     """nbs_ppi/nbs_pmi/customs_trade/nbs_iva/nbs_fai/nbs_70city/nbs_gdp/
     nbs_income are commented out of SOURCES (not deleted -- see module
     docstring) precisely so they can never be emitted, regardless of window
-    or freshness."""
+    or freshness. A structural check (SOURCES/due_sources() can only ever
+    surface a name from SOURCES + "dg_refresh"), so it can't actually depend
+    on real data content -- isolated anyway (empty series dir) for hygiene
+    and consistency with the sibling tests below."""
+    monkeypatch.setattr(schedule, "SERIES_DIR", tmp_path / "empty-series")  # no files at all -- every lookup is None
+
     active_names = {spec.name for spec in schedule.SOURCES}
     not_implemented = {"nbs_ppi", "nbs_pmi", "customs_trade", "nbs_iva", "nbs_fai", "nbs_70city", "nbs_gdp", "nbs_income"}
     assert active_names.isdisjoint(not_implemented)
@@ -147,7 +152,31 @@ def test_dg_refresh_not_due_outside_every_window():
     assert schedule._dg_refresh_due(date(2026, 3, 23), {}) is None
 
 
-def test_dg_refresh_appears_in_due_sources_with_the_expected_tuple_shape():
+def _isolate_series_dir(monkeypatch, tmp_path, **series_periods: str):
+    """An isolated data/series/ (never the real repo's) containing exactly
+    the synthetic series this test needs, each at the given latest period.
+    Regression, 2026-07-08: several tests below used to call due_sources()/
+    _explain()/main() against the REAL repo's data/series/ with no
+    monkeypatch at all -- correct at the time, but a test must never depend
+    on the live data state of the repo: a real scheduled cron run later
+    landing fresh data (e.g. customs-exports-usd catching up to 2026-06)
+    silently invalidated the "still stale, still due" assumption those
+    tests were built on. Every test in this file now constructs its own
+    series state explicitly instead."""
+    series_dir = tmp_path / "series"
+    series_dir.mkdir()
+    for series_id, period in series_periods.items():
+        _write_series(series_dir / f"{series_id}.json", period)
+    monkeypatch.setattr(schedule, "SERIES_DIR", series_dir)
+    return series_dir
+
+
+def test_dg_refresh_appears_in_due_sources_with_the_expected_tuple_shape(tmp_path, monkeypatch):
+    # 2026-07-08 falls inside the 'trade' window (day 7-14 +grace); a
+    # synthetic customs-exports-usd stale at 2026-05 (expects 2026-06) makes
+    # this deterministic regardless of what the real repo's data holds today.
+    _isolate_series_dir(monkeypatch, tmp_path, **{"customs-exports-usd": "2026-05"})
+
     results = schedule.due_sources(date(2026, 7, 8))
     dg_hits = [r for r in results if r[0].name == "dg_refresh"]
     assert len(dg_hits) == 1
@@ -156,14 +185,18 @@ def test_dg_refresh_appears_in_due_sources_with_the_expected_tuple_shape():
     assert expected == "2026-06"
 
 
-def test_dg_refresh_explain_output_names_a_checkpoint_series(capsys):
+def test_dg_refresh_explain_output_names_a_checkpoint_series(tmp_path, monkeypatch, capsys):
+    _isolate_series_dir(monkeypatch, tmp_path, **{"customs-exports-usd": "2026-05"})
+
     schedule._explain(date(2026, 7, 8))
     out = capsys.readouterr().out
     assert "dg_refresh" in out
     assert "customs-exports-usd" in out
 
 
-def test_main_due_includes_dg_refresh_on_a_day_it_fires(capsys):
+def test_main_due_includes_dg_refresh_on_a_day_it_fires(tmp_path, monkeypatch, capsys):
+    _isolate_series_dir(monkeypatch, tmp_path, **{"customs-exports-usd": "2026-05"})
+
     exit_code = schedule.main(["--due", "--date", "2026-07-08"])
     assert exit_code == 0
     lines = capsys.readouterr().out.strip().splitlines()
@@ -173,9 +206,26 @@ def test_main_due_includes_dg_refresh_on_a_day_it_fires(capsys):
 # -- pre-existing behavior, unaffected by this change ----------------------------
 
 
-def test_implemented_sources_still_fire_normally():
+def test_implemented_sources_still_fire_normally_when_stale(tmp_path, monkeypatch):
     """nbs_cpi/nbs_retail/pboc_money's ordinary due-ness (one window group,
-    one series) must be completely unaffected by the dg_refresh addition."""
+    one series) must be completely unaffected by the dg_refresh addition.
+    Regression, 2026-07-08: this used to read the REAL repo's
+    data/series/nbs-cpi-yoy.json with no isolation at all, assuming it was
+    always stale relative to day 12 (expects 2026-06) -- a real scheduled
+    cron run later landing June's data broke that assumption. A synthetic,
+    explicitly-stale series makes this deterministic."""
+    _isolate_series_dir(monkeypatch, tmp_path, **{"nbs-cpi-yoy": "2026-04"})  # stale: expects 2026-06
+
     due = schedule.due_sources(date(2026, 7, 12), grace=0)
     names = {spec.name for spec, _e, _s in due}
     assert "nbs_cpi" in names  # cpi_ppi window is day 9-13
+
+
+def test_implemented_sources_do_not_fire_when_already_current(tmp_path, monkeypatch):
+    """The other half of the same check: a synthetic series already AT the
+    expected period must not be due, even with the window wide open."""
+    _isolate_series_dir(monkeypatch, tmp_path, **{"nbs-cpi-yoy": "2026-06"})  # already current
+
+    due = schedule.due_sources(date(2026, 7, 12), grace=0)
+    names = {spec.name for spec, _e, _s in due}
+    assert "nbs_cpi" not in names
