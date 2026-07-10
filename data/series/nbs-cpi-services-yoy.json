@@ -7,7 +7,9 @@
   "unit_en": "%",
   "value_type": "index",
   "freq": "M",
-  "calibers": ["single"],
+  "calibers": [
+    "single"
+  ],
   "decimals": 1,
   "source": {
     "agency": "nbs",
@@ -82,9 +84,10 @@
     {"period": "2026-02", "m": 101.6, "m_yoy": 1.6, "src": "dg:c87191b714554e9eba8c2c062abfabb4"},
     {"period": "2026-03", "m": 100.8, "m_yoy": 0.8, "src": "dg:c87191b714554e9eba8c2c062abfabb4"},
     {"period": "2026-04", "m": 100.9, "m_yoy": 0.9, "src": "dg:c87191b714554e9eba8c2c062abfabb4"},
-    {"period": "2026-05", "m": 100.8, "m_yoy": 0.8, "src": "dg:c87191b714554e9eba8c2c062abfabb4"}
+    {"period": "2026-05", "m": 100.8, "m_yoy": 0.8, "src": "dg:c87191b714554e9eba8c2c062abfabb4"},
+    {"period": "2026-06", "mom": 0.0, "m_yoy": 0.8, "ytd_yoy": 0.8}
   ],
   "revisions": [],
   "breaks": [],
-  "generated_at": "2026-07-07T19:23:24Z"
+  "generated_at": "2026-07-10T08:45:33.029706+00:00"
 }
