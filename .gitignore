@@ -6,3 +6,5 @@ __pycache__/
 .wrangler/
 /site-data/
 site-data-fixtures/
+pipeline/backfill/tree_cache.json
+validate_reports/

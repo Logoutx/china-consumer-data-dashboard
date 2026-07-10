@@ -236,7 +236,7 @@ jobs:
             # tolerance for "try again shortly".
             pushed=false
             for attempt in 1 2 3; do
-              if git pull --rebase origin main && git push; then
+              if git -c rebase.autoStash=true pull --rebase origin main && git push; then
                 pushed=true
                 break
               fi
