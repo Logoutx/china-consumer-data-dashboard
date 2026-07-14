@@ -457,11 +457,11 @@
     {"period": "2026-03", "m": 101.0, "m_yoy": 1.0, "mom": -0.7, "src": "dg:f3904a1f5a384d54a3944ec6e2df3d1c"},
     {"period": "2026-04", "m": 101.2, "m_yoy": 1.2, "mom": 0.3, "src": "dg:f3904a1f5a384d54a3944ec6e2df3d1c"},
     {"period": "2026-05", "m": 101.2, "m_yoy": 1.2, "mom": -0.1, "src": "dg:f3904a1f5a384d54a3944ec6e2df3d1c"},
-    {"period": "2026-06", "mom": -0.3, "m_yoy": 1.0, "ytd_yoy": 1.0}
+    {"period": "2026-06", "mom": -0.3, "m_yoy": 1.0, "ytd_yoy": 1.0, "m": 101.0}
   ],
   "revisions": [],
   "breaks": [
     {"effective": "2026-01", "kind": "rebase", "no_yoy_across": true, "yoy_valid_from": "2026-01", "note_zh": "CPI 定基调整至 2025 年基期，跨基期同比不可比。", "note_en": "CPI rebased to 2025 base; YoY not comparable across the seam."}
   ],
-  "generated_at": "2026-07-10T08:45:33.025790+00:00"
+  "generated_at": "2026-07-14T10:07:44.985523+00:00"
 }

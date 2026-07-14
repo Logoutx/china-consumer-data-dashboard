@@ -7,7 +7,9 @@
   "unit_en": "index points",
   "value_type": "index",
   "freq": "M",
-  "calibers": ["single"],
+  "calibers": [
+    "single"
+  ],
   "decimals": 1,
   "source": {
     "agency": "nbs",
@@ -373,9 +375,10 @@
     {"period": "2026-02", "m": 98.4, "m_yoy": -1.6, "src": "dg:649b27dbffb14466a3f204e16f3c74ed"},
     {"period": "2026-03", "m": 98.7, "m_yoy": -1.3, "src": "dg:649b27dbffb14466a3f204e16f3c74ed"},
     {"period": "2026-04", "m": 99.0, "m_yoy": -1.0, "src": "dg:649b27dbffb14466a3f204e16f3c74ed"},
-    {"period": "2026-05", "m": 99.2, "m_yoy": -0.8, "src": "dg:649b27dbffb14466a3f204e16f3c74ed"}
+    {"period": "2026-05", "m": 99.2, "m_yoy": -0.8, "src": "dg:649b27dbffb14466a3f204e16f3c74ed"},
+    {"period": "2026-06", "m": 99.1, "m_yoy": -0.9}
   ],
   "revisions": [],
   "breaks": [],
-  "generated_at": "2026-07-07T19:23:24Z"
+  "generated_at": "2026-07-14T10:07:44.996217+00:00"
 }

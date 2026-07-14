@@ -1,0 +1,27 @@
+{
+  "url": "https://data.stats.gov.cn/dg/website/publicrelease/web/external/new/queryIndexTreeAsync?code=1&pid=e69d8b62991649d4b278e0445bcc0cd0",
+  "request": null,
+  "response": {
+    "data": [
+      {
+        "explain": "2023年12月起，失业率年龄分组进行了调整，往月数据包含在校生。",
+        "sdate": null,
+        "_name": "城镇调查失业率",
+        "treeinfo_pid": "e69d8b62991649d4b278e0445bcc0cd0",
+        "treeinfo_level": 4,
+        "type": "catalog",
+        "edate": null,
+        "isLeaf": true,
+        "treeinfo_globalid": "69c574ab128a44e595cc0b24502b771b.fc982599aa684be7969d7b90b1bd0e84.e69d8b62991649d4b278e0445bcc0cd0.ee3b7046b390415b9b7745e3d16f6052",
+        "name": "城镇调查失业率",
+        "_id": "ee3b7046b390415b9b7745e3d16f6052",
+        "publicrelease_web_catalog_id": "ee3b7046b390415b9b7745e3d16f6052",
+        "treeinfo_icon": null
+      }
+    ],
+    "success": true,
+    "state": 20000,
+    "message": "成功"
+  },
+  "fetched_at": "20260714T100540677422Z"
+}

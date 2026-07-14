@@ -85,9 +85,9 @@
     {"period": "2026-03", "m": 100.8, "m_yoy": 0.8, "src": "dg:c87191b714554e9eba8c2c062abfabb4"},
     {"period": "2026-04", "m": 100.9, "m_yoy": 0.9, "src": "dg:c87191b714554e9eba8c2c062abfabb4"},
     {"period": "2026-05", "m": 100.8, "m_yoy": 0.8, "src": "dg:c87191b714554e9eba8c2c062abfabb4"},
-    {"period": "2026-06", "mom": 0.0, "m_yoy": 0.8, "ytd_yoy": 0.8}
+    {"period": "2026-06", "mom": 0.0, "m_yoy": 0.8, "ytd_yoy": 0.8, "m": 100.8}
   ],
   "revisions": [],
   "breaks": [],
-  "generated_at": "2026-07-10T08:45:33.029706+00:00"
+  "generated_at": "2026-07-14T10:07:44.989896+00:00"
 }
