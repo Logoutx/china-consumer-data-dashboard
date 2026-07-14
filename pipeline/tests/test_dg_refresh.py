@@ -11,11 +11,13 @@ indicator_values() calls would).
 from __future__ import annotations
 
 import json
+from datetime import date
 from pathlib import Path
 
 import pytest
 
 from pipeline import dg_refresh as dgr
+from pipeline.backfill.dg_client import DGClient as RealDGClient
 
 
 def _write_series(path: Path, series_id: str, period: str, value: float) -> None:
@@ -162,3 +164,90 @@ def test_persist_gate_report_is_a_noop_when_no_report_files_exist(tmp_path):
     finally:
         dgr_mod.VALIDATE_REPORTS_DIR = original
     assert not list((dest / "dg_refresh").glob("*")) if (dest / "dg_refresh").exists() else True
+
+
+# -- archive manifest (2026-07-14): links raw DG captures to release_id ----------
+
+
+def _fake_ok_with_capture(client, cache, month_codes, quarter_codes):
+    """Simulates what a real family step's DGClient calls do: archive a raw
+    response under client.archive_dir (DGClient._archive()'s own job, not
+    reproduced here -- just its observable side effect for this test)."""
+    (client.archive_dir / "indicators_deadbeef_20260714T000000000000Z.json").write_text("{}", encoding="utf-8")
+    return {"test-a": {"2026-02": {"m": 2.0}}}
+
+
+def test_manifest_written_before_staging_lists_every_capture_and_matches_release_id(monkeypatch, tmp_path):
+    """Bug fixed 2026-07-14: Gate A correctly blocked the first dg_refresh
+    run with genuinely new observations -- gate_a.archive_release_identity
+    found no archive capture matching the run's release_id, because DGClient
+    archives raw responses keyed only by an indicator hash + fetch
+    timestamp, with no release_id anywhere. The manifest is the missing
+    link: release_id, generated_at (from the run's own date context, not
+    wall-clock randomness), and every capture filename this run produced."""
+    _wire_isolated_repo(monkeypatch, tmp_path)
+    archive_dir = tmp_path / "archive" / "dg"
+    monkeypatch.setattr(dgr, "DGClient", lambda: RealDGClient(archive_dir=archive_dir))
+    monkeypatch.setattr(dgr, "FAMILY_STEPS", [("OK", _fake_ok_with_capture)])
+
+    exit_code = dgr.run(dry_run=True, no_gate=True, today=date(2026, 7, 14))
+
+    assert exit_code == 0
+    manifest_path = archive_dir / "manifest_dg-refresh-2026-07-14.json"
+    assert manifest_path.exists()
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert manifest["release_id"] == "dg-refresh-2026-07-14"
+    assert manifest["generated_at"] == "2026-07-14"  # run's own date context, not datetime.now()
+    assert manifest["captures"] == ["indicators_deadbeef_20260714T000000000000Z.json"]
+
+
+def test_manifest_release_id_matches_the_staged_batch(monkeypatch, tmp_path):
+    """The other half of the fix: the manifest's own release_id must be
+    exactly what the staged ParsedRelease/Batch carries, since that's what
+    the (parallel) archive_release_identity update will match against."""
+    from pipeline.validate.batch import batch_from_parsed_release
+    from pipeline.validate.staging import stage_release
+
+    _wire_isolated_repo(monkeypatch, tmp_path)
+    archive_dir = tmp_path / "archive" / "dg"
+    monkeypatch.setattr(dgr, "DGClient", lambda: RealDGClient(archive_dir=archive_dir))
+    monkeypatch.setattr(dgr, "FAMILY_STEPS", [("OK", _fake_ok_with_capture)])
+
+    calls = {}
+    original_stage_release = stage_release
+
+    def _spy_stage_release(parsed, field_map, series_dir, **kwargs):
+        calls["release_id"] = parsed.release_id
+        return original_stage_release(parsed, field_map, series_dir, **kwargs)
+
+    monkeypatch.setattr(dgr, "stage_release", _spy_stage_release)
+
+    dgr.run(dry_run=True, no_gate=True, today=date(2026, 7, 14))
+
+    manifest = json.loads((archive_dir / "manifest_dg-refresh-2026-07-14.json").read_text(encoding="utf-8"))
+    assert calls["release_id"] == manifest["release_id"] == "dg-refresh-2026-07-14"
+
+
+def test_manifest_is_written_before_the_staged_gate_report(monkeypatch, tmp_path):
+    """Ordering matters: the manifest must exist before stage/gate run, not
+    just eventually. Proven by checking it's on disk the moment
+    stage_release() is first called (see the spy above's pattern)."""
+    from pipeline.validate.staging import stage_release
+
+    _wire_isolated_repo(monkeypatch, tmp_path)
+    archive_dir = tmp_path / "archive" / "dg"
+    monkeypatch.setattr(dgr, "DGClient", lambda: RealDGClient(archive_dir=archive_dir))
+    monkeypatch.setattr(dgr, "FAMILY_STEPS", [("OK", _fake_ok_with_capture)])
+
+    seen_manifest_before_staging = {}
+    original_stage_release = stage_release
+
+    def _spy_stage_release(parsed, field_map, series_dir, **kwargs):
+        seen_manifest_before_staging["exists"] = (archive_dir / f"manifest_{parsed.release_id}.json").exists()
+        return original_stage_release(parsed, field_map, series_dir, **kwargs)
+
+    monkeypatch.setattr(dgr, "stage_release", _spy_stage_release)
+
+    dgr.run(dry_run=True, no_gate=True, today=date(2026, 7, 14))
+
+    assert seen_manifest_before_staging["exists"] is True

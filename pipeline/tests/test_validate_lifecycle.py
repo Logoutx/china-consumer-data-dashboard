@@ -5,6 +5,7 @@ gate_a.revision_flood, gate_a.revision_integrity."""
 from __future__ import annotations
 
 import copy
+import json
 from datetime import date
 
 from pipeline.normalize import NormalizeReport
@@ -211,6 +212,48 @@ def test_archive_release_identity_blocks_a_stale_reserve(tmp_path):
         normalize_report=report,
         archive_files={"nbs-retail": ["2026-01-17_test-release"]},
     )
+    result = check_archive_release_identity(ctx)
+    assert result.status == BLOCK
+
+
+def _dg_refresh_case(tmp_path, *, write_manifest, captures_present=True):
+    real = _small_series("nbs-industrial-va", [("2026-04", 4.9)])
+    staged = copy.deepcopy(real)
+    staged["observations"].append({"period": "2026-05", "m": 5.1})
+    report = NormalizeReport(new_observations=[("nbs-industrial-va", "2026-05")])
+    batch = make_batch(release_id="dg-refresh-2026-07-14", source="dg")
+    ctx = make_context(
+        tmp_path,
+        real_overrides={"nbs-industrial-va": real},
+        staged_overrides={"nbs-industrial-va": staged},
+        batch=batch,
+        normalize_report=report,
+    )
+    dg_dir = ctx.archive_dir / "dg"
+    dg_dir.mkdir(parents=True, exist_ok=True)
+    if write_manifest:
+        captures = ["abc123.json"]
+        if captures_present:
+            (dg_dir / "abc123.json").write_text("{}", encoding="utf-8")
+        manifest = {"release_id": "dg-refresh-2026-07-14", "generated_at": "2026-07-14T00:00:00Z", "captures": captures}
+        (dg_dir / "manifest_dg-refresh-2026-07-14.json").write_text(json.dumps(manifest), encoding="utf-8")
+    return ctx
+
+
+def test_archive_release_identity_passes_for_dg_refresh_with_a_valid_manifest(tmp_path):
+    ctx = _dg_refresh_case(tmp_path, write_manifest=True, captures_present=True)
+    result = check_archive_release_identity(ctx)
+    assert result.status == PASS
+
+
+def test_archive_release_identity_blocks_dg_refresh_with_no_manifest(tmp_path):
+    ctx = _dg_refresh_case(tmp_path, write_manifest=False)
+    result = check_archive_release_identity(ctx)
+    assert result.status == BLOCK
+
+
+def test_archive_release_identity_blocks_dg_refresh_when_a_listed_capture_is_missing(tmp_path):
+    ctx = _dg_refresh_case(tmp_path, write_manifest=True, captures_present=False)
     result = check_archive_release_identity(ctx)
     assert result.status == BLOCK
 

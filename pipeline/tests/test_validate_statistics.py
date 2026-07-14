@@ -117,6 +117,27 @@ def test_ytd_arithmetic_warns_on_jan_feb_m_ytd_mismatch(tmp_path):
     assert result.status == WARN
 
 
+def test_ytd_arithmetic_skips_a_yoy_pct_series_even_with_non_additive_ytd(tmp_path):
+    """nbs-industrial-va-style series store ONLY growth rates: 累计同比 is not
+    additive from monthly rates, so a "mismatch" here is not a real error and
+    must be skipped, not flagged."""
+    series = {
+        "schema": "series/v1", "id": "test-industrial-va", "name_zh": "x", "name_en": "x",
+        "unit_zh": "%", "unit_en": "%", "value_type": "yoy_pct", "freq": "M",
+        "calibers": ["single", "ytd"], "source": {"agency": "nbs"}, "derived": None,
+        "coverage_note_zh": None,
+        "observations": [
+            {"period": "2026-04", "m": 5.6, "ytd": 5.6},
+            {"period": "2026-05", "m": 4.5, "ytd": 5.4},  # ytd(t) != ytd(t-1)+m(t) by construction, not by error
+        ],
+        "revisions": [], "breaks": [], "generated_at": "2026-06-01T00:00:00Z",
+    }
+    batch = make_batch([touch("test-industrial-va", "2026-05", m=4.5, ytd=5.4)])
+    ctx = make_context(tmp_path, staged_overrides={"test-industrial-va": series}, batch=batch)
+    result = check_ytd_arithmetic(ctx)
+    assert result.status == SKIP
+
+
 # -- 10. gate_a.yoy_base_tolerance -----------------------------------------------
 
 
@@ -147,6 +168,19 @@ def test_yoy_base_tolerance_blocks_impossible_math(tmp_path):
     ctx = make_context(tmp_path, staged_overrides={"nbs-retail-total": broken}, batch=batch)
     result = check_yoy_base_tolerance(ctx)
     assert result.status == BLOCK
+
+
+def test_yoy_base_tolerance_skips_an_index_typed_series(tmp_path):
+    """nbs-ppi-producer-yoy-style series: m is an index-typed value, not a
+    chained level, so deriving 'the YoY' from a level ratio is meaningless --
+    must be skipped regardless of how far apart published vs. derived look."""
+    broken = load_fixture_series("nbs-cpi-yoy")
+    last = broken["observations"][-1]
+    last["m_yoy"] = last["m_yoy"] + 5.0  # would clearly WARN if this were value_type=="level"
+    batch = make_batch([touch("nbs-cpi-yoy", last["period"], m_yoy=last["m_yoy"])])
+    ctx = make_context(tmp_path, staged_overrides={"nbs-cpi-yoy": broken}, batch=batch)
+    result = check_yoy_base_tolerance(ctx)
+    assert result.status == SKIP
 
 
 # -- 11. gate_a.sum_of_parts ------------------------------------------------------

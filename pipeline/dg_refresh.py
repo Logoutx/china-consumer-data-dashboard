@@ -65,6 +65,7 @@ needed there either.
 """
 from __future__ import annotations
 
+import json
 import shutil
 import sys
 from datetime import date, datetime, timedelta
@@ -434,12 +435,42 @@ FAMILY_STEPS = [
 
 
 def _load_catalog_by_id() -> dict[str, dict]:
-    import json
-
     if not CATALOG_PATH.exists():
         return {}
     raw = json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
     return {entry["id"]: entry for entry in raw.get("series", []) if "id" in entry}
+
+
+def _write_archive_manifest(archive_dir: Path, release_id: str, generated_at: str, captures: list[str]) -> Path:
+    """data/archive/dg/manifest_<release_id>.json -- links this run's raw DG
+    response captures (data/archive/dg/{indicators,values,tree}_<hash>_
+    <timestamp>.json -- DGClient's own archiving, with no reference back to
+    any release_id at all) to the release_id THIS run's staged observations
+    carry, so gate_a.archive_release_identity has something to match
+    against.
+
+    Bug fixed 2026-07-14 (Gate A correctly blocked the first dg_refresh run
+    that landed genuinely new observations): DGClient archives every raw
+    response under data/archive/dg/ keyed only by an indicator/tree hash and
+    a fetch timestamp -- nothing there ever recorded WHICH release_id those
+    captures belonged to, so archive_release_identity's "does a capture
+    matching this release_id exist" check could never find one for
+    dg_refresh, no matter how much real data actually landed. This manifest
+    is the missing link: `interface coordinated with the validate owner, who
+    is updating the check in parallel to accept it` -- {release_id,
+    generated_at, captures}, `generated_at` anchored to the run's own date
+    context (not fresh wall-clock randomness) so two manifests for the same
+    release_id are reproducible.
+
+    Written into data/archive/dg/ itself (under data/, so the workflow's own
+    `git add data/` picks it up in the same commit as the observations it
+    backs) by the caller, BEFORE stage_release()/run_gate() run -- the
+    identity check must see it in the same pass it verifies, not after.
+    """
+    manifest = {"release_id": release_id, "generated_at": generated_at, "captures": sorted(captures)}
+    path = archive_dir / f"manifest_{release_id}.json"
+    path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return path
 
 
 def _rows_from_pulled(pulled: Pulled, catalog_by_id: dict[str, dict]) -> tuple[list[ParsedRow], list[str]]:
@@ -472,12 +503,22 @@ def _rows_from_pulled(pulled: Pulled, catalog_by_id: dict[str, dict]) -> tuple[l
 
 def run(*, dry_run: bool, no_gate: bool = False, lookback: int = LOOKBACK_PERIODS, today: date | None = None) -> int:
     today = today or _shanghai_today()
+    release_id = f"dg-refresh-{today.isoformat()}"
     month_codes = _recent_month_codes(lookback, today)
     quarter_codes = _recent_quarter_codes(lookback, today)
     print(f"[dg_refresh] re-pulling last {lookback} period(s) as of {today.isoformat()}: months={month_codes} quarters={quarter_codes}")
 
     client = DGClient()
     cache = TreeCache.load(DEFAULT_CACHE_PATH)
+    # Snapshot the archive pool before this run's own HTTP calls -- diffed
+    # against the same pool after the family loop, below, to know exactly
+    # which capture files THIS run produced (see the manifest write after
+    # the loop). client.archive_dir is DGClient's own data/archive/dg/,
+    # already accumulating every prior run's captures too -- a snapshot diff
+    # is the only way to isolate "just this run's" without DGClient itself
+    # tracking or returning archived paths (pipeline.backfill is reuse-only,
+    # not mine to modify).
+    archived_before = set(client.archive_dir.glob("*.json"))
     pulled: Pulled = {}
     family_errors: list[str] = []
     for label, step in FAMILY_STEPS:
@@ -525,9 +566,17 @@ def run(*, dry_run: bool, no_gate: bool = False, lookback: int = LOOKBACK_PERIOD
         print("[dg_refresh] no data returned for any tracked DG series in the lookback window -- exiting cleanly")
         return 0
 
+    # Manifest: link this run's raw DG captures to release_id, BEFORE
+    # staging/gating so gate_a.archive_release_identity can see it in the
+    # same pass -- see _write_archive_manifest's docstring.
+    archived_after = set(client.archive_dir.glob("*.json"))
+    new_captures = [p.name for p in (archived_after - archived_before)]
+    manifest_path = _write_archive_manifest(client.archive_dir, release_id, today.isoformat(), new_captures)
+    print(f"[dg_refresh] wrote archive manifest {manifest_path} ({len(new_captures)} capture(s))")
+
     parsed = ParsedRelease(
         source=SOURCE_NAME,
-        release_id=f"dg-refresh-{today.isoformat()}",
+        release_id=release_id,
         url=DG_PAGE_URL,
         published_at=None,
         period_hint=today.strftime("%Y-%m"),

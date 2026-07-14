@@ -158,13 +158,24 @@ def _prior_month_period(period: str) -> str | None:
     return f"{y:04d}-{m:02d}"
 
 
+_ADDITIVE_VALUE_TYPES = {"level", "count"}
+
+
 def check_ytd_arithmetic(ctx: GateContext):
     """gate_a.ytd_arithmetic -- WARN normally; BLOCK when ytd(t), ytd(t-1) AND
     m(t) all came from this SAME staged release (no later-revision excuse for
-    the mismatch). Feb (jan_feb): m==ytd. March onward: ytd(t) ~= ytd(t-1)+m(t)."""
+    the mismatch). Feb (jan_feb): m==ytd. March onward: ytd(t) ~= ytd(t-1)+m(t).
+
+    Scoped to value_type in {level, count} -- genuine additive levels. A
+    series like nbs-industrial-va (value_type yoy_pct) stores ONLY growth
+    rates: 累计同比 is a ratio of cumulative sums, not itself additive from
+    monthly rates (ytd(t) != ytd(t-1)+m(t) for rates by construction, not by
+    error), so rate/index-typed series are skipped rather than flagged."""
     findings = []
     evaluated = False
     for series_id, data in ctx.touched_series_dicts():
+        if data.get("value_type") not in _ADDITIVE_VALUE_TYPES:
+            continue
         calibers = set(data.get("calibers", []))
         if not {"single", "ytd"} <= calibers:
             continue
@@ -242,10 +253,19 @@ def check_yoy_base_tolerance(ctx: GateContext):
     exceeds the configured tolerance (comparable-caliber base differences make
     small gaps legitimate, hence a tolerance rather than equality). BLOCK only
     for impossible math: non-positive implied denominator, or an implied
-    prior-year level more than 50% off the level actually on file."""
+    prior-year level more than 50% off the level actually on file.
+
+    Scoped to value_type=="level" -- deriving a YoY from a level ratio only
+    makes sense when `m`/`ytd` is a genuine chained level. An index-typed
+    series (e.g. nbs-ppi-producer-yoy, base=100-style) has no such chain --
+    dividing two index prints and calling it "the YoY" is a different,
+    meaningless number, not a base-comparability nuance the tolerance exists
+    to absorb."""
     findings = []
     evaluated = False
     for series_id, data in ctx.touched_series_dicts():
+        if data.get("value_type") != "level":
+            continue
         calibers = set(data.get("calibers", []))
         observations = data.get("observations", [])
         by_period = {o["period"]: o for o in observations}

@@ -4,6 +4,7 @@ gate_a.break_no_yoy, gate_a.break_link, gate_a.revision_flood,
 gate_a.revision_integrity."""
 from __future__ import annotations
 
+import json
 import re
 from collections import defaultdict
 from datetime import datetime
@@ -219,31 +220,63 @@ def _looks_like_stale_reserve(data: dict, period: str) -> bool:
     return all(current[m] == previous[m] for m in shared_measures)
 
 
+_DG_REFRESH_PREFIX = "dg-refresh"
+
+
+def _dg_refresh_manifest_satisfied(ctx: GateContext) -> bool:
+    """dg_refresh releases aren't a single HTML capture -- they're a DG bulk
+    pull, and the capture files themselves are hash-named (no release_id
+    match possible against them directly). The dg_refresh owner instead
+    writes data/archive/dg/manifest_<release_id>.json =
+    {"release_id", "generated_at", "captures": [filenames]}; identity is
+    satisfied when that manifest exists AND every capture it lists is
+    actually present on disk."""
+    manifest_path = ctx.archive_dir / "dg" / f"manifest_{ctx.batch.release_id}.json"
+    if not manifest_path.exists():
+        return False
+    try:
+        with manifest_path.open("r", encoding="utf-8") as handle:
+            manifest = json.load(handle)
+    except (json.JSONDecodeError, OSError):
+        return False
+    captures = manifest.get("captures") or []
+    if not captures:
+        return False
+    return all((ctx.archive_dir / "dg" / filename).exists() for filename in captures)
+
+
 def check_archive_release_identity(ctx: GateContext):
     """gate_a.archive_release_identity -- BLOCK. Every genuinely new
     observation this run must trace to an archive capture actually fetched
-    this run (data/archive/<source>/<release_id>.*); a new "period" whose
-    values are byte-identical to the immediately preceding period is flagged
-    as a likely stale re-serve masquerading as fresh data."""
+    this run: for an HTML-sourced release, a matching data/archive/<source>/
+    <release_id>.* file; for a dg_refresh release (release_id starting with
+    'dg-refresh'), a data/archive/dg/manifest_<release_id>.json whose listed
+    captures all exist on disk (see _dg_refresh_manifest_satisfied -- DG
+    capture files themselves are hash-named, so no direct release_id match is
+    possible there). A new "period" whose values are byte-identical to the
+    immediately preceding period is flagged as a likely stale re-serve
+    masquerading as fresh data."""
     new_obs = _new_observations(ctx)
     if not new_obs:
         return make_result("gate_a.archive_release_identity", skipped=True, note="no new observations this run")
     if ctx.archive_dir is None or not ctx.batch.release_id:
         return make_result("gate_a.archive_release_identity", skipped=True, note="no archive_dir/release_id wired in for this invocation")
 
-    archive_subdir = ctx.archive_dir / (ctx.effective_archive_source or "")
-    has_release_file = archive_subdir.exists() and any(p.stem == ctx.batch.release_id for p in archive_subdir.glob("*"))
+    if ctx.batch.release_id.startswith(_DG_REFRESH_PREFIX):
+        has_release_file = _dg_refresh_manifest_satisfied(ctx)
+        missing_message = (
+            f"new observation traces to dg_refresh release_id {ctx.batch.release_id!r} but no manifest "
+            f"(data/archive/dg/manifest_{ctx.batch.release_id}.json) with all listed captures present was found"
+        )
+    else:
+        archive_subdir = ctx.archive_dir / (ctx.effective_archive_source or "")
+        has_release_file = archive_subdir.exists() and any(p.stem == ctx.batch.release_id for p in archive_subdir.glob("*"))
+        missing_message = f"new observation traces to release_id {ctx.batch.release_id!r} but no matching archive capture found under {archive_subdir}"
 
     findings = []
     for series_id, period in new_obs:
         if not has_release_file:
-            findings.append(
-                Finding(
-                    "gate_a.archive_release_identity", BLOCK,
-                    f"new observation traces to release_id {ctx.batch.release_id!r} but no matching archive capture found under {archive_subdir}",
-                    series_id=series_id, period=period,
-                )
-            )
+            findings.append(Finding("gate_a.archive_release_identity", BLOCK, missing_message, series_id=series_id, period=period))
             continue
         data = ctx.load(series_id)
         if data is not None and _looks_like_stale_reserve(data, period):
