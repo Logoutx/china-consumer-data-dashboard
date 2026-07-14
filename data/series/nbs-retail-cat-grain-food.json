@@ -7,7 +7,10 @@
   "unit_en": "100M CNY",
   "value_type": "level",
   "freq": "M",
-  "calibers": ["single", "ytd"],
+  "calibers": [
+    "single",
+    "ytd"
+  ],
   "source": {
     "agency": "nbs",
     "dataset_zh": "国家统计局数据发布 · 粮油、食品类",
@@ -53,9 +56,10 @@
     {"period": "2023-12", "m": 1906, "m_yoy": 5.8, "ytd": 18887, "ytd_yoy": 5.2, "src": "legacy:2023-12"},
     {"period": "2024-03", "m": 1690, "m_yoy": 11, "ytd": 5390, "ytd_yoy": 9.6, "src": "legacy:2024-03"},
     {"period": "2024-04", "m": 1521, "m_yoy": 8.5, "ytd": 6883, "ytd_yoy": 9.3, "src": "legacy:2024-04"},
-    {"period": "2024-05", "m": 1615, "m_yoy": 9.3, "ytd": 8499, "ytd_yoy": 9.3, "src": "legacy:2024-05"}
+    {"period": "2024-05", "m": 1615, "m_yoy": 9.3, "ytd": 8499, "ytd_yoy": 9.3, "src": "legacy:2024-05"},
+    {"period": "2026-05", "m": 1853.0, "m_yoy": 1.9, "ytd": 10049.0, "ytd_yoy": 7.4}
   ],
   "revisions": [],
   "breaks": [],
-  "generated_at": "2026-07-08T00:00:00Z"
+  "generated_at": "2026-07-14T02:47:15.167660+00:00"
 }

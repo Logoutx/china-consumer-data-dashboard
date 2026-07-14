@@ -7,7 +7,10 @@
   "unit_en": "100M CNY",
   "value_type": "level",
   "freq": "M",
-  "calibers": ["single", "ytd"],
+  "calibers": [
+    "single",
+    "ytd"
+  ],
   "source": {
     "agency": "nbs",
     "dataset_zh": "国家统计局数据发布 · 限额以上单位消费品零售额",
@@ -170,9 +173,10 @@
     {"period": "2025-11", "m": 17810.3, "m_yoy": -2, "src": "rel:20251215"},
     {"period": "2025-12", "m": 19546.7, "m_yoy": -1.9, "src": "rel:20260119"},
     {"period": "2026-03", "m": 17065.7, "m_yoy": 1.3, "src": "rel:20260416"},
-    {"period": "2026-04", "m": 14147.2, "m_yoy": -4.4, "src": "rel:20260518"}
+    {"period": "2026-04", "m": 14147.2, "m_yoy": -4.4, "src": "rel:20260518"},
+    {"period": "2026-05", "m": 15609.0, "m_yoy": -4.9, "ytd": 77941.0, "ytd_yoy": -0.5}
   ],
   "revisions": [],
   "breaks": [],
-  "generated_at": "2026-07-08T00:00:00Z"
+  "generated_at": "2026-07-14T02:47:15.161431+00:00"
 }
