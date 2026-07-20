@@ -7,7 +7,9 @@
   "unit_en": "%",
   "value_type": "rate_pct",
   "freq": "M",
-  "calibers": ["single"],
+  "calibers": [
+    "single"
+  ],
   "decimals": 1,
   "source": {
     "agency": "nbs",
@@ -118,9 +120,10 @@
     {"period": "2026-02", "m": 5.3, "src": "dg:3888eac6062945a79c8a27e5f13d4953"},
     {"period": "2026-03", "m": 5.4, "src": "dg:3888eac6062945a79c8a27e5f13d4953"},
     {"period": "2026-04", "m": 5.2, "src": "dg:3888eac6062945a79c8a27e5f13d4953"},
-    {"period": "2026-05", "m": 5.1, "src": "dg:3888eac6062945a79c8a27e5f13d4953"}
+    {"period": "2026-05", "m": 5.1, "src": "dg:3888eac6062945a79c8a27e5f13d4953"},
+    {"period": "2026-06", "m": 5.0}
   ],
   "revisions": [],
   "breaks": [],
-  "generated_at": "2026-07-07T19:23:24Z"
+  "generated_at": "2026-07-20T10:44:52.035119+00:00"
 }

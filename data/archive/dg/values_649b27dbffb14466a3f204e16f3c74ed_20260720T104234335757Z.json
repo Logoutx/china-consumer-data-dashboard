@@ -1,0 +1,56 @@
+{
+  "url": "https://data.stats.gov.cn/dg/website/publicrelease/web/external/getEsDataByIndicatorIdAndDa",
+  "request": {
+    "cid": "60e8b361f11c4a878c652a6487a25561",
+    "id": "649b27dbffb14466a3f204e16f3c74ed",
+    "da": "000000000000",
+    "dt": "",
+    "rootId": "3c9c459384c74f578f3541b2198aac70",
+    "dts": [
+      "202605MM",
+      "202606MM",
+      "202607MM"
+    ]
+  },
+  "response": {
+    "data": [
+      {
+        "dt": "202605MM",
+        "du": "414774dee2bc47f392cf13abfa9de882",
+        "unit": null,
+        "code": "000000000000",
+        "dt_name": "2026年5月",
+        "v": "99.2",
+        "i": "ab3a1ae25fdf45c1a15a30351a869800",
+        "i_name": "工业生产者出厂价格指数",
+        "du_name": null
+      },
+      {
+        "dt": "202606MM",
+        "du": "414774dee2bc47f392cf13abfa9de882",
+        "unit": null,
+        "code": "000000000000",
+        "dt_name": "2026年6月",
+        "v": "99.1",
+        "i": "ab3a1ae25fdf45c1a15a30351a869800",
+        "i_name": "工业生产者出厂价格指数",
+        "du_name": null
+      },
+      {
+        "dt": "202607MM",
+        "du": "",
+        "unit": "",
+        "code": "000000000000",
+        "dt_name": "2026年7月",
+        "v": "",
+        "i": "",
+        "i_name": "",
+        "du_name": ""
+      }
+    ],
+    "success": true,
+    "state": 20000,
+    "message": "成功"
+  },
+  "fetched_at": "20260720T104234335757Z"
+}

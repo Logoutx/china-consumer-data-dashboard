@@ -7,7 +7,10 @@
   "unit_en": "pp",
   "value_type": "ratio",
   "freq": "Q",
-  "calibers": ["single", "ytd"],
+  "calibers": [
+    "single",
+    "ytd"
+  ],
   "decimals": 1,
   "source": {
     "agency": "nbs",
@@ -58,9 +61,10 @@
     {"period": "2025-Q2", "m": 24.8, "ytd": 34.9, "src": "dg:8df845d93daa42359314690b9721de19"},
     {"period": "2025-Q3", "m": 30.0, "ytd": 33.3, "src": "dg:8df845d93daa42359314690b9721de19"},
     {"period": "2025-Q4", "m": 31.1, "ytd": 32.7, "src": "dg:8df845d93daa42359314690b9721de19"},
-    {"period": "2026-Q1", "m": 15.3, "ytd": 15.3, "src": "dg:8df845d93daa42359314690b9721de19"}
+    {"period": "2026-Q1", "m": 15.3, "ytd": 15.3, "src": "dg:8df845d93daa42359314690b9721de19"},
+    {"period": "2026-Q2", "m": 20.8, "ytd": 17.9}
   ],
   "revisions": [],
   "breaks": [],
-  "generated_at": "2026-07-07T19:23:24Z"
+  "generated_at": "2026-07-20T10:44:52.042938+00:00"
 }

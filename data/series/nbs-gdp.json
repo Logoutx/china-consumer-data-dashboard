@@ -7,7 +7,10 @@
   "unit_en": "100M CNY",
   "value_type": "level",
   "freq": "Q",
-  "calibers": ["single", "ytd"],
+  "calibers": [
+    "single",
+    "ytd"
+  ],
   "decimals": 1,
   "source": {
     "agency": "nbs",
@@ -154,9 +157,10 @@
     {"period": "2025-Q2", "m": 341395.3, "ytd": 659861.6, "real_yoy": 5.2, "src": "dg:d22612f09aeb4241bc557ef0ac61b3ba"},
     {"period": "2025-Q3", "m": 354106.2, "ytd": 1013967.9, "real_yoy": 4.8, "src": "dg:d22612f09aeb4241bc557ef0ac61b3ba"},
     {"period": "2025-Q4", "m": 387911.3, "ytd": 1401879.2, "real_yoy": 4.5, "src": "dg:d22612f09aeb4241bc557ef0ac61b3ba"},
-    {"period": "2026-Q1", "m": 334192.9, "ytd": 334192.9, "real_yoy": 5.0, "src": "dg:d22612f09aeb4241bc557ef0ac61b3ba"}
+    {"period": "2026-Q1", "m": 334192.9, "ytd": 334192.9, "real_yoy": 5.0, "src": "dg:d22612f09aeb4241bc557ef0ac61b3ba"},
+    {"period": "2026-Q2", "m": 361511.1, "ytd": 695704.0, "real_yoy": 4.3}
   ],
   "revisions": [],
   "breaks": [],
-  "generated_at": "2026-07-07T19:23:24Z"
+  "generated_at": "2026-07-20T10:44:52.040779+00:00"
 }

@@ -1,0 +1,27 @@
+{
+  "url": "https://data.stats.gov.cn/dg/website/publicrelease/web/external/new/queryIndexTreeAsync?code=1&pid=4fb2f4d836a24c1a824a26e2b04b7009",
+  "request": null,
+  "response": {
+    "data": [
+      {
+        "explain": "货币供应量已包含住房公积金中心存款和非存款类金融机构在存款类金融机构的存款。2001年6月起，将证券公司客户保证金计入货币供应量(M2)，含在其他存款项内。\n",
+        "sdate": "1999",
+        "_name": "货币供应量",
+        "treeinfo_pid": "4fb2f4d836a24c1a824a26e2b04b7009",
+        "treeinfo_level": 4,
+        "type": "catalog",
+        "edate": null,
+        "isLeaf": true,
+        "treeinfo_globalid": "69c574ab128a44e595cc0b24502b771b.fc982599aa684be7969d7b90b1bd0e84.4fb2f4d836a24c1a824a26e2b04b7009.82130c6621a745cda3d64b090e733383",
+        "name": "货币供应量",
+        "_id": "82130c6621a745cda3d64b090e733383",
+        "publicrelease_web_catalog_id": "82130c6621a745cda3d64b090e733383",
+        "treeinfo_icon": null
+      }
+    ],
+    "success": true,
+    "state": 20000,
+    "message": "成功"
+  },
+  "fetched_at": "20260720T104352494811Z"
+}
