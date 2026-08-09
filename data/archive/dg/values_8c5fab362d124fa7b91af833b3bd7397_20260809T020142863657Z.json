@@ -1,0 +1,56 @@
+{
+  "url": "https://data.stats.gov.cn/dg/website/publicrelease/web/external/getEsDataByIndicatorIdAndDa",
+  "request": {
+    "cid": "28d936104e304aa191e338eb82b6dc09",
+    "id": "8c5fab362d124fa7b91af833b3bd7397",
+    "da": "000000000000",
+    "dt": "",
+    "rootId": "1b1ce0cfd03646dc9e15103ea4c570f6",
+    "dts": [
+      "202601SS",
+      "202602SS",
+      "202603SS"
+    ]
+  },
+  "response": {
+    "data": [
+      {
+        "dt": "202601SS",
+        "du": "7dae305350e74cf793520af55bceffa4",
+        "unit": "亿元",
+        "code": "000000000000",
+        "dt_name": "2026年第一季度",
+        "v": "334192.9",
+        "i": "db8e5a86c08246e79b1b11251927e740",
+        "i_name": "国内生产总值",
+        "du_name": "亿元"
+      },
+      {
+        "dt": "202602SS",
+        "du": "7dae305350e74cf793520af55bceffa4",
+        "unit": "亿元",
+        "code": "000000000000",
+        "dt_name": "2026年第二季度",
+        "v": "695704.0",
+        "i": "db8e5a86c08246e79b1b11251927e740",
+        "i_name": "国内生产总值",
+        "du_name": "亿元"
+      },
+      {
+        "dt": "202603SS",
+        "du": "",
+        "unit": "",
+        "code": "000000000000",
+        "dt_name": "2026年第三季度",
+        "v": "",
+        "i": "",
+        "i_name": "",
+        "du_name": ""
+      }
+    ],
+    "success": true,
+    "state": 20000,
+    "message": "成功"
+  },
+  "fetched_at": "20260809T020142863657Z"
+}
