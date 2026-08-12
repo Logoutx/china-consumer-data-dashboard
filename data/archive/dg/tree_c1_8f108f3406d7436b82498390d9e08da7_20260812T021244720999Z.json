@@ -1,0 +1,57 @@
+{
+  "url": "https://data.stats.gov.cn/dg/website/publicrelease/web/external/new/queryIndexTreeAsync?code=1&pid=8f108f3406d7436b82498390d9e08da7",
+  "request": null,
+  "response": {
+    "data": [
+      {
+        "explain": "2017年1月起改进了生产经营活动预期指数的季节调整方法，并对历史数据进行修订。\n",
+        "sdate": null,
+        "_name": "制造业采购经理指数",
+        "treeinfo_pid": "8f108f3406d7436b82498390d9e08da7",
+        "treeinfo_level": 4,
+        "type": "catalog",
+        "edate": null,
+        "isLeaf": true,
+        "treeinfo_globalid": "69c574ab128a44e595cc0b24502b771b.fc982599aa684be7969d7b90b1bd0e84.8f108f3406d7436b82498390d9e08da7.93ffbb1aa85740d3aa2618371508b606",
+        "name": "制造业采购经理指数",
+        "_id": "93ffbb1aa85740d3aa2618371508b606",
+        "publicrelease_web_catalog_id": "93ffbb1aa85740d3aa2618371508b606",
+        "treeinfo_icon": null
+      },
+      {
+        "explain": "发布数据均为季节调整后数据。\n原“中间投入价格指数”改为“投入品价格指数”。\n原“收费价格指数”改为“销售价格指数”。",
+        "sdate": null,
+        "_name": "非制造业采购经理指数",
+        "treeinfo_pid": "8f108f3406d7436b82498390d9e08da7",
+        "treeinfo_level": 4,
+        "type": "catalog",
+        "edate": null,
+        "isLeaf": true,
+        "treeinfo_globalid": "69c574ab128a44e595cc0b24502b771b.fc982599aa684be7969d7b90b1bd0e84.8f108f3406d7436b82498390d9e08da7.7a64a6e25aec4a8e9dde044ecd9e2cce",
+        "name": "非制造业采购经理指数",
+        "_id": "7a64a6e25aec4a8e9dde044ecd9e2cce",
+        "publicrelease_web_catalog_id": "7a64a6e25aec4a8e9dde044ecd9e2cce",
+        "treeinfo_icon": null
+      },
+      {
+        "explain": null,
+        "sdate": null,
+        "_name": "综合PMI产出指数",
+        "treeinfo_pid": "8f108f3406d7436b82498390d9e08da7",
+        "treeinfo_level": 4,
+        "type": "catalog",
+        "edate": null,
+        "isLeaf": true,
+        "treeinfo_globalid": "69c574ab128a44e595cc0b24502b771b.fc982599aa684be7969d7b90b1bd0e84.8f108f3406d7436b82498390d9e08da7.455378e1c3264a32875768a35ba5de76",
+        "name": "综合PMI产出指数",
+        "_id": "455378e1c3264a32875768a35ba5de76",
+        "publicrelease_web_catalog_id": "455378e1c3264a32875768a35ba5de76",
+        "treeinfo_icon": null
+      }
+    ],
+    "success": true,
+    "state": 20000,
+    "message": "成功"
+  },
+  "fetched_at": "20260812T021244720999Z"
+}

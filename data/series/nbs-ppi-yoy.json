@@ -421,11 +421,12 @@
     {"period": "2026-03", "m": 100.5, "m_yoy": 0.5, "mom": 1.0, "src": "dg:150633e52b9a470a9a9fd1b296dd6c5b"},
     {"period": "2026-04", "m": 102.8, "m_yoy": 2.8, "mom": 1.7, "src": "dg:150633e52b9a470a9a9fd1b296dd6c5b"},
     {"period": "2026-05", "m": 103.9, "m_yoy": 3.9, "mom": 0.5, "src": "dg:150633e52b9a470a9a9fd1b296dd6c5b"},
-    {"period": "2026-06", "m": 104.1, "m_yoy": 4.1, "mom": -0.3}
+    {"period": "2026-06", "m": 104.1, "m_yoy": 4.1, "mom": -0.3},
+    {"period": "2026-07", "m": 103.5, "m_yoy": 3.5, "mom": -0.7}
   ],
   "revisions": [],
   "breaks": [
     {"effective": "2026-01", "kind": "rebase", "no_yoy_across": true, "yoy_valid_from": "2026-01", "note_zh": "PPI 定基调整至 2025 年基期，跨基期同比不可比。", "note_en": "PPI rebased to 2025 base; YoY not comparable across the seam."}
   ],
-  "generated_at": "2026-07-14T10:07:44.991572+00:00"
+  "generated_at": "2026-08-12T02:15:16.457202+00:00"
 }

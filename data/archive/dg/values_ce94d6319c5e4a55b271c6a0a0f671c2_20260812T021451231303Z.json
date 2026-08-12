@@ -1,0 +1,56 @@
+{
+  "url": "https://data.stats.gov.cn/dg/website/publicrelease/web/external/getEsDataByIndicatorIdAndDa",
+  "request": {
+    "cid": "62cd73e3fcb4492fab8e998ca3a7dc5b",
+    "id": "ce94d6319c5e4a55b271c6a0a0f671c2",
+    "da": "000000000000",
+    "dt": "",
+    "rootId": "1b1ce0cfd03646dc9e15103ea4c570f6",
+    "dts": [
+      "202601SS",
+      "202602SS",
+      "202603SS"
+    ]
+  },
+  "response": {
+    "data": [
+      {
+        "dt": "202601SS",
+        "du": "414774dee2bc47f392cf13abfa9de882",
+        "unit": "%",
+        "code": "000000000000",
+        "dt_name": "2026年第一季度",
+        "v": "46.7",
+        "i": "5213663b6a5c427fb0a617ccab87ea5b",
+        "i_name": "最终消费支出对国内生产总值增长贡献率",
+        "du_name": "%"
+      },
+      {
+        "dt": "202602SS",
+        "du": "414774dee2bc47f392cf13abfa9de882",
+        "unit": "%",
+        "code": "000000000000",
+        "dt_name": "2026年第二季度",
+        "v": "45.2",
+        "i": "5213663b6a5c427fb0a617ccab87ea5b",
+        "i_name": "最终消费支出对国内生产总值增长贡献率",
+        "du_name": "%"
+      },
+      {
+        "dt": "202603SS",
+        "du": "",
+        "unit": "",
+        "code": "000000000000",
+        "dt_name": "2026年第三季度",
+        "v": "",
+        "i": "",
+        "i_name": "",
+        "du_name": ""
+      }
+    ],
+    "success": true,
+    "state": 20000,
+    "message": "成功"
+  },
+  "fetched_at": "20260812T021451231303Z"
+}
