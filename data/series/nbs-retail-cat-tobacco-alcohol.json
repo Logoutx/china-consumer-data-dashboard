@@ -7,7 +7,10 @@
   "unit_en": "100M CNY",
   "value_type": "level",
   "freq": "M",
-  "calibers": ["single", "ytd"],
+  "calibers": [
+    "single",
+    "ytd"
+  ],
   "source": {
     "agency": "nbs",
     "dataset_zh": "国家统计局数据发布 · 烟酒类",
@@ -73,9 +76,10 @@
     {"period": "2025-12", "m": 623, "m_yoy": -2.9, "ytd": 6425, "ytd_yoy": 2.7, "src": "rel:20260119"},
     {"period": "2026-03", "m": 539, "m_yoy": 7.7, "ytd": 2122, "ytd_yoy": 16, "src": "rel:20260416"},
     {"period": "2026-04", "m": 471, "m_yoy": 11.7, "ytd": 2575, "ytd_yoy": 15.2, "src": "rel:20260518"},
-    {"period": "2026-05", "m": 484, "m_yoy": 4.8, "ytd": 3016, "ytd_yoy": 13.4, "src": "rel:20260616"}
+    {"period": "2026-05", "m": 484, "m_yoy": 4.8, "ytd": 3016, "ytd_yoy": 13.4, "src": "rel:20260616"},
+    {"period": "2026-07", "m": 431.0, "m_yoy": 6.0, "ytd": 3966.0, "ytd_yoy": 12.4}
   ],
   "revisions": [],
   "breaks": [],
-  "generated_at": "2026-07-08T00:00:00Z"
+  "generated_at": "2026-08-17T08:32:18.463877+00:00"
 }

@@ -7,7 +7,10 @@
   "unit_en": "100M CNY",
   "value_type": "level",
   "freq": "M",
-  "calibers": ["single", "ytd"],
+  "calibers": [
+    "single",
+    "ytd"
+  ],
   "source": {
     "agency": "nbs",
     "dataset_zh": "国家统计局数据发布 · 服装、鞋帽、针纺织品类",
@@ -56,9 +59,10 @@
     {"period": "2025-12", "m": 1661, "m_yoy": 0.6, "ytd": 15215, "ytd_yoy": 3.2, "src": "rel:20260119"},
     {"period": "2026-03", "m": 1296, "m_yoy": 7, "ytd": 4122, "ytd_yoy": 9.3, "src": "rel:20260416"},
     {"period": "2026-04", "m": 1108, "m_yoy": 3.6, "ytd": 5212, "ytd_yoy": 8.1, "src": "rel:20260518"},
-    {"period": "2026-05", "m": 1251, "m_yoy": 3.8, "ytd": 6425, "ytd_yoy": 7.2, "src": "rel:20260616"}
+    {"period": "2026-05", "m": 1251, "m_yoy": 3.8, "ytd": 6425, "ytd_yoy": 7.2, "src": "rel:20260616"},
+    {"period": "2026-07", "m": 922.0, "m_yoy": -1.0, "ytd": 8628.0, "ytd_yoy": 5.8}
   ],
   "revisions": [],
   "breaks": [],
-  "generated_at": "2026-07-08T00:00:00Z"
+  "generated_at": "2026-08-17T08:32:18.464530+00:00"
 }

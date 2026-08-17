@@ -7,7 +7,10 @@
   "unit_en": "100M CNY",
   "value_type": "level",
   "freq": "M",
-  "calibers": ["single", "ytd"],
+  "calibers": [
+    "single",
+    "ytd"
+  ],
   "source": {
     "agency": "nbs",
     "dataset_zh": "国家统计局数据发布 · 家用电器和音像器材类",
@@ -69,9 +72,10 @@
     {"period": "2025-12", "m": 971, "m_yoy": -18.7, "ytd": 11695, "ytd_yoy": 11, "src": "rel:20260119"},
     {"period": "2026-03", "m": 938, "m_yoy": -5, "ytd": 2514, "ytd_yoy": 0, "src": "rel:20260416"},
     {"period": "2026-04", "m": 776, "m_yoy": -15.1, "ytd": 3252, "ytd_yoy": -4, "src": "rel:20260518"},
-    {"period": "2026-05", "m": 975, "m_yoy": -15.6, "ytd": 4197, "ytd_yoy": -6.9, "src": "rel:20260616"}
+    {"period": "2026-05", "m": 975, "m_yoy": -15.6, "ytd": 4197, "ytd_yoy": -6.9, "src": "rel:20260616"},
+    {"period": "2026-07", "m": 946.0, "m_yoy": -1.9, "ytd": 6372.0, "ytd_yoy": -6.6}
   ],
   "revisions": [],
   "breaks": [],
-  "generated_at": "2026-07-08T00:00:00Z"
+  "generated_at": "2026-08-17T08:32:18.467651+00:00"
 }

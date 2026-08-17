@@ -7,7 +7,10 @@
   "unit_en": "100M CNY",
   "value_type": "level",
   "freq": "M",
-  "calibers": ["single", "ytd"],
+  "calibers": [
+    "single",
+    "ytd"
+  ],
   "source": {
     "agency": "nbs",
     "dataset_zh": "国家统计局数据发布 · 体育、娱乐用品类",
@@ -48,9 +51,10 @@
     {"period": "2025-12", "m": 152, "m_yoy": 9, "ytd": 1703, "ytd_yoy": 15.7, "src": "rel:20260119"},
     {"period": "2026-03", "m": 145, "m_yoy": -2, "ytd": 410, "ytd_yoy": 1.9, "src": "rel:20260416"},
     {"period": "2026-04", "m": 129, "m_yoy": -8, "ytd": 541, "ytd_yoy": -0.7, "src": "rel:20260518"},
-    {"period": "2026-05", "m": 157, "m_yoy": -8, "ytd": 697, "ytd_yoy": -2.4, "src": "rel:20260616"}
+    {"period": "2026-05", "m": 157, "m_yoy": -8, "ytd": 697, "ytd_yoy": -2.4, "src": "rel:20260616"},
+    {"period": "2026-07", "m": 125.0, "m_yoy": -10.6, "ytd": 996.0, "ytd_yoy": -3.5}
   ],
   "revisions": [],
   "breaks": [],
-  "generated_at": "2026-07-08T00:00:00Z"
+  "generated_at": "2026-08-17T08:32:18.467010+00:00"
 }

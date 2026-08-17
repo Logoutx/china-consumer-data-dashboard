@@ -7,7 +7,10 @@
   "unit_en": "100M CNY",
   "value_type": "level",
   "freq": "M",
-  "calibers": ["single", "ytd"],
+  "calibers": [
+    "single",
+    "ytd"
+  ],
   "source": {
     "agency": "nbs",
     "dataset_zh": "国家统计局数据发布 · 家具类",
@@ -69,9 +72,10 @@
     {"period": "2025-12", "m": 207, "m_yoy": -2.2, "ytd": 2092, "ytd_yoy": 14.6, "src": "rel:20260119"},
     {"period": "2026-03", "m": 149, "m_yoy": -8.7, "ytd": 422, "ytd_yoy": 1.9, "src": "rel:20260416"},
     {"period": "2026-04", "m": 134, "m_yoy": -10.4, "ytd": 552, "ytd_yoy": -1.4, "src": "rel:20260518"},
-    {"period": "2026-05", "m": 150, "m_yoy": -8.7, "ytd": 696, "ytd_yoy": -3, "src": "rel:20260616"}
+    {"period": "2026-05", "m": 150, "m_yoy": -8.7, "ytd": 696, "ytd_yoy": -3, "src": "rel:20260616"},
+    {"period": "2026-07", "m": 145.0, "m_yoy": -8.8, "ytd": 1004.0, "ytd_yoy": -4.5}
   ],
   "revisions": [],
   "breaks": [],
-  "generated_at": "2026-07-08T00:00:00Z"
+  "generated_at": "2026-08-17T08:32:18.469567+00:00"
 }

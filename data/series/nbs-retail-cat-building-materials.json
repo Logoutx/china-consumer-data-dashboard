@@ -7,7 +7,10 @@
   "unit_en": "100M CNY",
   "value_type": "level",
   "freq": "M",
-  "calibers": ["single", "ytd"],
+  "calibers": [
+    "single",
+    "ytd"
+  ],
   "source": {
     "agency": "nbs",
     "dataset_zh": "国家统计局数据发布 · 建筑及装潢材料类",
@@ -69,9 +72,10 @@
     {"period": "2025-12", "m": 172, "m_yoy": -11.8, "ytd": 1671, "ytd_yoy": -2.7, "src": "rel:20260119"},
     {"period": "2026-03", "m": 112, "m_yoy": -9, "ytd": 314, "ytd_yoy": -4.7, "src": "rel:20260416"},
     {"period": "2026-04", "m": 101, "m_yoy": -13.8, "ytd": 411, "ytd_yoy": -7.1, "src": "rel:20260518"},
-    {"period": "2026-05", "m": 100, "m_yoy": -13.6, "ytd": 500, "ytd_yoy": -8.4, "src": "rel:20260616"}
+    {"period": "2026-05", "m": 100, "m_yoy": -13.6, "ytd": 500, "ytd_yoy": -8.4, "src": "rel:20260616"},
+    {"period": "2026-07", "m": 94.0, "m_yoy": -14.2, "ytd": 690.0, "ytd_yoy": -9.5}
   ],
   "revisions": [],
   "breaks": [],
-  "generated_at": "2026-07-08T00:00:00Z"
+  "generated_at": "2026-08-17T08:32:18.472530+00:00"
 }
