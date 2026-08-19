@@ -50,11 +50,12 @@
     {"period": "2026-03", "m": 16.9, "src": "dg:bd6da1abb26046c2acb38aa701d90e86"},
     {"period": "2026-04", "m": 16.3, "src": "dg:bd6da1abb26046c2acb38aa701d90e86"},
     {"period": "2026-05", "m": 15.6, "src": "dg:bd6da1abb26046c2acb38aa701d90e86"},
-    {"period": "2026-06", "m": 14.9}
+    {"period": "2026-06", "m": 14.9},
+    {"period": "2026-07", "m": 17.9}
   ],
   "revisions": [],
   "breaks": [
     {"effective": "2023-12", "kind": "methodology", "no_yoy_across": true, "yoy_valid_from": "2024-12", "supersedes": "nbs-urban-unemp-youth-1624", "note_zh": "自 2023-12 起改为不含在校生口径，与旧序列不可比。", "note_en": "From 2023-12, excludes students -- not comparable with the old series."}
   ],
-  "generated_at": "2026-07-20T10:44:52.036720+00:00"
+  "generated_at": "2026-08-19T02:58:53.812797+00:00"
 }

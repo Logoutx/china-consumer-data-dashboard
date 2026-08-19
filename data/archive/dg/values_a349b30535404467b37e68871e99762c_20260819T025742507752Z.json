@@ -1,0 +1,56 @@
+{
+  "url": "https://data.stats.gov.cn/dg/website/publicrelease/web/external/getEsDataByIndicatorIdAndDa",
+  "request": {
+    "cid": "7e11b47c828d4e4e925f1c5a98305558",
+    "id": "a349b30535404467b37e68871e99762c",
+    "da": "000000000000",
+    "dt": "",
+    "rootId": "73f0f0fafb31475ab48a309cc25dedd9",
+    "dts": [
+      "202606MM",
+      "202607MM",
+      "202608MM"
+    ]
+  },
+  "response": {
+    "data": [
+      {
+        "dt": "202606MM",
+        "du": "",
+        "unit": "",
+        "code": "000000000000",
+        "dt_name": "2026年6月",
+        "v": "",
+        "i": "",
+        "i_name": "",
+        "du_name": ""
+      },
+      {
+        "dt": "202607MM",
+        "du": "",
+        "unit": "",
+        "code": "000000000000",
+        "dt_name": "2026年7月",
+        "v": "",
+        "i": "",
+        "i_name": "",
+        "du_name": ""
+      },
+      {
+        "dt": "202608MM",
+        "du": "",
+        "unit": "",
+        "code": "000000000000",
+        "dt_name": "2026年8月",
+        "v": "",
+        "i": "",
+        "i_name": "",
+        "du_name": ""
+      }
+    ],
+    "success": true,
+    "state": 20000,
+    "message": "成功"
+  },
+  "fetched_at": "20260819T025742507752Z"
+}

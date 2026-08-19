@@ -145,9 +145,10 @@
     {"period": "2026-03", "ytd_yoy": 1.7, "src": "dg:7e570cf8071c4734a7d78d9f0a70fbe1"},
     {"period": "2026-04", "ytd_yoy": -1.6, "src": "dg:7e570cf8071c4734a7d78d9f0a70fbe1"},
     {"period": "2026-05", "ytd_yoy": -4.1, "src": "dg:7e570cf8071c4734a7d78d9f0a70fbe1"},
-    {"period": "2026-06", "ytd_yoy": -5.7}
+    {"period": "2026-06", "ytd_yoy": -5.7},
+    {"period": "2026-07", "ytd_yoy": -6.7}
   ],
   "revisions": [],
   "breaks": [],
-  "generated_at": "2026-07-20T10:44:52.038393+00:00"
+  "generated_at": "2026-08-19T02:58:53.814375+00:00"
 }

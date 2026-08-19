@@ -1,0 +1,56 @@
+{
+  "url": "https://data.stats.gov.cn/dg/website/publicrelease/web/external/getEsDataByIndicatorIdAndDa",
+  "request": {
+    "cid": "ee3b7046b390415b9b7745e3d16f6052",
+    "id": "3888eac6062945a79c8a27e5f13d4953",
+    "da": "000000000000",
+    "dt": "",
+    "rootId": "e69d8b62991649d4b278e0445bcc0cd0",
+    "dts": [
+      "202606MM",
+      "202607MM",
+      "202608MM"
+    ]
+  },
+  "response": {
+    "data": [
+      {
+        "dt": "202606MM",
+        "du": "414774dee2bc47f392cf13abfa9de882",
+        "unit": "%",
+        "code": "000000000000",
+        "dt_name": "2026年6月",
+        "v": "5.0",
+        "i": "410fdcb2740546ffa0818936ca2efb73",
+        "i_name": "城镇调查失业率",
+        "du_name": "%"
+      },
+      {
+        "dt": "202607MM",
+        "du": "414774dee2bc47f392cf13abfa9de882",
+        "unit": "%",
+        "code": "000000000000",
+        "dt_name": "2026年7月",
+        "v": "5.2",
+        "i": "410fdcb2740546ffa0818936ca2efb73",
+        "i_name": "城镇调查失业率",
+        "du_name": "%"
+      },
+      {
+        "dt": "202608MM",
+        "du": "",
+        "unit": "",
+        "code": "000000000000",
+        "dt_name": "2026年8月",
+        "v": "",
+        "i": "",
+        "i_name": "",
+        "du_name": ""
+      }
+    ],
+    "success": true,
+    "state": 20000,
+    "message": "成功"
+  },
+  "fetched_at": "20260819T025706620156Z"
+}
