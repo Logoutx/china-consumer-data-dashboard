@@ -1,0 +1,56 @@
+{
+  "url": "https://data.stats.gov.cn/dg/website/publicrelease/web/external/getEsDataByIndicatorIdAndDa",
+  "request": {
+    "cid": "93ffbb1aa85740d3aa2618371508b606",
+    "id": "a09aa989bdcf4cffa2021795722eb916",
+    "da": "000000000000",
+    "dt": "",
+    "rootId": "8f108f3406d7436b82498390d9e08da7",
+    "dts": [
+      "202606MM",
+      "202607MM",
+      "202608MM"
+    ]
+  },
+  "response": {
+    "data": [
+      {
+        "dt": "202606MM",
+        "du": "414774dee2bc47f392cf13abfa9de882",
+        "unit": "%",
+        "code": "000000000000",
+        "dt_name": "2026年6月",
+        "v": "50.3",
+        "i": "793a9f10f0494c20acf046aaecf76d2b",
+        "i_name": "制造业采购经理指数(PMI)",
+        "du_name": "%"
+      },
+      {
+        "dt": "202607MM",
+        "du": "414774dee2bc47f392cf13abfa9de882",
+        "unit": "%",
+        "code": "000000000000",
+        "dt_name": "2026年7月",
+        "v": "49.2",
+        "i": "793a9f10f0494c20acf046aaecf76d2b",
+        "i_name": "制造业采购经理指数(PMI)",
+        "du_name": "%"
+      },
+      {
+        "dt": "202608MM",
+        "du": "",
+        "unit": "",
+        "code": "000000000000",
+        "dt_name": "2026年8月",
+        "v": "",
+        "i": "",
+        "i_name": "",
+        "du_name": ""
+      }
+    ],
+    "success": true,
+    "state": 20000,
+    "message": "成功"
+  },
+  "fetched_at": "20260828T035710264930Z"
+}

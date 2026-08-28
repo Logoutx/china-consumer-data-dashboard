@@ -7,7 +7,9 @@
   "unit_en": "100M CNY",
   "value_type": "level",
   "freq": "M",
-  "calibers": ["single"],
+  "calibers": [
+    "single"
+  ],
   "decimals": 2,
   "source": {
     "agency": "pbc",
@@ -334,9 +336,12 @@
     {"period": "2026-01", "m": 146138.6, "m_yoy": 2.7, "src": "dg:bd67997414b147a08d4aa03d146f4486"},
     {"period": "2026-02", "m": 151400.0, "m_yoy": 14.1, "src": "dg:bd67997414b147a08d4aa03d146f4486"},
     {"period": "2026-03", "m": 147082.81, "m_yoy": 12.5, "src": "dg:bd67997414b147a08d4aa03d146f4486"},
-    {"period": "2026-04", "m": 147477.38, "m_yoy": 12.2, "src": "dg:bd67997414b147a08d4aa03d146f4486"}
+    {"period": "2026-04", "m": 147477.38, "m_yoy": 12.2, "src": "dg:bd67997414b147a08d4aa03d146f4486"},
+    {"period": "2026-05", "m": 146900.0, "m_yoy": 11.9},
+    {"period": "2026-06", "m": 147364.79, "m_yoy": 11.8},
+    {"period": "2026-07", "m": 148202.86, "m_yoy": 11.6}
   ],
   "revisions": [],
   "breaks": [],
-  "generated_at": "2026-07-07T19:23:24Z"
+  "generated_at": "2026-08-28T03:58:12.992900+00:00"
 }

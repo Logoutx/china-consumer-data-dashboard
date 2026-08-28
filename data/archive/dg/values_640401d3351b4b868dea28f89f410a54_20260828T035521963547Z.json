@@ -1,0 +1,80 @@
+{
+  "url": "https://data.stats.gov.cn/dg/website/publicrelease/web/external/getEsDataByIndicatorIdAndDa",
+  "request": {
+    "cid": "82130c6621a745cda3d64b090e733383",
+    "id": "640401d3351b4b868dea28f89f410a54",
+    "da": "000000000000",
+    "dt": "",
+    "rootId": "4fb2f4d836a24c1a824a26e2b04b7009",
+    "dts": [
+      "202604MM",
+      "202605MM",
+      "202606MM",
+      "202607MM",
+      "202608MM"
+    ]
+  },
+  "response": {
+    "data": [
+      {
+        "dt": "202604MM",
+        "du": "414774dee2bc47f392cf13abfa9de882",
+        "unit": "%",
+        "code": "000000000000",
+        "dt_name": "2026年4月",
+        "v": "5.0",
+        "i": "559aa34beb3743f6b0b1b9b75c6dc3da",
+        "i_name": "货币(M1)供应量",
+        "du_name": "%"
+      },
+      {
+        "dt": "202605MM",
+        "du": "414774dee2bc47f392cf13abfa9de882",
+        "unit": "%",
+        "code": "000000000000",
+        "dt_name": "2026年5月",
+        "v": "5.5",
+        "i": "559aa34beb3743f6b0b1b9b75c6dc3da",
+        "i_name": "货币(M1)供应量",
+        "du_name": "%"
+      },
+      {
+        "dt": "202606MM",
+        "du": "414774dee2bc47f392cf13abfa9de882",
+        "unit": "%",
+        "code": "000000000000",
+        "dt_name": "2026年6月",
+        "v": "4.0",
+        "i": "559aa34beb3743f6b0b1b9b75c6dc3da",
+        "i_name": "货币(M1)供应量",
+        "du_name": "%"
+      },
+      {
+        "dt": "202607MM",
+        "du": "414774dee2bc47f392cf13abfa9de882",
+        "unit": "%",
+        "code": "000000000000",
+        "dt_name": "2026年7月",
+        "v": "4.0",
+        "i": "559aa34beb3743f6b0b1b9b75c6dc3da",
+        "i_name": "货币(M1)供应量",
+        "du_name": "%"
+      },
+      {
+        "dt": "202608MM",
+        "du": "",
+        "unit": "",
+        "code": "000000000000",
+        "dt_name": "2026年8月",
+        "v": "",
+        "i": "",
+        "i_name": "",
+        "du_name": ""
+      }
+    ],
+    "success": true,
+    "state": 20000,
+    "message": "成功"
+  },
+  "fetched_at": "20260828T035521963547Z"
+}

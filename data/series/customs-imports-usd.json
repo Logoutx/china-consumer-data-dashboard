@@ -7,7 +7,10 @@
   "unit_en": "100M USD",
   "value_type": "level",
   "freq": "M",
-  "calibers": ["single", "ytd"],
+  "calibers": [
+    "single",
+    "ytd"
+  ],
   "decimals": 2,
   "source": {
     "agency": "customs",
@@ -334,9 +337,11 @@
     {"period": "2026-02", "m": 2089.0, "m_yoy": 13.8, "ytd": 4429.6, "ytd_yoy": 19.8, "src": "dg:86a340fee806409ebdf4d0069bd23f29"},
     {"period": "2026-03", "m": 2699.04, "m_yoy": 27.8, "ytd": 7131.61, "ytd_yoy": 22.7, "src": "dg:86a340fee806409ebdf4d0069bd23f29"},
     {"period": "2026-04", "m": 2746.18, "m_yoy": 25.3, "ytd": 9891.85, "ytd_yoy": 23.6, "src": "dg:86a340fee806409ebdf4d0069bd23f29"},
-    {"period": "2026-05", "m": 2713.49, "m_yoy": 27.4, "ytd": 12616.89, "ytd_yoy": 24.5, "src": "dg:86a340fee806409ebdf4d0069bd23f29"}
+    {"period": "2026-05", "m": 2713.49, "m_yoy": 27.4, "ytd": 12616.89, "ytd_yoy": 24.5, "src": "dg:86a340fee806409ebdf4d0069bd23f29"},
+    {"period": "2026-06", "m": 2867.64, "m_yoy": 36.0, "ytd": 15493.83, "ytd_yoy": 26.6},
+    {"period": "2026-07", "m": 2855.14, "m_yoy": 27.6, "ytd": 18354.23, "ytd_yoy": 26.8}
   ],
   "revisions": [],
   "breaks": [],
-  "generated_at": "2026-07-07T19:23:24Z"
+  "generated_at": "2026-08-28T03:58:12.991962+00:00"
 }

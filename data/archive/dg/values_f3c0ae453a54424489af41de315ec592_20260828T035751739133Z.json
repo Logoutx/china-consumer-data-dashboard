@@ -1,0 +1,56 @@
+{
+  "url": "https://data.stats.gov.cn/dg/website/publicrelease/web/external/getEsDataByIndicatorIdAndDa",
+  "request": {
+    "cid": "82130c6621a745cda3d64b090e733383",
+    "id": "f3c0ae453a54424489af41de315ec592",
+    "da": "000000000000",
+    "dt": "",
+    "rootId": "4fb2f4d836a24c1a824a26e2b04b7009",
+    "dts": [
+      "202606MM",
+      "202607MM",
+      "202608MM"
+    ]
+  },
+  "response": {
+    "data": [
+      {
+        "dt": "202606MM",
+        "du": "7dae305350e74cf793520af55bceffa4",
+        "unit": "亿元",
+        "code": "000000000000",
+        "dt_name": "2026年6月",
+        "v": "3567108.43",
+        "i": "37bea7cb68064788b91d4c1aa46bf97a",
+        "i_name": "货币和准货币(M2)供应量",
+        "du_name": "亿元"
+      },
+      {
+        "dt": "202607MM",
+        "du": "7dae305350e74cf793520af55bceffa4",
+        "unit": "亿元",
+        "code": "000000000000",
+        "dt_name": "2026年7月",
+        "v": "3555077.24",
+        "i": "37bea7cb68064788b91d4c1aa46bf97a",
+        "i_name": "货币和准货币(M2)供应量",
+        "du_name": "亿元"
+      },
+      {
+        "dt": "202608MM",
+        "du": "",
+        "unit": "",
+        "code": "000000000000",
+        "dt_name": "2026年8月",
+        "v": "",
+        "i": "",
+        "i_name": "",
+        "du_name": ""
+      }
+    ],
+    "success": true,
+    "state": 20000,
+    "message": "成功"
+  },
+  "fetched_at": "20260828T035751739133Z"
+}

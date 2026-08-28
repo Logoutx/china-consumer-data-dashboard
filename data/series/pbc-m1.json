@@ -7,7 +7,9 @@
   "unit_en": "100M CNY",
   "value_type": "level",
   "freq": "M",
-  "calibers": ["single"],
+  "calibers": [
+    "single"
+  ],
   "decimals": 2,
   "source": {
     "agency": "pbc",
@@ -334,11 +336,14 @@
     {"period": "2026-01", "m": 1179680.52, "m_yoy": 4.9, "src": "dg:add08d4a1ca049158166f126e169edde"},
     {"period": "2026-02", "m": 1159300.0, "m_yoy": 5.9, "src": "dg:add08d4a1ca049158166f126e169edde"},
     {"period": "2026-03", "m": 1193202.99, "m_yoy": 5.1, "src": "dg:add08d4a1ca049158166f126e169edde"},
-    {"period": "2026-04", "m": 1145833.73, "m_yoy": 5.0, "src": "dg:add08d4a1ca049158166f126e169edde"}
+    {"period": "2026-04", "m": 1145833.73, "m_yoy": 5.0, "src": "dg:add08d4a1ca049158166f126e169edde"},
+    {"period": "2026-05", "m": 1148900.0, "m_yoy": 5.5},
+    {"period": "2026-06", "m": 1184775.53, "m_yoy": 4.0},
+    {"period": "2026-07", "m": 1154623.0, "m_yoy": 4.0}
   ],
   "revisions": [],
   "breaks": [
     {"effective": "2025-01", "kind": "redefinition", "no_yoy_across": true, "yoy_valid_from": "2025-01", "note_zh": "M1 口径调整（新增个人活期存款、非银行支付机构客户备付金），跨口径同比不可比。", "note_en": "M1 redefined (adds personal demand deposits & non-bank payment institution reserves); YoY not comparable across the seam."}
   ],
-  "generated_at": "2026-07-07T19:23:24Z"
+  "generated_at": "2026-08-28T03:58:12.993901+00:00"
 }
