@@ -77,5 +77,5 @@ def test_fallback_with_unparseable_period_returns_the_full_pool():
 
 def test_fallback_mixed_pool_keeps_only_the_plausible_ones():
     pages = [_page("2007-09-01_retail.html"), _page("2009-04-10_retail.html"), _page("2026-05-18_retail.html")]
-    result = pages_for_src(pages, "legacy:2009-03", period="2009-03")  # 2007: diff=2 (kept), 2009: diff=0 (kept), 2026: diff=17 (dropped)
-    assert [p.path.name for p in result] == ["2007-09-01_retail.html", "2009-04-10_retail.html"]
+    result = pages_for_src(pages, "legacy:2009-03", period="2009-03")  # 2007: diff=2 (dropped), 2009: diff=0 (kept), 2026: diff=17 (dropped)
+    assert [p.path.name for p in result] == ["2009-04-10_retail.html"]

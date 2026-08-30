@@ -99,6 +99,7 @@ jobs:
           # guaranteed fallback either way.
           path: |
             audit_reports/
+            pipeline/audit/reports/
             audit_output.txt
           if-no-files-found: warn
 

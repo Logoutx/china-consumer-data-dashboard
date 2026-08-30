@@ -84,7 +84,16 @@ def load_fixture_pages(fixtures_dir: Path) -> list[ArchivedPage]:
     return load_archived_pages(fixtures_dir, exclude_dirs=())
 
 
-_FALLBACK_YEAR_TOLERANCE = 3  # generous: normal publication/archival lag is weeks-to-months, never years
+# Normal publication/archival lag is weeks-to-months, never years, so a page
+# more than 1 calendar year from the observation's period can't plausibly be
+# its source. The previous value (3) re-opened the exact "right label, wrong
+# time" trap this filter exists to close, at a shorter range: the first
+# full-history sweep (2026-08-30, deploy run 33318642705) checked legacy:2023-*
+# retail observations against the only archived retail pages -- all 2026
+# captures, within 3 years, whose repeating headline row labels (社会消费品
+# 零售总额/餐饮收入/...) pass any_page_mentions_label -- and reported 55
+# honest coverage gaps as BLOCK-severity mismatches.
+_FALLBACK_YEAR_TOLERANCE = 1
 # YYYY-MM-DD (fetch.py's archive_path_for convention for a real live fetch) OR
 # bare YYYY-MM (pipeline.runner's --fixture archive registration, whose
 # filename is the fixture's own stem -- a committed fixture like
