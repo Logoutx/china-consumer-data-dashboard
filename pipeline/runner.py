@@ -108,7 +108,9 @@ SOURCES = {
     },
     "nbs_retail": {
         "archive_source": "nbs-retail",
-        "title_pattern": r"^\d{4}年(?:1[—\-－]\d{1,2}月份)?社会消费品零售总额",
+        # 上半年 = NBS's alternate phrasing for the Jan-Jun release (missed
+        # live 2026-07-15, leaving a 2026-06 hole -- see nbs_retail.py).
+        "title_pattern": r"^\d{4}年(?:1[—\-－]\d{1,2}月份|上半年)?社会消费品零售总额",
         "parser": nbs_retail.parse,
         "engine": "nbs",
     },

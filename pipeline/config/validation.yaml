@@ -88,6 +88,15 @@ source_pairs: []
 # `periods`/`checks` are each optional; omitting one makes that dimension
 # match everything.
 known_disagreements:
+  - periods: ["2026-06"]
+    checks: ["gate_a.calendar_expected"]
+    note: >-
+      One-time catch-up (2026-08-30): NBS titled the June retail release
+      "2026年上半年..." instead of "1—6月份...", the discover pattern missed
+      it, and 2026-07 landed first -- backfilling 2026-06 behind the on-file
+      latest is our own archive hole being repaired, not a wrong release.
+      Applies to every retail series in that release (26 ids), hence no
+      series filter; scoped to this single period + check.
   - series: mof-real-estate-tax-total
     periods: ["2018-06", "2018-07", "2018-09", "2018-10", "2018-11"]
     checks: ["gate_a.sum_of_parts"]

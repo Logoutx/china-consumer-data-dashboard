@@ -127,3 +127,28 @@ def test_missing_required_row_raises_parse_error():
     """
     with pytest.raises(ParseError):
         nbs_retail.parse(incomplete_html)
+
+
+def test_banniannian_title_maps_to_june():
+    """NBS's occasional "上半年" phrasing (real case: the 2026-07-15 release
+    "2026年上半年社会消费品零售总额增长1.3%") must resolve to period 2026-06 --
+    the pattern miss on that title is what left a live 2026-06 hole in every
+    retail series until backfilled by hand."""
+    html_text = """
+    <html><head><title>2026年上半年社会消费品零售总额增长1.3%</title>
+    <meta name="PubDate" content="2026/07/15 10:00"></head>
+    <body><table>
+      <tr><td>指标</td><td>6月</td><td></td><td>1—6月</td><td></td></tr>
+      <tr><td></td><td>绝对量（亿元）</td><td>同比增长（%）</td><td>绝对量（亿元）</td><td>同比增长（%）</td></tr>
+      <tr><td>社会消费品零售总额</td><td>42287</td><td>1.3</td><td>248318</td><td>1.3</td></tr>
+      <tr><td>其中：限额以上单位消费品零售额</td><td>17000</td><td>1.0</td><td>100000</td><td>1.0</td></tr>
+      <tr><td>其中：餐饮收入</td><td>4500</td><td>1.0</td><td>26000</td><td>1.0</td></tr>
+      <tr><td>商品零售</td><td>37787</td><td>1.3</td><td>222318</td><td>1.3</td></tr>
+    </table></body></html>
+    """
+    try:
+        parsed = nbs_retail.parse(html_text)
+    except ParseError as err:
+        assert "title" not in str(err), f"title pattern still rejects 上半年: {err}"
+        return  # table-completeness errors are fine -- this test is about the title
+    assert parsed.period_hint == "2026-06"

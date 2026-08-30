@@ -45,7 +45,11 @@ from pipeline.parsers._util import (
 
 SOURCE = "nbs-retail"
 
-_TITLE_PERIOD_RE = re.compile(r"(\d{4})年(?:1[—\-－](\d{1,2})月份|(\d{1,2})月份)社会消费品零售总额")
+# 上半年 is NBS's occasional alternate phrasing for the January-June release
+# (real case: the 2026-07-15 release "2026年上半年社会消费品零售总额增长1.3%"
+# -- the 1—6月份 phrasing simply never appeared that month, so the pattern
+# miss left a 2026-06 hole in every retail series until backfilled by hand).
+_TITLE_PERIOD_RE = re.compile(r"(\d{4})年(?:1[—\-－](\d{1,2})月份|(\d{1,2})月份|(上半年))社会消费品零售总额")
 _PUBDATE_XPATH = "//meta[@name='PubDate']/@content"
 _BODY_XPATHS = [
     '//div[contains(@class,"detail-text-content")]',
@@ -109,7 +113,7 @@ def parse(html_text: str, *, url: str = "", release_id: str = "") -> ParsedRelea
             found=title,
         )
     year = int(period_match.group(1))
-    month = int(period_match.group(2) or period_match.group(3))
+    month = 6 if period_match.group(4) else int(period_match.group(2) or period_match.group(3))
     period_hint = f"{year:04d}-{month:02d}"
 
     pubdate_nodes = doc.xpath(_PUBDATE_XPATH)
