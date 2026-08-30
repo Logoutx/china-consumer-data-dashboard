@@ -124,6 +124,7 @@ WINDOWS: dict[str, list[tuple[int, int, int]]] = {
     "trade": [(1, 7, 14)],
     "pboc_money": [(1, 10, 15)],
     "nbs_activity": [(1, 14, 18)],
+    "spb_post": [(1, 10, 28)],
 }
 
 # Release month -> which quarter it reports, for the quarterly GDP/income
@@ -149,6 +150,7 @@ SOURCES: list[SourceSpec] = [
     SourceSpec("nbs_cpi", "cpi_ppi", "monthly", "nbs-cpi-yoy"),
     SourceSpec("pboc_money", "pboc_money", "monthly", "pbc-m2"),
     SourceSpec("nbs_retail", "nbs_activity", "monthly", "nbs-retail-total"),
+    SourceSpec("spb_express", "spb_post", "monthly", "spb-express-volume"),
     # dg_refresh isn't a SourceSpec -- it doesn't ride ONE window group (see
     # DG_REFRESH_CHECKPOINTS + _dg_refresh_due below, wired into due_sources()
     # separately). Still asserted against pipeline.runner.SOURCES below.

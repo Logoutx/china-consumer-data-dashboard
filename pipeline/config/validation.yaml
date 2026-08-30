@@ -52,6 +52,25 @@ by_value_type:
 #     at 2021-02 -- see data/series/nbs-fai.json), even outside any demand
 #     shock.
 by_series:
+  # Express delivery swings hard around Chinese New Year: whichever of
+  # Jan/Feb carries the holiday prints monthly YoY in the +-80-100% range on
+  # SPB's own comparable-caliber basis (real prints: +84.8 at 2024-01,
+  # 2023-01 base was the holiday month). The single-month yoy also routinely
+  # diverges from the level-derived ratio because SPB restates the base for
+  # comparability (按可比口径计算) without restating the prior-year level.
+  spb-express-volume:
+    seasonal: true
+    yoy_band: [-60, 120]
+    # CNY month-shift flips the Jan/Feb yoy sign year to year; with only a
+    # 2023-onward history the robust-z pool is short, so the default z_block=7
+    # fires on genuine holiday swings (|z|=8.9 on the real 2025-02 print).
+    z_warn: 6
+    z_block: 14
+  spb-express-revenue:
+    seasonal: true
+    yoy_band: [-60, 120]
+    z_warn: 6
+    z_block: 14
   nbs-retail-cat-gold-jewelry:
     seasonal: true
   nbs-retail-catering:

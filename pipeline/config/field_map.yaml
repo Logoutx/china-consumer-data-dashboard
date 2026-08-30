@@ -114,3 +114,11 @@ pbc-money:
   # 本外币贷款余额: (no catalog series)
   # 住户存款增加: (no catalog series)
   # 住户贷款增加: (no catalog series)
+
+spb-express:
+  # 国家邮政局 邮政行业运行情况 bulletins (MOT mirror) -- prose releases, see
+  # pipeline/parsers/spb_express.py. Only the two headline express concepts
+  # are extracted; the 同城/异地/国际 splits and the 邮政行业(寄递)业务 totals
+  # in the same prose are never emitted by the parser (no catalog series).
+  快递业务量: spb-express-volume
+  快递业务收入: spb-express-revenue

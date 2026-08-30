@@ -62,10 +62,10 @@ from pathlib import Path
 
 from pipeline import ParseError
 from pipeline import dg_refresh
-from pipeline.discover import discover_nbs, discover_pbc
+from pipeline.discover import discover_mot_post, discover_nbs, discover_pbc
 from pipeline.fetch import FetchError, fetch_and_archive
 from pipeline.normalize import load_field_map
-from pipeline.parsers import nbs_cpi, nbs_retail, pboc_money
+from pipeline.parsers import nbs_cpi, nbs_retail, pboc_money, spb_express
 from pipeline.validate.batch import batch_from_parsed_release
 from pipeline.validate.gate import run_gate
 from pipeline.validate.staging import promote_to_real, stage_release
@@ -113,6 +113,16 @@ SOURCES = {
         "title_pattern": r"^\d{4}年(?:1[—\-－]\d{1,2}月份|上半年)?社会消费品零售总额",
         "parser": nbs_retail.parse,
         "engine": "nbs",
+    },
+    "spb_express": {
+        "archive_source": "spb-express",
+        # Anchor-text (not @title) on the MOT mirror listing; the period part
+        # varies (1-N月/上半年/一季度/前三季度/N月份/bare year) so only the
+        # stable frame is pinned here -- spb_express.period_from_title owns
+        # the period grammar.
+        "title_pattern": r"^国家邮政局公布\d{4}年.*邮政行业运行情况$",
+        "parser": spb_express.parse,
+        "engine": "mot_post",
     },
     "pboc_money": {
         "archive_source": "pbc-money",
@@ -169,6 +179,8 @@ def run(source_key: str, *, dry_run: bool, no_gate: bool = False, fixture: Path 
     else:
         if config["engine"] == "pbc":
             candidates = discover_pbc(config["query_title"])
+        elif config["engine"] == "mot_post":
+            candidates = discover_mot_post(config["title_pattern"])
         else:
             candidates = discover_nbs(config["title_pattern"])
 

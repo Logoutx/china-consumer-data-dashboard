@@ -158,7 +158,7 @@
       "additionalProperties": false,
       "required": ["agency"],
       "properties": {
-        "agency": { "enum": ["nbs", "pbc", "mof", "mohurd", "customs", "caam", "safe", "cflp"] },
+        "agency": { "enum": ["nbs", "pbc", "mof", "mohurd", "customs", "caam", "safe", "cflp", "spb"] },
         "dataset_zh": { "type": "string" },
         "dataset_en": { "type": "string" },
         "url": { "type": "string", "format": "uri" }

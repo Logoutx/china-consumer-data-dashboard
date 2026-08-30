@@ -48,3 +48,8 @@ consumer_confidence:
   lag_days: 40  # ~40-day publication lag from the reference period's end, not a day-of-month window
   freq: M
   grace_days: 10
+
+spb_post:
+  window_days: [10, 28]  # 国家邮政局 邮政行业运行情况, mid-month, timing looser than NBS (observed 07-15..08-18 for the 2026 bulletins)
+  freq: M
+  grace_days: 3

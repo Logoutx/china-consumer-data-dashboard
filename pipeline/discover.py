@@ -108,6 +108,63 @@ def discover_nbs(
     return sorted(candidates.values(), key=lambda candidate: (candidate.period_hint or "", candidate.url))
 
 
+MOT_POST_LISTING_BASE = "https://www.mot.gov.cn/shuju/tongjishuju/youzheng/"
+
+
+def discover_mot_post(
+    title_pattern: str,
+    *,
+    max_pages: int = 2,
+    session=None,
+) -> list[Candidate]:
+    """Scrape the 交通运输部 mirror of the 国家邮政局 statistics listing
+    (MOT_POST_LISTING_BASE) for bulletin links whose ANCHOR TEXT matches
+    `title_pattern`. Same index.html / index_N.html paging convention as the
+    NBS listing, but MOT anchors carry no @title attribute and pad their text
+    with whitespace -- so this matches on the whitespace-stripped text_content
+    instead. The SPB's own site (www.spb.gov.cn) 403s non-mainland clients,
+    including GitHub Actions runners; the MOT mirror serves plain HTTP (see
+    docs/SOURCE-CANDIDATES.md).
+
+    period_hint comes from pipeline.parsers.spb_express.period_from_title --
+    the one place the SPB title grammar (1-N月/上半年/一季度/前三季度/N月份/
+    bare-year) is implemented; an unrecognized title just gets hint None
+    rather than being dropped (sorting handles None like discover_nbs does).
+    """
+    from pipeline.parsers.spb_express import period_from_title  # local: avoid a parsers import at module load
+
+    pattern = re.compile(title_pattern)
+    candidates: dict[str, Candidate] = {}
+
+    for index in range(max_pages):
+        name = "index.html" if index == 0 else f"index_{index}.html"
+        url = urljoin(MOT_POST_LISTING_BASE, name)
+        try:
+            result = fetch(url, session=session)
+        except FetchError:
+            break
+
+        try:
+            doc = html.fromstring(result.text)
+        except Exception:
+            break
+
+        for anchor in doc.xpath("//a[@href]"):
+            title = re.sub(r"\s+", "", anchor.text_content() or "")
+            if not title or not pattern.search(title):
+                continue
+            if any(bad in title for bad in REJECT_TITLE_SUBSTRINGS):
+                continue
+            href = urljoin(url, anchor.get("href"))
+            try:
+                period_hint = period_from_title(title)[0]
+            except Exception:
+                period_hint = None
+            candidates[href] = Candidate(url=href, title=title, period_hint=period_hint)
+
+    return sorted(candidates.values(), key=lambda candidate: (candidate.period_hint or "", candidate.url))
+
+
 def discover_pbc(
     query_title: str,
     *,

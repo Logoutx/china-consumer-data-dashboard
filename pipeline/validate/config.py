@@ -191,4 +191,5 @@ ARCHIVE_SOURCE_TO_CALENDAR_KEY = {
     "customs": "trade",
     "pbc-lpr": "lpr",
     "nbs-confidence": "consumer_confidence",
+    "spb-express": "spb_post",
 }

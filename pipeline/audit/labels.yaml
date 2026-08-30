@@ -374,3 +374,12 @@ series:
     unit: '%'
     alt_labels:
     - 规模以上工业增加值同比增长
+  # SPB bulletins are prose; the headline sentences always carry these exact
+  # substrings ("其中，快递业务量累计完成…亿件" / "快递业务收入…亿元") --
+  # verified against the archived 2026-08-14 bulletin.
+  spb-express-volume:
+    label_zh: 快递业务量
+    unit: 亿件
+  spb-express-revenue:
+    label_zh: 快递业务收入
+    unit: 亿元

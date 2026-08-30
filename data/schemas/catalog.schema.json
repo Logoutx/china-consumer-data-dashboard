@@ -86,7 +86,7 @@
           "additionalProperties": false,
           "required": ["agency"],
           "properties": {
-            "agency": { "enum": ["nbs", "pbc", "mof", "mohurd", "customs", "caam", "safe", "cflp"] },
+            "agency": { "enum": ["nbs", "pbc", "mof", "mohurd", "customs", "caam", "safe", "cflp", "spb"] },
             "agency_zh": { "type": "string", "description": "Chinese agency name (e.g. 国家统计局, 中国人民银行), surfaced in the bundle's per-series source object (DATA-CONTRACT §10.2)." },
             "dataset_zh": { "type": "string" },
             "dataset_en": { "type": "string" },

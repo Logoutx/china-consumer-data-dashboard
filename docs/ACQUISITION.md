@@ -217,11 +217,18 @@ Realistic paths, in order:
 
 ## Group 8 — Tier-3 pulse (best-effort)
 
-- **State Post Bureau — ✅ high.** Listing `spb.gov.cn/gjyzj/c100015/c100016/`, monthly
-  `国家邮政局公布YYYY年1-N月邮政行业运行情况` (URL `…/YYYYMM/<32hex>.shtml`, e.g.
-  `202606/b2d7c77013a64fe7a73f527c2a41d15f.shtml`). Prose: 邮政行业业务收入,
-  快递业务量(件), 快递业务收入. ~mid-month, YTD cumulative. Backfill: listing pagination
-  ~2015→.
+- **State Post Bureau — ✅ IMPLEMENTED (2026-08-31, `--source spb_express`).**
+  Fetched from the MOT mirror `mot.gov.cn/shuju/tongjishuju/youzheng/` (the SPB's own
+  site `spb.gov.cn` 403s non-mainland clients, GitHub Actions runners included; the
+  mirror carries the same bulletins and pages `index_N.html` like the NBS listing).
+  Discovery: `pipeline.discover.discover_mot_post` matches anchor TEXT (MOT anchors
+  carry no `@title`). Parser: `pipeline/parsers/spb_express.py` -- prose, both
+  当月 and 累计 with YoY for 快递业务量/快递业务收入; the cumulative sentence is
+  distinguished by its period marker (`1-N月，`/`上半年，`/…), NOT by a 累计 verb
+  (the combined Jan-Feb bulletins omit it). Title grammar 1-N月/上半年/一季度/
+  前三季度/N月份/bare-year lives in `spb_express.period_from_title`. Backfilled
+  2023-01→ (2023-06 missing on the mirror -- documented hole). YoY is SPB's
+  可比口径, so `validation.yaml` widens yoy_band/z for the two series.
 - **文旅部 holiday tourism — 🟡 medium.** `mct.gov.cn/whzx/whyw/YYYYMM/tYYYYMMDD_<id>.htm`,
   **per-holiday not monthly** (元旦/春节/清明/五一/端午/中秋/国庆). Prose
   `国内出游([\d.]+)亿人次` + `国内出游总花费([\d.]+)亿元` (+YoY). Discovery: listing or
