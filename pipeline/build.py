@@ -885,6 +885,20 @@ def _build_series_entry(entry: dict, series: dict, annotations: dict, as_of: dat
         "plot_kind": plot_kind,
         "yoy_series": _build_yoy_series(observations, yoy_field, breaks),
         "level_series": _build_level_series(observations, value_field),
+        # When a series carries BOTH calibers, also ship the ytd caliber's
+        # arrays so the client's 当月/累计 toggle can swap the plotted curve,
+        # not just the endpoint readout. Key names follow the `_ytd` suffix
+        # convention section.mjs's seriesForCaliber() already feature-detects
+        # (the resolved base arrays above are the "single" caliber whenever
+        # both exist -- see _resolve_caliber).
+        **(
+            {
+                "yoy_series_ytd": _build_yoy_series(observations, _MEASURE_FIELDS["ytd"][1], breaks),
+                "level_series_ytd": _build_level_series(observations, _MEASURE_FIELDS["ytd"][0]),
+            }
+            if "single" in calibers and "ytd" in calibers
+            else {}
+        ),
         "spark": _build_spark(_build_level_series(observations, value_field)),
         "breaks": breaks,
         "annotations": _annotations_for(entry["id"], annotations),

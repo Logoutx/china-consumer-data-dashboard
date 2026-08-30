@@ -593,6 +593,11 @@ def run(*, dry_run: bool, no_gate: bool = False, lookback: int = LOOKBACK_PERIOD
     report = stage_result.report
     mode = "would change" if dry_run else "changed"
     print(f"[dg_refresh] {mode}: {len(report.new_observations)} new observation(s), {len(report.revisions)} revision(s)")
+    if report.new_observations:
+        # update-data.yml greps `period: \K\S+` to build the commit title
+        # (press-release sources print this via runner.py; without it every
+        # dg_refresh commit is titled "@unknown").
+        print(f"[dg_refresh] period: {max(p for _, p in report.new_observations)}")
     if stage_result.missing_series:
         print(f"[dg_refresh] mapped series file(s) not found on disk, skipped: {stage_result.missing_series}")
 
