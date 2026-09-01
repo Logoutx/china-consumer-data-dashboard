@@ -1,0 +1,56 @@
+{
+  "url": "https://data.stats.gov.cn/dg/website/publicrelease/web/external/getEsDataByIndicatorIdAndDa",
+  "request": {
+    "cid": "7e11b47c828d4e4e925f1c5a98305558",
+    "id": "6545926705124075961bf28602fd50bb",
+    "da": "000000000000",
+    "dt": "",
+    "rootId": "73f0f0fafb31475ab48a309cc25dedd9",
+    "dts": [
+      "202607MM",
+      "202608MM",
+      "202609MM"
+    ]
+  },
+  "response": {
+    "data": [
+      {
+        "dt": "202607MM",
+        "du": "cd5d621755914731ae33d7678225ea67",
+        "unit": "千美元",
+        "code": "000000000000",
+        "dt_name": "2026年7月",
+        "v": "1835423296",
+        "i": "9a217af735814896a45325facca87f24",
+        "i_name": "进口总额(美元)",
+        "du_name": "千美元"
+      },
+      {
+        "dt": "202608MM",
+        "du": "",
+        "unit": "",
+        "code": "000000000000",
+        "dt_name": "2026年8月",
+        "v": "",
+        "i": "",
+        "i_name": "",
+        "du_name": ""
+      },
+      {
+        "dt": "202609MM",
+        "du": "",
+        "unit": "",
+        "code": "000000000000",
+        "dt_name": "2026年9月",
+        "v": "",
+        "i": "",
+        "i_name": "",
+        "du_name": ""
+      }
+    ],
+    "success": true,
+    "state": 20000,
+    "message": "成功"
+  },
+  "fetched_at": "20260901T042033970717Z"
+}

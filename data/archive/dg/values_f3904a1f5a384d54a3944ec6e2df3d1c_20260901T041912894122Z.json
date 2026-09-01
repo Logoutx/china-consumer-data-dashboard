@@ -1,0 +1,56 @@
+{
+  "url": "https://data.stats.gov.cn/dg/website/publicrelease/web/external/getEsDataByIndicatorIdAndDa",
+  "request": {
+    "cid": "b4fad2cf9e0e4af7815b7e9e2e95c5c7",
+    "id": "f3904a1f5a384d54a3944ec6e2df3d1c",
+    "da": "000000000000",
+    "dt": "",
+    "rootId": "3c9c459384c74f578f3541b2198aac70",
+    "dts": [
+      "202607MM",
+      "202608MM",
+      "202609MM"
+    ]
+  },
+  "response": {
+    "data": [
+      {
+        "dt": "202607MM",
+        "du": "414774dee2bc47f392cf13abfa9de882",
+        "unit": null,
+        "code": "000000000000",
+        "dt_name": "2026年7月",
+        "v": "99.9",
+        "i": "b50457fdeade41b0ac011456f7ab5e44",
+        "i_name": "居民消费价格指数",
+        "du_name": null
+      },
+      {
+        "dt": "202608MM",
+        "du": "",
+        "unit": "",
+        "code": "000000000000",
+        "dt_name": "2026年8月",
+        "v": "",
+        "i": "",
+        "i_name": "",
+        "du_name": ""
+      },
+      {
+        "dt": "202609MM",
+        "du": "",
+        "unit": "",
+        "code": "000000000000",
+        "dt_name": "2026年9月",
+        "v": "",
+        "i": "",
+        "i_name": "",
+        "du_name": ""
+      }
+    ],
+    "success": true,
+    "state": 20000,
+    "message": "成功"
+  },
+  "fetched_at": "20260901T041912894122Z"
+}

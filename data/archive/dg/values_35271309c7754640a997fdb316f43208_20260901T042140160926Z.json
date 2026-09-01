@@ -1,0 +1,56 @@
+{
+  "url": "https://data.stats.gov.cn/dg/website/publicrelease/web/external/getEsDataByIndicatorIdAndDa",
+  "request": {
+    "cid": "62cd73e3fcb4492fab8e998ca3a7dc5b",
+    "id": "35271309c7754640a997fdb316f43208",
+    "da": "000000000000",
+    "dt": "",
+    "rootId": "1b1ce0cfd03646dc9e15103ea4c570f6",
+    "dts": [
+      "202601SS",
+      "202602SS",
+      "202603SS"
+    ]
+  },
+  "response": {
+    "data": [
+      {
+        "dt": "202601SS",
+        "du": "414774dee2bc47f392cf13abfa9de882",
+        "unit": "%",
+        "code": "000000000000",
+        "dt_name": "2026年第一季度",
+        "v": "15.3",
+        "i": "dd0325de900a4bdf8adb6ee2b8597174",
+        "i_name": "货物和服务净出口对国内生产总值增长贡献率",
+        "du_name": "%"
+      },
+      {
+        "dt": "202602SS",
+        "du": "414774dee2bc47f392cf13abfa9de882",
+        "unit": "%",
+        "code": "000000000000",
+        "dt_name": "2026年第二季度",
+        "v": "17.9",
+        "i": "dd0325de900a4bdf8adb6ee2b8597174",
+        "i_name": "货物和服务净出口对国内生产总值增长贡献率",
+        "du_name": "%"
+      },
+      {
+        "dt": "202603SS",
+        "du": "",
+        "unit": "",
+        "code": "000000000000",
+        "dt_name": "2026年第三季度",
+        "v": "",
+        "i": "",
+        "i_name": "",
+        "du_name": ""
+      }
+    ],
+    "success": true,
+    "state": 20000,
+    "message": "成功"
+  },
+  "fetched_at": "20260901T042140160926Z"
+}
