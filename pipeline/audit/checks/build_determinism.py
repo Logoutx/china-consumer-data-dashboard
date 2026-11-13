@@ -19,17 +19,8 @@ run's own diary/*.json files were still sitting in the "audited" tree from
 moments earlier, producing two spurious "file missing from rerun" blocks that
 had nothing to do with build.py's determinism.
 
-Known fragility, discovered while writing this check and flagged rather than
-silently worked around: pipeline/build.py's own CLI (`main()`) has no `--as-of`
-flag -- `build_site_data` defaults `as_of` to `date.today()` whenever it isn't
-passed one, and the CLI never passes one. `revisions_recent` (a 90-day window)
-and `flags_latest`'s `break_recent` (a 12-month window) are therefore
-genuinely relative to wall-clock "today", not the catalog's `generated_at`.
-Running this check on a different CALENDAR DAY than the audited site-data/ was
-originally built can produce a benign diff in exactly those two fields, with
-no underlying data problem at all. This is a limitation in build.py's CLI
-(out of this package's owned paths), not a bug in this check; it does not
-affect a same-day run (which is what this task's real audit run below is).
+The audit passes its explicit as_of date through to the rebuild so time-relative
+revision and break flags use the same reference date, including fixture tests.
 """
 from __future__ import annotations
 
@@ -68,7 +59,7 @@ def run(ctx: AuditContext, *, tmp_dir: Path | None = None) -> CheckReport:
     tmp_dir = tmp_dir or Path(tempfile.mkdtemp(prefix="gate_b_build_determinism_"))
     try:
         result = subprocess.run(
-            [sys.executable, "-m", "pipeline.build", "--data", str(ctx.data_dir), "--out", str(tmp_dir)],
+            [sys.executable, "-m", "pipeline.build", "--data", str(ctx.data_dir), "--out", str(tmp_dir), "--as-of", ctx.as_of.isoformat()],
             cwd=ctx.repo_root,
             capture_output=True,
             text=True,
@@ -111,8 +102,7 @@ def run(ctx: AuditContext, *, tmp_dir: Path | None = None) -> CheckReport:
                     check=CHECK_ID,
                     status="block",
                     field=rel,
-                    note="byte-for-byte diff between rebuilt output and audited site-data/ (see module docstring for the "
-                    "known same-day-only caveat around revisions_recent/break_recent)",
+                    note="byte-for-byte diff between rebuilt output and audited site-data/",
                 )
             )
 

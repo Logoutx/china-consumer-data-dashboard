@@ -11,6 +11,7 @@ from datetime import datetime
 
 from pipeline.validate.config import ARCHIVE_SOURCE_TO_CALENDAR_KEY
 from pipeline.validate.context import GateContext
+from pipeline.validate.archive_evidence import corroborates_repeated_price
 from pipeline.validate.model import BLOCK, WARN, Finding, make_result
 from pipeline.validate.util import in_no_yoy_window, is_number, period_shape, steps_between
 
@@ -255,7 +256,8 @@ def check_archive_release_identity(ctx: GateContext):
     capture files themselves are hash-named, so no direct release_id match is
     possible there). A new "period" whose values are byte-identical to the
     immediately preceding period is flagged as a likely stale re-serve
-    masquerading as fresh data."""
+    masquerading as fresh data, unless the exact period and every proposed
+    measure are corroborated by this batch's archived price release."""
     new_obs = _new_observations(ctx)
     if not new_obs:
         return make_result("gate_a.archive_release_identity", skipped=True, note="no new observations this run")
@@ -280,6 +282,8 @@ def check_archive_release_identity(ctx: GateContext):
             continue
         data = ctx.load(series_id)
         if data is not None and _looks_like_stale_reserve(data, period):
+            if corroborates_repeated_price(ctx, series_id, period, data):
+                continue
             findings.append(
                 Finding(
                     "gate_a.archive_release_identity", BLOCK,

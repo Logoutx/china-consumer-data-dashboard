@@ -75,7 +75,7 @@ jobs:
         id: audit
         run: |
           set +e
-          python -m pipeline.audit --site-data site-data/ --offline > audit_output.txt 2>&1
+          python -m pipeline.audit --site-data site-data/ --offline --report-dir "$RUNNER_TEMP/gate-b-audit-reports" > audit_output.txt 2>&1
           code=$?
           cat audit_output.txt
           echo "code=$code" >> "$GITHUB_OUTPUT"
@@ -92,14 +92,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: gate-b-audit-report
-          # audit_reports/ is tools/audit_official_data.py's existing output
-          # convention (see README.md); pipeline.audit is expected to reuse
-          # it, but that module doesn't exist yet -- audit_output.txt (the
-          # captured stdout/stderr) is included unconditionally as a
-          # guaranteed fallback either way.
+          # Upload only this run, not historical tracked reports (whose old
+          # colon-containing names are rejected by upload-artifact).
           path: |
-            audit_reports/
-            pipeline/audit/reports/
+            ${{ runner.temp }}/gate-b-audit-reports/
             audit_output.txt
           if-no-files-found: warn
 

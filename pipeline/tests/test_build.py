@@ -1413,3 +1413,53 @@ def test_headline_streak_matches_takeaway_text_for_the_frozen_youth_series():
     assert "连续 6 个月上升" in bundle_entry["takeaway"]
     assert bundle_entry["headline"]["streak"] == 6
     _assert_streak_consistent(bundle_entry)
+
+
+def test_declared_single_from_ytd_fills_only_supported_missing_levels():
+    from copy import deepcopy
+    from pipeline.build import _complete_single_from_ytd
+
+    entry = {"id": "online", "derived": {"rule": "single_from_ytd", "inputs": ["online"]}}
+    observations = [
+        {"period": "2025-12", "ytd": 900},
+        {"period": "2026-01", "ytd": 50},
+        {"period": "2026-02", "ytd": 120, "flags": ["jan_feb"]},
+        {"period": "2026-04", "ytd": 400},  # Missing March: no bridge.
+        {"period": "2026-07", "ytd": 73965, "m": 9669},
+        {"period": "2026-08", "ytd": 84195, "m": None},
+        {"period": "2026-09", "ytd": 95060},
+        {"period": "2026-10", "ytd": 100000, "m": 5000},
+    ]
+    original = deepcopy(observations)
+    completed = _complete_single_from_ytd(entry, observations)
+    assert observations == original
+    assert [o.get("m") for o in completed] == [None, None, 120, None, 9669, 10230, 10865, 5000]
+    assert all("m_yoy" not in o for o in completed)
+    assert _complete_single_from_ytd({"id": "online"}, observations) == original
+
+
+def test_declared_single_from_ytd_advances_bundle_headline():
+    from pipeline.build import _build_series_entry
+
+    catalog = json.loads((FIXTURES_DIR / "catalog.json").read_text())
+    entry = next(e for e in catalog["series"] if e["id"] == "test-retail-revised")
+    series = json.loads((FIXTURES_DIR / "series/test-retail-revised.json").read_text())
+    entry["derived"] = {"rule": "single_from_ytd", "inputs": [entry["id"]]}
+    series["observations"] = [
+        {"period": "2026-07", "ytd": 73965, "m": 9669},
+        {"period": "2026-08", "ytd": 84195},
+        {"period": "2026-09", "ytd": 95060},
+    ]
+    bundle = _build_series_entry(entry, series, {}, date(2026, 11, 13))
+    assert bundle["latest"]["period"] == "2026-09"
+
+
+def test_single_from_ytd_does_not_treat_other_spans_as_jan_feb():
+    from pipeline.build import _complete_single_from_ytd
+    entry = {"id": "online", "derived": {"rule": "single_from_ytd", "inputs": ["online"]}}
+    result = _complete_single_from_ytd(entry, [
+        {"period": "2026-05", "ytd": 500},
+        {"period": "2026-06", "ytd": 700, "span": 2},
+        {"period": "2026-07", "ytd": 800, "flags": ["jan_feb"]},
+    ])
+    assert all("m" not in observation for observation in result)
