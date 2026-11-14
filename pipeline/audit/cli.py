@@ -10,6 +10,8 @@ check itself raised).
 from __future__ import annotations
 
 import argparse
+import hashlib
+import re
 import random
 import sys
 import time
@@ -23,6 +25,14 @@ from pipeline.audit.models import AuditContext, CheckReport
 from pipeline.audit.report import build_report_payload, write_json_report, write_md_report
 from pipeline.audit.sampling import derive_seed
 from pipeline.audit.site_data import load_all_section_bundles, load_catalog, load_json, make_panel_bundle_loader
+
+def _report_file_stem(run_id: str) -> str:
+    """Portable, traversal-safe filename; keep the original ID in report metadata."""
+    safe = re.sub(r"[^A-Za-z0-9._-]", "_", run_id).strip(".")[:160]
+    if safe != run_id or not safe:
+        safe = (safe or "run") + "-" + hashlib.sha256(run_id.encode()).hexdigest()[:12]
+    return safe
+
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_REPORT_DIR = Path(__file__).resolve().parent / "reports"
@@ -72,6 +82,7 @@ def run_audit(args: argparse.Namespace, *, repo_root: Path | None = None, labels
 
     seed = derive_seed(args.seed, repo_root=repo_root, catalog_version=catalog.get("version", "unknown"))
     run_id = args.run_id or seed
+    file_stem = _report_file_stem(run_id)
     as_of = date.fromisoformat(args.as_of) if args.as_of else date.today()
 
     ctx = AuditContext(
@@ -112,14 +123,14 @@ def run_audit(args: argparse.Namespace, *, repo_root: Path | None = None, labels
     )
     diary_payload = build_diary_payload(ctx, check_reports, exit_code=exit_code)
 
-    write_json_report(report_payload, args.report_dir / f"{run_id}.json")
-    write_md_report(report_payload, args.report_dir / f"{run_id}.md")
+    write_json_report(report_payload, args.report_dir / f"{file_stem}.json")
+    write_md_report(report_payload, args.report_dir / f"{file_stem}.md")
 
     diary_dir = args.site_data / "diary"
     diary_dir.mkdir(parents=True, exist_ok=True)
     import json
 
-    (diary_dir / f"{run_id}.json").write_text(json.dumps(diary_payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    (diary_dir / f"{file_stem}.json").write_text(json.dumps(diary_payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (diary_dir / "latest.json").write_text(json.dumps(diary_payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     return exit_code, report_payload, diary_payload

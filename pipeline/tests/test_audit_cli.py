@@ -29,6 +29,7 @@ def _args(repo_dir: Path, report_dir: Path, **overrides) -> argparse.Namespace:
     args = parser.parse_args(
         ["--data", str(repo_dir / "data"), "--site-data", str(repo_dir / "site-data"), "--report-dir", str(report_dir)]
     )
+    args.as_of = "2026-07-08"
     for key, value in overrides.items():
         setattr(args, key, value)
     return args
@@ -178,3 +179,31 @@ def test_diary_blocked_checks_lists_checks_with_a_block_or_error():
     ctx = make_ctx(CLEAN_REPO)
     payload = diary.build_diary_payload(ctx, [ok, broken, errored], exit_code=2)
     assert set(payload["blocked_checks"]) == {"gate_b.broken", "gate_b.errored"}
+
+
+def test_report_file_stems_are_portable_and_collision_resistant():
+    from pipeline.audit.cli import _report_file_stem
+
+    assert _report_file_stem("e2e-run") == "e2e-run"
+    unsafe = ["022a4ff:1.0.2", "../outside", "a/b", "a\\b", "..", "", "a" * 300]
+    stems = [_report_file_stem(value) for value in unsafe]
+    assert len(set(stems)) == len(stems)
+    assert all(stem and len(stem) < 200 and not any(c in stem for c in '/\\:') for stem in stems)
+    assert _report_file_stem("a/b") != _report_file_stem("a_b")
+
+
+def test_unsafe_run_id_is_preserved_in_metadata_not_paths(tmp_path):
+    from pipeline.audit.cli import _report_file_stem
+
+    repo_dir = copy_clean_repo(tmp_path)
+    report_dir = tmp_path / "reports"
+    run_id = "022a4ff:1.0.2"
+    args = _args(repo_dir, report_dir, seed="e2e-seed", run_id=run_id)
+    exit_code, payload, _ = run_audit(args, repo_root=REAL_REPO_ROOT, labels=TEST_LABELS)
+    assert exit_code == 0
+    assert payload["run_id"] == run_id
+    stem = _report_file_stem(run_id)
+    assert (report_dir / f"{stem}.json").exists()
+    assert (report_dir / f"{stem}.md").exists()
+    assert (repo_dir / "site-data/diary" / f"{stem}.json").exists()
+    assert not any(":" in p.name for p in report_dir.iterdir())

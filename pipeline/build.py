@@ -684,12 +684,41 @@ def _empty_series_entry(
     }
 
 
+def _complete_single_from_ytd(entry: dict, observations: list[dict]) -> list[dict]:
+    """Apply the declared self-derived rule without changing source observations.
+
+    Only fill absent monthly levels. Never invent growth rates, cross a year
+    reset, bridge a missing month, or replace a published monthly measure.
+    """
+    derived = entry.get("derived") or {}
+    if derived.get("rule") != "single_from_ytd" or derived.get("inputs") != [entry["id"]]:
+        return observations
+    by_period = {obs["period"]: obs for obs in observations}
+    result = []
+    for source in observations:
+        obs = dict(source)
+        period = obs["period"]
+        ytd = obs.get("ytd")
+        if obs.get("m") is None and isinstance(ytd, (int, float)) and not isinstance(ytd, bool):
+            if _period_shape(period) == "monthly":
+                month = int(period[-2:])
+                aggregate = "jan_feb" in obs.get("flags", []) or obs.get("span", 1) > 1
+                if aggregate and month == 2 and obs.get("span", 2) == 2:
+                    obs["m"] = ytd
+                elif not aggregate and month > 1:
+                    prior = by_period.get(f"{period[:4]}-{month - 1:02d}", {}).get("ytd")
+                    if isinstance(prior, (int, float)) and not isinstance(prior, bool):
+                        obs["m"] = ytd - prior
+        result.append(obs)
+    return result
+
+
 def _build_series_entry(entry: dict, series: dict, annotations: dict, as_of: date) -> dict:
     calibers = entry["calibers"]
     caliber = _resolve_caliber(calibers)
     value_field, yoy_field = _MEASURE_FIELDS[caliber]
 
-    observations = series.get("observations", [])
+    observations = _complete_single_from_ytd(entry, series.get("observations", []))
     breaks = series.get("breaks", [])
     index_by_period = {obs["period"]: obs for obs in observations}
 
@@ -1116,9 +1145,10 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Build site-data/ bundles from data/ (DATA-CONTRACT §10)")
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT_DIR, help="output directory (default: site-data/)")
     parser.add_argument("--data", type=Path, default=DEFAULT_DATA_DIR, help="input data/ directory (default: data/)")
+    parser.add_argument("--as-of", type=date.fromisoformat, help="reference date for time-relative flags (YYYY-MM-DD)")
     args = parser.parse_args(argv)
 
-    report = build_site_data(args.data, args.out)
+    report = build_site_data(args.data, args.out, as_of=args.as_of)
     print(
         f"[build] wrote {report.sections} section bundle(s), {report.series} series, "
         f"{report.panels} panel bundle(s), {report.tiles} tier-1 tile(s) -> {args.out}"
