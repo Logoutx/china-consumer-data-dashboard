@@ -190,7 +190,8 @@
     {"period": "2026-06", "m": 5847.0, "m_yoy": 2.1, "ytd": 33216.0, "ytd_yoy": 2.5},
     {"period": "2026-07", "m": 5242.0, "m_yoy": 1.6, "ytd": 38459.0, "ytd_yoy": 2.4},
     {"period": "2026-08", "m": 5367.0, "m_yoy": 1.6, "ytd": 43826.0, "ytd_yoy": 2.3},
-    {"period": "2026-09", "m": 6356.0, "m_yoy": 2.7, "ytd": 50181.0, "ytd_yoy": 2.3}
+    {"period": "2026-09", "m": 6356.0, "m_yoy": 2.7, "ytd": 50181.0, "ytd_yoy": 2.3},
+    {"period": "2026-10", "m": 6365.0, "m_yoy": 1.5, "ytd": 56546.0, "ytd_yoy": 2.2}
   ],
   "revisions": [
     {"period": "2013-10", "measure": "m", "old": 2858, "new": 2857.8, "revised_on": null, "source": "legacy-migration", "note": "published_* vs latest_* twin from legacy retail archive"},
@@ -248,5 +249,5 @@
     {"period": "2026-04", "measure": "m", "old": 4900, "new": 4899.5, "revised_on": null, "source": "legacy-migration", "note": "published_* vs latest_* twin from legacy retail archive"}
   ],
   "breaks": [],
-  "generated_at": "2026-10-19T03:55:14.832628+00:00"
+  "generated_at": "2026-11-16T05:36:17.016537+00:00"
 }
