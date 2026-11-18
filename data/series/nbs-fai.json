@@ -148,9 +148,10 @@
     {"period": "2026-06", "ytd_yoy": -5.7},
     {"period": "2026-07", "ytd_yoy": -6.7},
     {"period": "2026-08", "ytd_yoy": -7.2},
-    {"period": "2026-09", "ytd_yoy": -7.2}
+    {"period": "2026-09", "ytd_yoy": -7.2},
+    {"period": "2026-10", "ytd_yoy": -8.1}
   ],
   "revisions": [],
   "breaks": [],
-  "generated_at": "2026-10-21T04:00:20.317612+00:00"
+  "generated_at": "2026-11-18T06:41:14.751193+00:00"
 }
